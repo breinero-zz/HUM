@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://bryanreinero.com/hum/" xmlns:tns="http://bryanreinero.com/hum/"  >
+
+    <!-- Abstract Types -->
+    <element name="action" abstract="true" substitutionGroup="tns:actionDecision"/>
+    <element name="getter" abstract="true" />
+    <element name="booleanExpression" abstract="true" />
+    <element name="actionDecision" abstract="true" />
+    
+    
+	<element name="DecisionTree" substitutionGroup="tns:action">
+		<complexType>
+			<sequence>
+				<element ref="tns:actionDecision" minOccurs="1" maxOccurs="unbounded" />
+			</sequence>
+		</complexType>
+	</element>
+
+	<!-- Control Structure Elements -->
+	<element name="NonDeterministic">
+		<complexType>
+			<sequence>
+				<element ref="tns:Path" minOccurs="1" maxOccurs="unbounded" />
+			</sequence>
+			<attribute name="id" type="int" />
+		</complexType>
+	</element>
+
+	<element name="Deterministic">
+		<complexType>
+			<sequence>
+				<element ref="tns:If" />
+				<element ref="tns:Else" minOccurs="0" />
+			</sequence>
+		</complexType>
+	</element>
+
+	<element name="If">
+		<complexType>
+			<sequence>
+				<element ref="tns:booleanExpression" maxOccurs="1" />
+				<element ref="tns:Path" />
+			</sequence>
+		</complexType>
+	</element>
+
+	<element name="Else">
+		<complexType>
+			<sequence>
+				<element ref="tns:Path" />
+			</sequence>
+		</complexType>
+	</element>
+
+	<element name="Or" substitutionGroup="tns:booleanExpression">
+		<complexType>
+			<sequence>
+				<element ref="tns:booleanExpression" minOccurs="0"
+					maxOccurs="unbounded" />
+			</sequence>
+			<attribute name="not" type="boolean" />
+		</complexType>
+	</element>
+
+	<element name="And" substitutionGroup="tns:booleanExpression">
+		<complexType>
+			<sequence>
+				<element ref="tns:booleanExpression" minOccurs="0"
+					maxOccurs="unbounded" />
+			</sequence>
+			<attribute name="not" type="boolean" />
+		</complexType>
+	</element>
+
+	<element name="Path">
+		<complexType>
+			<sequence>
+				<element ref="tns:actionDecision" minOccurs="1" maxOccurs="unbounded" />
+			</sequence>
+			<attribute name="id" type="int" />
+			<attribute name="weight" type="int" />
+		</complexType>
+	</element>
+	
+	<element name="RedirectURL" substitutionGroup="tns:action">
+		<complexType mixed="true">
+			<sequence>
+				<element ref="tns:getter" minOccurs="0" maxOccurs="unbounded" />
+			</sequence>
+			<attribute name="group" type="tns:group" />
+		</complexType>
+	</element>
+	<element name="RedirectCode" substitutionGroup="tns:action">
+		<complexType mixed="true">
+			<sequence>
+				<element ref="tns:getter" minOccurs="0" maxOccurs="unbounded" />
+			</sequence>
+			<attribute name="group" type="tns:group" />
+		</complexType>
+	</element>
+	<element name="RedirectProtocol" substitutionGroup="tns:action">
+		<complexType mixed="true">
+			<sequence>
+				<element ref="tns:getter" minOccurs="0" maxOccurs="unbounded" />
+			</sequence>
+			<attribute name="group" type="tns:group" />
+		</complexType>
+	</element>
+
+	<element name="RedirectHost" substitutionGroup="tns:action">
+		<complexType mixed="true">
+			<sequence>
+				<element ref="tns:getter" minOccurs="0" maxOccurs="unbounded" />
+			</sequence>
+			<attribute name="group" type="tns:group" />
+		</complexType>
+	</element>
+
+	<element name="RedirectPort" substitutionGroup="tns:action">
+		<complexType mixed="true">
+			<sequence>
+				<element ref="tns:getter" minOccurs="0" maxOccurs="unbounded" />
+			</sequence>
+			<attribute name="group" type="tns:group" />
+		</complexType>
+	</element>
+
+	<element name="RedirectPath" substitutionGroup="tns:action">
+		<complexType mixed="true">
+			<sequence>
+				<element ref="tns:getter" minOccurs="0" maxOccurs="unbounded" />
+			</sequence>
+			<attribute name="group" type="tns:group" />
+		</complexType>
+	</element>
+
+	<element name="RedirectPage" substitutionGroup="tns:action">
+		<complexType mixed="true">
+			<sequence>
+				<element ref="tns:getter" minOccurs="0" maxOccurs="unbounded" />
+			</sequence>
+			<attribute name="group" type="tns:group" />
+		</complexType>
+	</element>
+	<element name="ResponseBody" substitutionGroup="tns:action">
+		<complexType mixed="true">
+			<sequence>
+				<element ref="tns:getter" minOccurs="0" maxOccurs="unbounded" />
+			</sequence>
+			<attribute name="group" type="tns:group" />
+		</complexType>
+	</element>
+
+	<element name="ResponseParameter" substitutionGroup="tns:action">
+		<complexType mixed="true">
+			<sequence>
+				<element ref="tns:getter" minOccurs="0" maxOccurs="unbounded" />
+			</sequence>
+			<attribute name="group" type="tns:group" />
+		</complexType>
+	</element>
+
+	<element name="ResponseHeader" substitutionGroup="tns:action">
+		<complexType>
+			<sequence>
+				<element name="name" type="string" />
+				<element ref="tns:Value" />
+			</sequence>
+			<attribute name="group" type="int" />
+		</complexType>
+	</element>
+
+	<element name="SetCookie" substitutionGroup="tns:action">
+		<complexType>
+			<sequence>
+				<element name="name" type="string" />
+				<element ref="tns:Value" />
+			</sequence>
+			<attribute name="group" type="int" />
+		</complexType>
+	</element>
+
+	<element name="SetVariable" substitutionGroup="tns:action">
+		<complexType>
+			<sequence>
+				<element name="name" type="string" />
+				<element ref="tns:Value" />
+			</sequence>
+			<attribute name="group" type="int" />
+		</complexType>
+	</element>
+
+	<element name="Log" substitutionGroup="tns:action">
+		<complexType>
+			<sequence>
+				<element name="column" type="string" />
+				<element ref="tns:Value" />
+			</sequence>
+			<attribute name="group" type="int" />
+		</complexType>
+	</element>
+
+	<!-- Getter Elements -->
+	<element name="RequestURL" substitutionGroup="tns:getter">
+		<complexType />
+	</element>
+	<element name="RequestURLProtocol" substitutionGroup="tns:getter">
+		<complexType />
+	</element>
+	<element name="RequestHost" substitutionGroup="tns:getter">
+		<complexType />
+	</element>
+	<element name="RequestURLPath" substitutionGroup="tns:getter">
+		<complexType />
+	</element>
+	<element name="RequestURLPage" substitutionGroup="tns:getter">
+		<complexType />
+	</element>
+	<element name="RequestBody" substitutionGroup="tns:getter">
+		<complexType />
+	</element>
+	<element name="ReferringURL" substitutionGroup="tns:getter">
+		<complexType />
+	</element>
+	<element name="UserAgent" substitutionGroup="tns:getter">
+		<complexType />
+	</element>
+	<element name="Language" substitutionGroup="tns:getter">
+		<complexType />
+	</element>
+	<element name="Continent" substitutionGroup="tns:getter">
+		<complexType />
+	</element>
+	<element name="Country" substitutionGroup="tns:getter">
+		<complexType />
+	</element>
+	<element name="State" substitutionGroup="tns:getter">
+		<complexType />
+	</element>
+	<element name="City" substitutionGroup="tns:getter">
+		<complexType />
+	</element>
+	<element name="AreaCode" substitutionGroup="tns:getter">
+		<complexType />
+	</element>
+	<element name="ZipCode" substitutionGroup="tns:getter">
+		<complexType />
+	</element>
+	<element name="DMA" substitutionGroup="tns:getter">
+		<complexType />
+	</element>
+	<element name="IP" substitutionGroup="tns:getter">
+		<complexType />
+	</element>
+	<element name="L2Domain" substitutionGroup="tns:getter">
+		<complexType />
+	</element>
+	<element name="L1Domain" substitutionGroup="tns:getter">
+		<complexType />
+	</element>
+	<element name="Carriers" substitutionGroup="tns:getter">
+		<complexType />
+	</element>
+	<element name="GetVariable" substitutionGroup="tns:getter"
+		type="string" />
+	<element name="RequestParameter" substitutionGroup="tns:getter"
+		type="string" />
+	<element name="RequestHeader" substitutionGroup="tns:getter"
+		type="string" />
+	<element name="Profile" substitutionGroup="tns:getter"
+		type="string" />
+	<element name="Product" substitutionGroup="tns:getter"
+		type="string" />
+	<element name="GetCookie" substitutionGroup="tns:getter">
+		<complexType>
+			<attribute name="domain" type="string" />
+		</complexType>
+	</element>
+
+	<simpleType name="operator">
+		<restriction base="string">
+			<enumeration value="eq" />
+			<enumeration value="ge" />
+			<enumeration value="le" />
+			<enumeration value="lt" />
+			<enumeration value="gt" />
+			<enumeration value="ne" />
+			<enumeration value="seq" />
+			<enumeration value="iseq" />
+			<enumeration value="inseq" />
+			<enumeration value="contains" />
+			<enumeration value="starts-with" />
+			<enumeration value="ends-with" />
+			<enumeration value="any" />
+		</restriction>
+	</simpleType>
+
+	<element name="Value">
+		<complexType mixed="true">
+			<sequence>
+				<element ref="tns:getter" minOccurs="0" maxOccurs="unbounded" />
+			</sequence>
+		</complexType>
+	</element>
+
+	<simpleType name="group">
+		<restriction base="int" />
+	</simpleType>
+
+	<simpleType name="dataType">
+		<restriction base="string">
+			<enumeration value="int" />
+			<enumeration value="float" />
+			<enumeration value="string" />
+		</restriction>
+	</simpleType>
+
+	<element name="StringReplace" substitutionGroup="tns:getter">
+		<complexType>
+			<sequence>
+				<element name="input">
+					<complexType mixed="true">
+						<sequence>
+							<element ref="tns:getter" />
+						</sequence>
+					</complexType>
+				</element>
+				<element name="Replacement" maxOccurs="unbounded">
+					<complexType>
+						<sequence>
+							<element name="Target">
+								<complexType mixed="true">
+									<sequence>
+										<element ref="tns:getter" />
+									</sequence>
+								</complexType>
+							</element>
+							<element name="Substitute" type="string" />
+						</sequence>
+					</complexType>
+				</element>
+			</sequence>
+		</complexType>
+	</element>
+
+	<element name="RandomNumber" substitutionGroup="tns:getter">
+		<complexType>
+			<attribute name="max" type="int" />
+		</complexType>
+	</element>
+	
+	               <element name="Term">
+                    <complexType mixed="true">
+                        <sequence>
+                            <element ref="tns:getter" />
+                        </sequence>
+                    </complexType>
+                </element>
+
+	<element name="Compare" substitutionGroup="tns:booleanExpression" >
+		<complexType>
+			<sequence>
+				<element ref="tns:Term"  minOccurs="2" maxOccurs="2"/>
+			</sequence>
+			<attribute name="op" type="tns:operator" />
+		</complexType>
+	</element>
+
+</schema>
