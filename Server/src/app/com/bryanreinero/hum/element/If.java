@@ -1,7 +1,9 @@
 package com.bryanreinero.hum.element;
 
 import com.bryanreinero.hum.visitor.*;
+import com.google.code.morphia.annotations.*;
 
+@Embedded
 public class If extends HumElement{
     private HumElement child;
     private Path path;

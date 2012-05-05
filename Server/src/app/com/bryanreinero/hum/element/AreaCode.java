@@ -1,7 +1,9 @@
 package com.bryanreinero.hum.element;
 
 import com.bryanreinero.hum.visitor.*;
+import com.google.code.morphia.annotations.*;
 
+@Embedded("AreaCode")
 public class AreaCode extends HumElement {
 
     @Override

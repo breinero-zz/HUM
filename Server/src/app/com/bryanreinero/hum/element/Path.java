@@ -3,7 +3,9 @@ package com.bryanreinero.hum.element;
 import java.util.ArrayList;
 
 import com.bryanreinero.hum.visitor.*;
+import com.google.code.morphia.annotations.*;
 
+@Embedded
 public class Path extends HumElement {
     private int weight = 0;
     private String id;

@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import javax.xml.bind.annotation.XmlEnumValue;
 
 import com.bryanreinero.hum.visitor.*;
+import com.google.code.morphia.annotations.*;
 
+@Embedded
 public class Compare extends HumElement {
     
     private ArrayList<HumElement> children;
@@ -88,7 +90,6 @@ public class Compare extends HumElement {
         return children;
     }
 
-    @Override
     public void addChild(Value element){
     	if(children == null)
     		children = new ArrayList<HumElement>();

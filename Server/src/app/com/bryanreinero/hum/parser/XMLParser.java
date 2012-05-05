@@ -667,17 +667,14 @@ public class XMLParser extends DefaultHandler {
     @Override
     public void endElement(String namespaceURI, String name, String qName) throws SAXException
     {
-		if (elements.containsKey(name)) {
-			try {
-				elements.get(name).handleEnd(this);
-			} catch (IllegalArgumentException e) {
-				throw new IllegalArgumentException(stack.peek().getClass()
-						.getSimpleName()
-						+ " " + e.getMessage());
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+    	try {
+    		if (elements.containsKey(name)) 
+    			elements.get(name).handleEnd(this);
+    		else
+    			unite();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
     }
     

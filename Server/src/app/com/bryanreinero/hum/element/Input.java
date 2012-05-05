@@ -1,7 +1,9 @@
 package com.bryanreinero.hum.element;
 
 import com.bryanreinero.hum.visitor.Visitor;
+import com.google.code.morphia.annotations.*;
 
+@Embedded
 public class Input extends MixedContentElement {
 
 	@Override

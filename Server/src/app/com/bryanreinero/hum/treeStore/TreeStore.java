@@ -19,7 +19,7 @@ public class TreeStore {
 	
 	private static TreeStore store = null;
 	private static final HashMap <String, DecisionTree> treeMap = new HashMap<String, DecisionTree>();
-	static String centralControl = "http://10.0.1.7/~breinero/";
+	static String centralControl = "http://127.0.0.1/~breinero/";
 	private ConfigKiller configRetirer = ConfigKiller.getInstance();
 	
 	private static Thread ConfigRetirerThread;
@@ -63,7 +63,7 @@ public class TreeStore {
 		
 		try {
 			// wait for the retrieval to finish, but not forever
-			retrieverThread.join(1000);
+			retrieverThread.join(10000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

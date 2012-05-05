@@ -1,7 +1,9 @@
 package com.bryanreinero.hum.element;
 
 import java.util.ArrayList;
+import com.google.code.morphia.annotations.*;
 
+@Embedded
 public abstract class MixedContentElement extends HumElement {
 	
 	ArrayList<HumElement> children = new ArrayList<HumElement>();

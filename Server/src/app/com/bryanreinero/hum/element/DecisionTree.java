@@ -3,10 +3,15 @@ package com.bryanreinero.hum.element;
 import java.util.ArrayList;
 
 import com.bryanreinero.hum.visitor.Visitor;
+import com.google.code.morphia.annotations.*;
 
+@Entity(noClassnameStored=true)
 public class DecisionTree extends HumElement {
 
+	@Id
 	private String id;
+	
+	@Embedded
 	private ArrayList<HumElement> children = new ArrayList<HumElement>();
 	
 	public ArrayList<HumElement> getChildren() {

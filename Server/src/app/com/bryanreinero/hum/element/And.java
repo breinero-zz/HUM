@@ -9,6 +9,7 @@ package com.bryanreinero.hum.element;
 import java.util.ArrayList;
 
 import com.bryanreinero.hum.visitor.*;
+import com.google.code.morphia.annotations.*;
 
 public class And extends HumElement {
 
@@ -39,29 +40,24 @@ public class And extends HumElement {
         this.not = value;
     }
 
-	@Override
 	public void addChild(And element){
 		if(children == null)
 			children = new ArrayList<HumElement>();
 		children.add(element);
 	}
 
-	@Override
 	public void addChild(Or element){
 		if(children == null)
 			children = new ArrayList<HumElement>();
 		children.add(element);
 	}
 	
-	@Override
 	public void addChild(Compare element){
 		if(children == null)
 			children = new ArrayList<HumElement>();
 		children.add(element);
 	}
 
-
-	@Override
 	public void accept(Visitor visitor) {
 		visitor.visit(this);
 	}
@@ -70,8 +66,6 @@ public class And extends HumElement {
 		return children;
 	}
 
-
-	@Override
 	public void addParent(HumElement element) throws IllegalArgumentException {
 		element.addChild(this);
 	}

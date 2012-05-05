@@ -3,7 +3,9 @@ package com.bryanreinero.hum.element;
 import java.util.ArrayList;
 
 import com.bryanreinero.hum.visitor.Visitor;
+import com.google.code.morphia.annotations.*;
 
+@Embedded
 public class SetProfile extends NamedVariableElement {
 
 	ArrayList<Pair> pairs = new ArrayList<Pair>();
