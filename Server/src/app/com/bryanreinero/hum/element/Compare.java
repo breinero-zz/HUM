@@ -5,9 +5,7 @@ import java.util.ArrayList;
 import javax.xml.bind.annotation.XmlEnumValue;
 
 import com.bryanreinero.hum.visitor.*;
-import com.google.code.morphia.annotations.*;
 
-@Embedded
 public class Compare extends HumElement {
     
     private ArrayList<HumElement> children;

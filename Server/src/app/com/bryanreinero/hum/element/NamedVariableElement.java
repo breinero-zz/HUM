@@ -1,7 +1,5 @@
 package com.bryanreinero.hum.element;
-import com.google.code.morphia.annotations.Embedded;
 
-@Embedded
 public abstract class NamedVariableElement extends HumElement {
 
 	private Name name;

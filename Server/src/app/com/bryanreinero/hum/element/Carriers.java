@@ -1,9 +1,7 @@
 package com.bryanreinero.hum.element;
 
 import com.bryanreinero.hum.visitor.*;
-import com.google.code.morphia.annotations.*;
 
-@Embedded
 public class Carriers extends HumElement {
     @Override
     public void addParent(HumElement element) throws IllegalArgumentException {
