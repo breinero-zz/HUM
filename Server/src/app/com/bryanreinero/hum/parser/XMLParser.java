@@ -629,10 +629,12 @@ public class XMLParser extends DefaultHandler {
 	}
 	
 	public void unite() {
+		HumElement element = null;
         try{
-		stack.pop().addParent(stack.peek());
+        	element = stack.pop();
+			element.addParent(stack.peek());
         }catch(IllegalArgumentException e){
-        	throw new IllegalArgumentException( stack.peek().getClass().getSimpleName()+" "+e.getMessage() );
+        	throw new IllegalArgumentException( stack.peek().getClass().getSimpleName()+" does not accept "+element.getClass().getSimpleName()+" as a child" );
         }
 	}
 	
@@ -667,14 +669,13 @@ public class XMLParser extends DefaultHandler {
     @Override
     public void endElement(String namespaceURI, String name, String qName) throws SAXException
     {
-    	try {
-    		if (elements.containsKey(name)) 
-    			elements.get(name).handleEnd(this);
-    		else
-    			unite();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if (elements.containsKey(name)) {
+			try {
+				elements.get(name).handleEnd(this);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
     }
     

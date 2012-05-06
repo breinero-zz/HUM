@@ -64,6 +64,14 @@ public abstract class MixedContentElement extends HumElement {
 		children.add(element);
 	}
 	
+	@Override
+	public void addChild(Replacement element){
+		if(children == null)
+			children = new ArrayList<HumElement>();
+		
+		children.add(element);
+	}
+	
 	public void addChild(RequestHost element){
 		if(children == null)
 			children = new ArrayList<HumElement>();
