@@ -12,7 +12,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 import com.bryanreinero.hum.element.*;
-import com.bryanreinero.hum.treeStore.TreeStore;
 import com.bryanreinero.hum.visitor.*;
 
 public class Executor implements Visitor {
@@ -488,8 +487,7 @@ public class Executor implements Visitor {
 
 	@Override
 	public void visit(SubTree subTree) {
-		DecisionTree newTree = TreeStore.getInstance().getTree(subTree.getId());
-		newTree.accept(this);
+		HUMServer.store.get(subTree.getId()).accept(this);
 	}
 
 	@Override
