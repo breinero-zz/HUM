@@ -1,6 +1,7 @@
 package com.bryanreinero.hum.element;
 
 import com.bryanreinero.hum.visitor.Visitable;
+import com.google.code.morphia.annotations.Embedded;
 
 public abstract class HumElement implements  Visitable {
 	
@@ -52,9 +53,6 @@ public abstract class HumElement implements  Visitable {
         throw new IllegalArgumentException();
     }
 	public void addChild(Language element) {
-        throw new IllegalArgumentException();
-    }
-	public void addChild(Log element) {
         throw new IllegalArgumentException();
     }
 	public void addChild(Or element) {
@@ -158,10 +156,6 @@ public abstract class HumElement implements  Visitable {
 	}
 
 	public void addChild(GetCookie element) {
-		throw new IllegalArgumentException();
-	}
-
-	public void addChild(Pair element) {
 		throw new IllegalArgumentException();
 	}
 }

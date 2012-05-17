@@ -3,7 +3,9 @@ package com.bryanreinero.hum.element;
 import java.util.ArrayList;
 
 import com.bryanreinero.hum.visitor.*;
+import com.google.code.morphia.annotations.Embedded;
 
+@Embedded
 public class Path extends HumElement {
     private int weight = 0;
     private String id;
@@ -78,12 +80,6 @@ public class Path extends HumElement {
 	public void addChild(SetVariable element){
 		children.add(element);
 	}
-	
-	@Override
-	public void addChild(Log element){
-		children.add(element);
-	}
-	
 	
 	@Override
 	public void addChild(ContentType element){

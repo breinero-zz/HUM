@@ -3,7 +3,9 @@ package com.bryanreinero.hum.element;
 import java.util.*;
 
 import com.bryanreinero.hum.visitor.*;
+import com.google.code.morphia.annotations.Embedded;
 
+@Embedded
 public class NonDetermintistic extends HumElement {
     private String id;
     private ArrayList<Path> paths;

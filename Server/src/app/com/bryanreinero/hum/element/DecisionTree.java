@@ -2,13 +2,19 @@ package com.bryanreinero.hum.element;
 
 import java.util.ArrayList;
 
+import org.bson.types.ObjectId;
+
 import com.bryanreinero.hum.visitor.Visitor;
 import com.google.code.morphia.annotations.*;
 
+@Entity
 public class DecisionTree extends HumElement {
 
 	@Id
-	private String id;
+	private ObjectId id;
+	
+	@Embedded
+	private String name;
 	
 	@Embedded
 	private ArrayList<HumElement> children = new ArrayList<HumElement>();
@@ -31,14 +37,22 @@ public class DecisionTree extends HumElement {
 		visitor.visit(this);
 	}
 
-	public void setId(String id) {
+	public void setId(ObjectId id) {
 		this.id = id;
 	}
 
-	public String getId() {
+	public ObjectId getId() {
 		return id;
 	}
 	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	@Override
 	public void addChild(Deterministic element){
 		children.add(element);
@@ -71,11 +85,6 @@ public class DecisionTree extends HumElement {
 	
 	@Override
 	public void addChild(SetVariable element){
-		children.add(element);
-	}
-	
-	@Override
-	public void addChild(Log element){
 		children.add(element);
 	}
 	

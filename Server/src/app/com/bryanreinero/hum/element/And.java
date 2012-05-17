@@ -9,7 +9,9 @@ package com.bryanreinero.hum.element;
 import java.util.ArrayList;
 
 import com.bryanreinero.hum.visitor.*;
+import com.google.code.morphia.annotations.Embedded;
 
+@Embedded
 public class And extends HumElement {
 
 	ArrayList<HumElement> children;

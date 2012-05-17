@@ -358,12 +358,6 @@ public class Executor implements Visitor {
 	}
 
 	@Override
-	public void visit(Log aBean) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void visit(ResponseBody aBean) {
 		this.getResponse().setResponseBody(handleMixedChildren(aBean.getChildren()));
 	}
@@ -468,19 +462,6 @@ public class Executor implements Visitor {
 	}
 
 	@Override
-	public void visit(SetProfile element) {
-		// create new record object
-		element.getValue().accept(this);
-		element.getName().accept(this);
-		this.setProfileRecord((String)stack.pop(), (String)stack.pop());
-	}
-
-	@Override
-	public void visit(GetProfile element) {
-		this.getProfileRecord(handleMixedChildren(element.getChildren()));
-	}
-
-	@Override
 	public void visit(GetVariable element) {
 		stack.push(variables.get(handleMixedChildren(element.getChildren())));
 	}
@@ -488,11 +469,5 @@ public class Executor implements Visitor {
 	@Override
 	public void visit(SubTree subTree) {
 		HUMServer.store.get(subTree.getId()).accept(this);
-	}
-
-	@Override
-	public void visit(Pair pair) {
-		// TODO Auto-generated method stub
-		
 	}
 }

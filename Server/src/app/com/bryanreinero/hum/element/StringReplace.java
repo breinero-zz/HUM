@@ -3,7 +3,9 @@ package com.bryanreinero.hum.element;
 import java.util.ArrayList;
 
 import com.bryanreinero.hum.visitor.*;
+import com.google.code.morphia.annotations.Embedded;
 
+@Embedded
 public class StringReplace extends HumElement {
 
 	private Input input = null;

@@ -66,8 +66,6 @@ public interface Visitor {
     
     public void visit(ZipCode element);
     
-    public void visit(Log element);
-    
     public void visit(ResponseBody element);
 
 	public void visit(Else element);
@@ -106,15 +104,9 @@ public interface Visitor {
 
 	public void visit(ContentType contentType);
 
-	public void visit(SetProfile setProfile);
-
-	public void visit(GetProfile getProfile);
-
 	public void visit(GetVariable getVariable);
 
 	public void visit(RequestURLPort requestURLPort);
 
 	public void visit(SubTree subTree);
-
-	public void visit(Pair pair);
 }

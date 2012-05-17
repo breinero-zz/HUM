@@ -7,9 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.bryanreinero.hum.DataStore.ConfigDAO;
-import com.bryanreinero.hum.DataStore.HUMElementDS;
 import com.bryanreinero.hum.element.DecisionTree;
-import com.bryanreinero.hum.visitor.PrintVisitor;
 
 
 public class HUMServer extends HttpServlet {
@@ -19,7 +17,7 @@ public class HUMServer extends HttpServlet {
 
 	
 	public void init(ServletConfig config){
-			store = new HUMElementDS<String, DecisionTree>();
+			store = new ConfigDAO <String, DecisionTree>();
 	}
 	
 	public void service(HttpServletRequest req, HttpServletResponse resp) {

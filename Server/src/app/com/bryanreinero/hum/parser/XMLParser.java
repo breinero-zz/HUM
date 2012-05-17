@@ -139,7 +139,9 @@ public class XMLParser extends DefaultHandler {
 			public void handleEnd(XMLParser parser) throws Exception {}
 
 			public void handleStart(XMLParser parser, Attributes atts) throws Exception {
-				parser.stack.push(new DecisionTree());
+				DecisionTree tree = new DecisionTree();
+				tree.setName(atts.getValue("name"));
+				parser.stack.push(tree);
 			}
 		});
 		
@@ -182,17 +184,6 @@ public class XMLParser extends DefaultHandler {
             
             public void handleStart(XMLParser parser, Attributes atts) throws Exception {
                 parser.stack.push(new GetCookie());
-            }
-        });
-		
-		elements.put("GetProfile", new HumSAXHandler()
-        {
-            public void handleEnd(XMLParser parser) throws Exception {
-                parser.unite();
-            }
-            
-            public void handleStart(XMLParser parser, Attributes atts) throws Exception {
-                parser.stack.push(new GetProfile());
             }
         });
 		
@@ -270,20 +261,6 @@ public class XMLParser extends DefaultHandler {
             
             public void handleStart(XMLParser parser, Attributes atts) throws Exception {
                 parser.stack.push(new Language());
-            }
-        });
-
-		elements.put("Log", new HumSAXHandler()
-        {
-            public void handleEnd(XMLParser parser) throws Exception {
-                  parser.unite();
-            }
-            
-            public void handleStart(XMLParser parser, Attributes atts) throws Exception {
-            	Log log = new Log();
-            	if(atts.getValue("group") != null)
-            		log.setGroup(Integer.parseInt(atts.getValue("group")));
-                parser.stack.push(log);
             }
         });
 		
@@ -525,17 +502,6 @@ public class XMLParser extends DefaultHandler {
             
             public void handleStart(XMLParser parser, Attributes atts) throws Exception {
                 parser.stack.push(new SetCookie());
-            }
-        });
-		
-		elements.put("SetProfile", new HumSAXHandler()
-        {
-            public void handleEnd(XMLParser parser) throws Exception {
-                  parser.unite();
-            }
-            
-            public void handleStart(XMLParser parser, Attributes atts) throws Exception {
-                parser.stack.push(new SetProfile());
             }
         });
 
