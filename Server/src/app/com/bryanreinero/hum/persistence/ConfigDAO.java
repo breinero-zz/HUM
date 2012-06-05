@@ -1,15 +1,12 @@
-package com.bryanreinero.hum.DataStore;
+package com.bryanreinero.hum.persistence;
 
 import java.net.UnknownHostException;
-
-import org.bson.types.ObjectId;
 
 import com.bryanreinero.hum.element.DecisionTree;
 import com.bryanreinero.hum.server.DataAccessObject;
 
 import com.google.code.morphia.Datastore;
 import com.google.code.morphia.Morphia;
-import com.google.code.morphia.query.Query;
 
 import com.mongodb.Mongo;
 import com.mongodb.MongoException;
@@ -17,14 +14,23 @@ import com.mongodb.MongoException;
 public class ConfigDAO<K, E> implements DataAccessObject<K, E> {
 
 	private Mongo connection;
-	Datastore ds;
-	Morphia morphia = new Morphia();
+	private Datastore ds;
+	private Morphia morphia = new Morphia();
+	private Deserializer<String, DecisionTree> deserializer;
 	
+	public Deserializer<String, DecisionTree> getDeserializer() {
+		return deserializer;
+	}
+
+	public void setDeserializer(Deserializer<String, DecisionTree> deserializer) {
+		this.deserializer = deserializer;
+	}
+
 	public ConfigDAO() {
 		try {
 			connection = new Mongo( "localhost" , 27017 );
 			ds = morphia.createDatastore(connection, "configurations");
-			morphia.map(DecisionTree.class);
+			morphia.map(ConfigurationTree.class);
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -37,7 +43,8 @@ public class ConfigDAO<K, E> implements DataAccessObject<K, E> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public E get(K key) {
-		return (E)ds.find(DecisionTree.class).field("name").equal(key).get();
+		ConfigurationTree config = ds.find(ConfigurationTree.class).field("name").equal(key).get();
+		return (E)deserializer.deserialize(config.getValue());
 	}
 
 	@Override

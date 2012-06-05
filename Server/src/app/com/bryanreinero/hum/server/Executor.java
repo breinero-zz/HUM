@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 import java.util.Stack;
 
@@ -12,24 +13,36 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 import com.bryanreinero.hum.element.*;
+import com.bryanreinero.hum.element.http.*;
+import com.bryanreinero.hum.element.persistence.Fields;
+import com.bryanreinero.hum.element.persistence.GetData;
+import com.bryanreinero.hum.element.persistence.Query;
+import com.bryanreinero.hum.element.persistence.SetData;
+import com.bryanreinero.hum.element.persistence.Update;
 import com.bryanreinero.hum.visitor.*;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import com.mongodb.Mongo;
+import com.mongodb.util.JSON;
+
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 public class Executor implements Visitor {
 
+	private Mongo mongo;
+	private DB db;
+	private DBCollection collection;
+	
 	private HttpServletRequest req;
-	
 	private Response response = null; 
-	
 	private Stack<Object> stack = new Stack<Object>();
 	
 	private Random randGen = new Random();
 	private ArrayList<String> executionPath;
 	private HashMap<String, String> variables;
-	private HashMap<String, String> profileRecords;
-	
-	public HashMap<String, String> getProfileRecords() {
-		return profileRecords;
-	}
 
 	private GeoLocation geoLocation;
 	
@@ -40,6 +53,14 @@ public class Executor implements Visitor {
 		this.geoLocation = GeoLocation.getLocation(req);
 		this.executionPath = new ArrayList<String>();
 		this.response = new Response();
+		
+		try {
+		mongo = new Mongo();
+		db = mongo.getDB("configurations");
+		collection = db.getCollection("ConfigurationTree");
+		}catch (Exception e){
+			e.printStackTrace();
+		}
 	}
 	
 	private URL getRequestURL() {
@@ -76,25 +97,11 @@ public class Executor implements Visitor {
 		
 		return variables.get(name);
 	}
-	
-	public void setProfileRecord(String name, String value){
-		if(profileRecords == null)
-			profileRecords = new HashMap<String, String>();
-		
-		variables.put(name, value);
-	}
-	
-	public String getProfileRecord(String name){
-		if(profileRecords == null)
-			return null;
-		
-		return profileRecords.get(name);
-	}
 
 	@Override
-	public void visit(And aBean) {
+	public void visit(And element) {
 		boolean result = true;
-		Iterator<HumElement> iterator = aBean.getChildren().iterator();
+		Iterator<HumElement> iterator = element.getChildren().iterator();
 		while (iterator.hasNext()) {
 			((Visitable)iterator.next()).accept(this);
 			if (!((Boolean) this.stack.pop()).booleanValue()) {
@@ -102,7 +109,7 @@ public class Executor implements Visitor {
 				break;
 			}
 		}
-		stack.push(new Boolean(result && !aBean.isNot()));
+		stack.push(new Boolean(result && !element.isNot()));
 	}
 
 	@Override
@@ -295,23 +302,28 @@ public class Executor implements Visitor {
 	}
 
 	@Override
-	public void visit(ReferringURL aBean) {
+	public void visit(ReferringURL element) {
 		this.stack.push(req);
 	}
 
 	@Override
-	public void visit(RequestBody aBean) {
+	public void visit(RequestBody element) {
 		// TODO Auto-generated method stub
+	}
+	
+	@Override
+	public void visit(RequestContentType element) {
+		this.stack.push(req.getContentType());
 	}
 
 	@Override
-	public void visit(RequestHost aBean) {
+	public void visit(RequestHost element) {
 		this.stack.push(req.getRemoteHost());
 	}
 
 	@Override
-	public void visit(RequestURL aBean) {
-		this.stack.push(req.getRequestURL().toString());
+	public void visit(RequestMethod element) {
+		this.stack.push(req.getMethod());
 	}
 
 	@Override
@@ -320,8 +332,18 @@ public class Executor implements Visitor {
 	}
 
 	@Override
-	public void visit(RequestURLPath aBean) {
-		this.stack.push(getRequestURL().getPath());
+	public void visit(RequestURI element) {
+		this.stack.push(req.getRequestURI());
+	}
+	
+	@Override
+	public void visit(RequestContextPath element) {
+		this.stack.push(req.getContextPath());
+	}
+	
+	@Override
+	public void visit(RequestServletPath element) {
+		this.stack.push(req.getServletPath());
 	}
 	
 	@Override
@@ -330,19 +352,19 @@ public class Executor implements Visitor {
 	}
 
 	@Override
-	public void visit(RequestURLProtocol aBean) {
+	public void visit(RequestURLProtocol element) {
 		this.stack.push(req.getProtocol());
 	}
 
 	@Override
-	public void visit(State aBean) {
+	public void visit(State element) {
 		this.stack.push(this.geoLocation.getState());
 	}
 
 	@Override
-	public void visit(StringReplace aBean) {
-		aBean.getInput().accept(this);
-		Iterator<Replacement> iterator = aBean.getReplacements().iterator();
+	public void visit(StringReplace element) {
+		element.getInput().accept(this);
+		Iterator<RegularExpression> iterator = element.getReplacements().iterator();
 		while(iterator.hasNext())
 			iterator.next().accept(this);
 	}
@@ -417,8 +439,8 @@ public class Executor implements Visitor {
 	}
 
 	@Override
-	public void visit(Target aBean) {
-		stack.push(handleMixedChildren(aBean.getChildren()));
+	public void visit(com.bryanreinero.hum.element.Pattern element) {
+		stack.push(handleMixedChildren(element.getChildren()));
 	}
 
 	@Override
@@ -447,13 +469,24 @@ public class Executor implements Visitor {
 	}
 
 	@Override
-	public void visit(Replacement element) {
-		element.getSubstitute().accept(this);
-		element.getTarget().accept(this);
+	public void visit(RegularExpression element) {
+		int group = element.getPattern().getGroup();
+		element.getPattern().accept(this);
 		String regex = (String)stack.pop();
-		String replacement = (String)stack.pop();
-		String input = (String)stack.pop();
-		stack.push(input.replaceAll(regex, replacement));
+		
+		Substitute substitute = element.getSubstitute();
+		
+		if(substitute != null ){
+			String replacement = (String)stack.pop();
+			String input = (String)stack.pop();
+			stack.push(input.replaceAll(regex, replacement));
+		}
+		else {
+			String input = (String)stack.pop();
+			Pattern pattern = Pattern.compile(regex);
+			Matcher matcher = pattern.matcher(input);
+			stack.push(((matcher.find())? matcher.group(group) : "" ));
+		}
 	}
 
 	@Override
@@ -469,5 +502,50 @@ public class Executor implements Visitor {
 	@Override
 	public void visit(SubTree subTree) {
 		HUMServer.store.get(subTree.getId()).accept(this);
+	}
+
+	@Override
+	public void visit(Fields element) {
+		stack.push(handleMixedChildren(element.getChildren()));
+	}
+
+	@Override
+	public void visit(Query element) {
+		stack.push(handleMixedChildren(element.getChildren()));
+	}
+
+	@Override
+	public void visit(GetData element) {
+		DBCursor results;
+		element.getQuery().accept(this);
+		DBObject query = (DBObject)JSON.parse((String)this.stack.pop() );
+		
+		if(element.getFields() != null){
+			element.getFields().accept(this);
+			DBObject fields = (DBObject)JSON.parse((String)this.stack.pop() );
+			results = collection.find(query, fields);
+		}
+		else{
+			results = collection.find(query);
+		}
+		
+		StringBuffer sb = new StringBuffer();
+		for(DBObject result : results)
+			sb.append(result.toString());
+		stack.push(sb.toString());
+	}
+
+	@Override
+	public void visit(Update element) {
+		stack.push(variables.get(handleMixedChildren(element.getChildren())));
+	}
+
+	@Override
+	public void visit(SetData element) {
+		element.getQuery().accept(this);
+		element.getUpdate().accept(this);
+		DBObject update = (DBObject)JSON.parse((String)this.stack.pop() );
+		DBObject query = (DBObject)JSON.parse((String)this.stack.pop() );
+
 	}
 }

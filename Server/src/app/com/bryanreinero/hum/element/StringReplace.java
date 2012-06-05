@@ -10,13 +10,13 @@ public class StringReplace extends HumElement {
 
 	private Input input = null;
 
-	private ArrayList<Replacement> replacements = null;
+	private ArrayList<RegularExpression> replacements = null;
     
     public Input getInput() {
 		return input;
 	}
     
-    public ArrayList<Replacement> getReplacements() {
+    public ArrayList<RegularExpression> getReplacements() {
 		return replacements;
 	}
 
@@ -36,9 +36,9 @@ public class StringReplace extends HumElement {
 	}
 	
 	@Override
-	public void addChild(Replacement element){
+	public void addChild(RegularExpression element){
 		if(replacements == null)
-			replacements = new ArrayList<Replacement>(); 
+			replacements = new ArrayList<RegularExpression>(); 
 			
 		replacements.add(element);
 	}

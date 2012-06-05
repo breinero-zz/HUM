@@ -1,4 +1,4 @@
-  package com.bryanreinero.hum.DataStore;
+  package com.bryanreinero.hum.persistence;
 
 import java.io.ByteArrayInputStream;
 

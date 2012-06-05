@@ -4,6 +4,10 @@ import java.util.ArrayList;
 
 import org.bson.types.ObjectId;
 
+import com.bryanreinero.hum.element.http.Redirect;
+import com.bryanreinero.hum.element.http.ResponseBody;
+import com.bryanreinero.hum.element.http.ResponseHeader;
+import com.bryanreinero.hum.element.http.SetCookie;
 import com.bryanreinero.hum.visitor.Visitor;
 import com.google.code.morphia.annotations.*;
 
@@ -17,8 +21,41 @@ public class DecisionTree extends HumElement {
 	private String name;
 	
 	@Embedded
+	private int client;
+	
+	@Embedded
+	private int timeToLive;
+	
+	@Embedded
+	private String type;
+	
+	@Embedded
 	private ArrayList<HumElement> children = new ArrayList<HumElement>();
 	
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public int getClient() {
+		return client;
+	}
+
+	public void setClient(int client) {
+		this.client = client;
+	}
+
+	public int getTimeToLive() {
+		return timeToLive;
+	}
+
+	public void setTimeToLive(int timeToLive) {
+		this.timeToLive = timeToLive;
+	}
+
 	public ArrayList<HumElement> getChildren() {
 		return children;
 	}

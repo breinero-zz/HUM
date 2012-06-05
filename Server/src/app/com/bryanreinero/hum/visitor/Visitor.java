@@ -7,6 +7,8 @@
 package com.bryanreinero.hum.visitor;
 
 import com.bryanreinero.hum.element.*;
+import com.bryanreinero.hum.element.http.*;
+import com.bryanreinero.hum.element.persistence.*;
 
 public interface Visitor {
     
@@ -47,16 +49,16 @@ public interface Visitor {
     public void visit(ReferringURL element);
     
     public void visit(RequestBody element);
+
+	public void visit(RequestContentType requestContentType);
     
     public void visit(RequestHeader element);
 
     public void visit(RequestHost element);
-    
-    public void visit(RequestURL element);
+
+	public void visit(RequestMethod requestMethod);
     
     public void visit(RequestURLPage element);
-    
-    public void visit(RequestURLPath element);
     
     public void visit(RequestURLProtocol element);
     
@@ -92,21 +94,37 @@ public interface Visitor {
 
 	public void visit(Input aBean);
 
-	public void visit(Target aBean);
+	public void visit(Pattern aBean);
 
 	public void visit(Literal element);
 
 	public void visit(Name element);
 
-	public void visit(Replacement element);
+	public void visit(RegularExpression element);
 
 	public void visit(Substitute element);
 
-	public void visit(ContentType contentType);
+	public void visit(ContentType element);
 
-	public void visit(GetVariable getVariable);
+	public void visit(GetVariable element);
 
-	public void visit(RequestURLPort requestURLPort);
+	public void visit(RequestURLPort element);
 
-	public void visit(SubTree subTree);
+	public void visit(SubTree element);
+
+	public void visit(RequestServletPath element);
+
+	public void visit(RequestURI element);
+
+	public void visit(RequestContextPath element);
+	
+	public void visit(Fields element);
+	
+	public void visit(Query element);
+	
+	public void visit(GetData element);
+	
+	public void visit(Update element);
+	
+	public void visit(SetData element);
 }

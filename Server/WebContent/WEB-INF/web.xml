@@ -6,6 +6,6 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>HumServer</servlet-name>
-		<url-pattern>/hum</url-pattern>
+		<url-pattern>/hum/*</url-pattern>
 	</servlet-mapping>
 </web-app>

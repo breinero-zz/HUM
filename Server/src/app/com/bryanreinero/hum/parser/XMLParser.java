@@ -1,7 +1,9 @@
 package com.bryanreinero.hum.parser;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Stack;
 
@@ -11,9 +13,11 @@ import org.xml.sax.helpers.*;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 import com.bryanreinero.hum.element.*;
+import com.bryanreinero.hum.element.http.*;
+import com.bryanreinero.hum.element.persistence.*;
+import com.bryanreinero.hum.persistence.Deserializer;
 
-
-public class XMLParser extends DefaultHandler {
+public class XMLParser extends DefaultHandler implements Deserializer<String, DecisionTree> {
 	
     private static HashMap<String, HumSAXHandler> elements;
 
@@ -139,8 +143,17 @@ public class XMLParser extends DefaultHandler {
 			public void handleEnd(XMLParser parser) throws Exception {}
 
 			public void handleStart(XMLParser parser, Attributes atts) throws Exception {
+				String name = atts.getValue("name");
+				String timeToLive = atts.getValue("timetolive");
+				
+				if(name == null || name.length() == 0)
+					throw new SAXException("Unallowed attribute \"name\" : "+name);
+				if(timeToLive == null || timeToLive.length() == 0)
+					throw new SAXException("Unallowed attribute \"timetolive\" : "+timeToLive);
+				
 				DecisionTree tree = new DecisionTree();
-				tree.setName(atts.getValue("name"));
+				tree.setName(name);
+				tree.setClient(Integer.parseInt(timeToLive));
 				parser.stack.push(tree);
 			}
 		});
@@ -369,14 +382,14 @@ public class XMLParser extends DefaultHandler {
             }
         });
 		
-		elements.put("Replacement", new HumSAXHandler()
+		elements.put("RegularExpression", new HumSAXHandler()
         {
             public void handleEnd(XMLParser parser) throws Exception {
                 parser.unite();
             }
             
             public void handleStart(XMLParser parser, Attributes atts) throws Exception {
-                parser.stack.push(new Replacement());
+                parser.stack.push(new RegularExpression());
             }
         });
 
@@ -412,15 +425,26 @@ public class XMLParser extends DefaultHandler {
                 parser.stack.push(new RequestHost());
             }
         });
-
-		elements.put("RequestURL", new HumSAXHandler()
+		
+		elements.put("RequestMethod", new HumSAXHandler()
         {
             public void handleEnd(XMLParser parser) throws Exception {
                 parser.unite();
             }
             
             public void handleStart(XMLParser parser, Attributes atts) throws Exception {
-                parser.stack.push(new RequestURL());
+                parser.stack.push(new RequestMethod());
+            }
+        });
+		
+		elements.put("RequestURI", new HumSAXHandler()
+        {
+            public void handleEnd(XMLParser parser) throws Exception {
+                parser.unite();
+            }
+            
+            public void handleStart(XMLParser parser, Attributes atts) throws Exception {
+                parser.stack.push(new RequestURI());
             }
         });
 		
@@ -432,17 +456,6 @@ public class XMLParser extends DefaultHandler {
             
             public void handleStart(XMLParser parser, Attributes atts) throws Exception {
                 parser.stack.push(new RequestURLPage());
-            }
-        });
-
-		elements.put("RequestURLPath", new HumSAXHandler()
-        {
-            public void handleEnd(XMLParser parser) throws Exception {
-                parser.unite();
-            }
-            
-            public void handleStart(XMLParser parser, Attributes atts) throws Exception {
-                parser.stack.push(new RequestURLPath());
             }
         });
 
@@ -549,14 +562,24 @@ public class XMLParser extends DefaultHandler {
             }
         });
 		
-		elements.put("Target", new HumSAXHandler()
+		elements.put("Pattern", new HumSAXHandler()
         {
             public void handleEnd(XMLParser parser) throws Exception {
                 parser.unite();
             }
             
             public void handleStart(XMLParser parser, Attributes atts) throws Exception {
-                parser.stack.push(new Target());
+            	Pattern pattern = new Pattern();
+            	int group;
+            	try{
+            	if(atts.getValue("group") != null){
+            		group = Integer.parseInt(atts.getValue("group"));
+            		pattern.setGroup(group);
+            	}
+            	}catch(NumberFormatException e){
+            		e.printStackTrace();
+            	}
+                parser.stack.push(pattern);
             }
         });
 
@@ -590,6 +613,54 @@ public class XMLParser extends DefaultHandler {
             
             public void handleStart(XMLParser parser, Attributes atts) throws Exception {
                 parser.stack.push(new ZipCode());
+            }
+        });
+		
+		elements.put("GetData", new HumSAXHandler()
+        {
+            public void handleEnd(XMLParser parser) throws Exception {
+                parser.unite();
+            }
+            
+            public void handleStart(XMLParser parser, Attributes atts) throws Exception {
+            	GetData element = new GetData();
+            	String type = atts.getValue("type");
+            	if(type != null && type.length() != 0)
+            		element.setType(type);
+                parser.stack.push(element);
+            }
+        });
+		
+		elements.put("Update", new HumSAXHandler()
+        {
+            public void handleEnd(XMLParser parser) throws Exception {
+                parser.unite();
+            }
+            
+            public void handleStart(XMLParser parser, Attributes atts) throws Exception {
+                parser.stack.push(new Update());
+            }
+        });
+		
+		elements.put("Fields", new HumSAXHandler()
+        {
+            public void handleEnd(XMLParser parser) throws Exception {
+                parser.unite();
+            }
+            
+            public void handleStart(XMLParser parser, Attributes atts) throws Exception {
+                parser.stack.push(new Fields());
+            }
+        });
+		
+		elements.put("Query", new HumSAXHandler()
+        {
+            public void handleEnd(XMLParser parser) throws Exception {
+                parser.unite();
+            }
+            
+            public void handleStart(XMLParser parser, Attributes atts) throws Exception {
+                parser.stack.push(new Query());
             }
         });
 	}
@@ -658,6 +729,23 @@ public class XMLParser extends DefaultHandler {
 			stack.peek().addChild(literal);
 		}
     }
+
+	@Override
+	public DecisionTree deserialize(String input) {
+		try {
+			return parse(new ByteArrayInputStream(input.getBytes("UTF-8")));
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SAXException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
     
     
 }

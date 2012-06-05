@@ -48,7 +48,7 @@
     	<copy file="${jar.dir}/HUMServer.jar" todir="${tomcatlib.dir}"/>
     </target>
 	
-    <target name="deploy-war-local" depends="jar">
+    <target name="deploy-war-local" depends="war">
         <copy file="${war.dir}/HUMServer.war" todir="${webapps.dir}"/>
     </target>
 	

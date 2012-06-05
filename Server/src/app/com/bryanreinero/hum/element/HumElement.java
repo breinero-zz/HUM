@@ -1,7 +1,8 @@
 package com.bryanreinero.hum.element;
 
+import com.bryanreinero.hum.element.http.*;
+import com.bryanreinero.hum.element.persistence.*;
 import com.bryanreinero.hum.visitor.Visitable;
-import com.google.code.morphia.annotations.Embedded;
 
 public abstract class HumElement implements  Visitable {
 	
@@ -79,13 +80,13 @@ public abstract class HumElement implements  Visitable {
 	public void addChild(RequestHost element) {
         throw new IllegalArgumentException();
     }
-	public void addChild(RequestURL element) {
+	public void addChild(RequestMethod element) {
         throw new IllegalArgumentException();
     }
 	public void addChild(RequestURLPage element) {
         throw new IllegalArgumentException();
     }
-	public void addChild(RequestURLPath element) {
+	public void addChild(RequestURI element) {
         throw new IllegalArgumentException();
     }
 	public void addChild(RequestURLProtocol element) {
@@ -133,13 +134,13 @@ public abstract class HumElement implements  Visitable {
 	public void addChild(Input element) {
 		throw new IllegalArgumentException();
 	}
-	public void addChild(Replacement element)  {
+	public void addChild(RegularExpression element)  {
 		throw new IllegalArgumentException();
 	}
 	public void addChild(Substitute element)  {
 		throw new IllegalArgumentException();
 	}
-	public void addChild(Target element)  {
+	public void addChild(Pattern element)  {
 		throw new IllegalArgumentException();
 	}
 
@@ -156,6 +157,26 @@ public abstract class HumElement implements  Visitable {
 	}
 
 	public void addChild(GetCookie element) {
+		throw new IllegalArgumentException();
+	}
+
+	public void addChild(GetData element) {
+		throw new IllegalArgumentException();
+	}
+
+	public void addChild(Fields element) {
+		throw new IllegalArgumentException();
+	}
+
+	public void addChild(Update element) {
+		throw new IllegalArgumentException();
+	}
+
+	public void addChild(Query element) {
+		throw new IllegalArgumentException();
+	}
+
+	public void addChild(SetData element) {
 		throw new IllegalArgumentException();
 	}
 }

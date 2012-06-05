@@ -1,10 +1,10 @@
-package com.bryanreinero.hum.element;
+package com.bryanreinero.hum.element.persistence;
 
+import com.bryanreinero.hum.element.HumElement;
+import com.bryanreinero.hum.element.MixedContentElement;
 import com.bryanreinero.hum.visitor.Visitor;
-import com.google.code.morphia.annotations.Embedded;
 
-@Embedded
-public class RequestURLPort extends HumElement {
+public class Update extends MixedContentElement {
 
 	@Override
 	public void accept(Visitor visitor) {

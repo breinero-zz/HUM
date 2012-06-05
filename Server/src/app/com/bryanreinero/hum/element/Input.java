@@ -15,5 +15,4 @@ public class Input extends MixedContentElement {
 	public void accept(Visitor visitor) {
 		visitor.visit(this);
 	}
-
 }

@@ -4,13 +4,13 @@ import com.bryanreinero.hum.visitor.Visitor;
 import com.google.code.morphia.annotations.Embedded;
 
 @Embedded
-public class Replacement extends HumElement {
+public class RegularExpression extends HumElement {
 	
-	private Target target = null;
+	private Pattern pattern = null;
 	private Substitute substitute = null;
 
-	public Target getTarget() {
-		return target;
+	public Pattern getPattern() {
+		return pattern;
 	}
 
 	public Substitute getSubstitute() {
@@ -29,11 +29,11 @@ public class Replacement extends HumElement {
 	
 	@Override
 	public void addChild(Substitute element){
-		this.substitute = element;
+		substitute = element;
 	}
 	
 	@Override
-	public void addChild(Target element){
-		this.target = element;
+	public void addChild(Pattern element){
+		pattern = element;
 	}
 }
