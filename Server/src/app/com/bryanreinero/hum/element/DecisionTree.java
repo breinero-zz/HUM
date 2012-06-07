@@ -91,12 +91,7 @@ public class DecisionTree extends HumElement {
 	}
 
 	@Override
-	public void addChild(Deterministic element){
-		children.add(element);
-	}
-	
-	@Override
-	public void addChild(NonDetermintistic element){
+	public void addChild(If element){
 		children.add(element);
 	}
 	
@@ -126,7 +121,7 @@ public class DecisionTree extends HumElement {
 	}
 	
 	@Override
-	public void addChild(Path element){
+	public void addChild(Block element){
 		children.add(element);
 	}
 	

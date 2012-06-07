@@ -168,16 +168,6 @@ public class XMLParser extends DefaultHandler implements Deserializer<String, De
 			}
 		});
 		
-		elements.put("Deterministic", new HumSAXHandler() {
-			public void handleEnd(XMLParser parser) throws Exception {
-				parser.unite();
-			}
-
-			public void handleStart(XMLParser parser, Attributes atts) throws Exception {
-				parser.stack.push(new Deterministic());
-			}
-		});
-		
 		elements.put("Else", new HumSAXHandler()
         {
             public void handleEnd(XMLParser parser) throws Exception {
@@ -288,27 +278,6 @@ public class XMLParser extends DefaultHandler implements Deserializer<String, De
             }
         });
 		
-		elements.put("NonDetermintistic", new HumSAXHandler()
-        {
-            public void handleEnd(XMLParser parser) throws Exception {
-                NonDetermintistic randomNode = (NonDetermintistic)parser.stack.pop();
-                randomNode.initialize();
-                randomNode.addParent(parser.stack.peek());
-            }
-            
-            public void handleStart(XMLParser parser, Attributes atts) throws Exception {
-                
-                String id = atts.getValue( "id" );
-                
-                if(id == null || id.length() == 0)
-                    throw new SAXException("illegal id");
-                
-                NonDetermintistic node = new NonDetermintistic();
-                node.setId(id);
-                parser.stack.push(node);
-            }
-        });
-		
 		elements.put("Or",
                 new HumSAXHandler()
         {
@@ -323,26 +292,14 @@ public class XMLParser extends DefaultHandler implements Deserializer<String, De
             }
         });
 		
-		elements.put("Path", new HumSAXHandler()
+		elements.put("Block", new HumSAXHandler()
         {
             public void handleEnd(XMLParser parser) throws Exception {
                 parser.unite();
             }
             
             public void handleStart(XMLParser parser, Attributes atts) throws Exception {
-                String id = atts.getValue( "id" );
-                String weight = atts.getValue( "weight" );
-                
-                if(id == null || id.length() == 0)
-                    throw new SAXException("Bad path id");
-                
-                if(weight == null || weight.length() == 0)
-                        throw new SAXException("Bad path weight");
-                
-                Path path = new Path();
-                path.setWeight( Integer.parseInt(weight));
-                path.setId(id);
-                parser.stack.push(path);
+                parser.stack.push(new Block());
             }
         });
 
@@ -401,6 +358,17 @@ public class XMLParser extends DefaultHandler implements Deserializer<String, De
             
             public void handleStart(XMLParser parser, Attributes atts) throws Exception {
                 parser.stack.push(new RequestBody());
+            }
+        });
+		
+		elements.put("RequestContentType", new HumSAXHandler()
+        {
+            public void handleEnd(XMLParser parser) throws Exception {
+                parser.unite();
+            }
+            
+            public void handleStart(XMLParser parser, Attributes atts) throws Exception {
+                parser.stack.push(new RequestContentType());
             }
         });
 
@@ -628,6 +596,17 @@ public class XMLParser extends DefaultHandler implements Deserializer<String, De
             	if(type != null && type.length() != 0)
             		element.setType(type);
                 parser.stack.push(element);
+            }
+        });
+		
+		elements.put("SetData", new HumSAXHandler()
+        {
+            public void handleEnd(XMLParser parser) throws Exception {
+                parser.unite();
+            }
+            
+            public void handleStart(XMLParser parser, Attributes atts) throws Exception {
+                parser.stack.push(new SetData());
             }
         });
 		

@@ -1,5 +1,9 @@
 package com.bryanreinero.hum.server;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -17,6 +21,7 @@ import com.bryanreinero.hum.element.http.*;
 import com.bryanreinero.hum.element.persistence.Fields;
 import com.bryanreinero.hum.element.persistence.GetData;
 import com.bryanreinero.hum.element.persistence.Query;
+import com.bryanreinero.hum.element.persistence.PutData;
 import com.bryanreinero.hum.element.persistence.SetData;
 import com.bryanreinero.hum.element.persistence.Update;
 import com.bryanreinero.hum.visitor.*;
@@ -37,12 +42,12 @@ public class Executor implements Visitor {
 	private DBCollection collection;
 	
 	private HttpServletRequest req;
+	private String requestBody = null;
 	private Response response = null; 
-	private Stack<Object> stack = new Stack<Object>();
 	
-	private Random randGen = new Random();
-	private ArrayList<String> executionPath;
+	private Stack<Object> stack = new Stack<Object>();
 	private HashMap<String, String> variables;
+	private Random randGen = new Random();
 
 	private GeoLocation geoLocation;
 	
@@ -51,7 +56,6 @@ public class Executor implements Visitor {
 	public Executor(HttpServletRequest req) {
 		this.req = req;
 		this.geoLocation = GeoLocation.getLocation(req);
-		this.executionPath = new ArrayList<String>();
 		this.response = new Response();
 		
 		try {
@@ -61,6 +65,40 @@ public class Executor implements Visitor {
 		}catch (Exception e){
 			e.printStackTrace();
 		}
+	}
+	
+	private String getBody() {
+		if (requestBody == null) {
+			StringBuilder stringBuilder = new StringBuilder();
+			BufferedReader bufferedReader = null;
+			try {
+				InputStream inputStream = req.getInputStream();
+				if (inputStream != null) {
+					bufferedReader = new BufferedReader(new InputStreamReader(
+							inputStream));
+					char[] charBuffer = new char[128];
+					int bytesRead = -1;
+					while ((bytesRead = bufferedReader.read(charBuffer)) > 0) {
+						stringBuilder.append(charBuffer, 0, bytesRead);
+					}
+				} else {
+					stringBuilder.append("");
+				}
+			} catch(IOException ioe) {
+				//TODO: do something
+			}
+			finally {
+				if (bufferedReader != null) {
+					try {
+						bufferedReader.close();
+					} catch (IOException ex) {
+						//TODO: do something
+					}
+				}
+			}
+			requestBody = stringBuilder.toString();
+		}
+		return this.requestBody;
 	}
 	
 	private URL getRequestURL() {
@@ -193,26 +231,29 @@ public class Executor implements Visitor {
 		this.stack.push(this.geoLocation.getDMA());
 	}
 
-	@Override
-	public void visit(Deterministic aBean) {
-		
-		If ifElement = (If)aBean.getChildren().get(0);
-		Else elseElement = null;
-		
-		if(aBean.getChildren().size() == 2)
-			elseElement = (Else)aBean.getChildren().get(1);
-			
-		ifElement.accept(this);
-		
-		if( ((Boolean)this.stack.pop()).booleanValue() ) 
-			ifElement.getPath().accept(this);
-		else if(elseElement != null)
-			elseElement.accept(this);
-	}
+//	@Override
+//	public void visit(Deterministic element) {
+//		
+//		If ifElement = (If)element.getChildren().get(0);
+//		Else elseElement = null;
+//		
+//		if(element.getChildren().size() == 2)
+//			elseElement = (Else)element.getChildren().get(1);
+//			
+//		ifElement.accept(this);
+//		
+//		if( ((Boolean)this.stack.pop()).booleanValue() ) 
+//			ifElement.getPath().accept(this);
+//		else if(elseElement != null)
+//			elseElement.accept(this);
+//	}
 
 	@Override
-	public void visit(Else aBean) {
-		aBean.getPath().accept(this);
+	public void visit(Else element) {
+		if(element.getIf() != null)
+			element.getIf().accept(this);
+		else
+			element.getPath().accept(this);
 	}
 
 	@Override
@@ -238,8 +279,12 @@ public class Executor implements Visitor {
 	}
 
 	@Override
-	public void visit(If aBean) {
-		aBean.getChild().accept(this);
+	public void visit(If element) {
+		element.getChild().accept(this);
+		if( ((Boolean)this.stack.pop()).booleanValue() ) 
+			element.getPath().accept(this);
+		else if(element.getElse() != null)
+			element.getElse().accept(this);
 	}
 
 	@Override
@@ -258,22 +303,6 @@ public class Executor implements Visitor {
 	}
 
 	@Override
-	public void visit(NonDetermintistic aBean) {
-		int randValue = this.randGen.nextInt();
-		int cumulative = 0;
-		Iterator<Path> iterator = aBean.getPaths().iterator();
-		
-		while(iterator.hasNext()){
-			Path path = iterator.next();
-			cumulative += path.getWeight();
-			if(randValue <= cumulative){
-				path.accept(this);
-				break;
-			}
-		}
-	}
-
-	@Override
 	public void visit(Or aBean) {
 		boolean result = false;
 		
@@ -289,8 +318,7 @@ public class Executor implements Visitor {
 	}
 	
 	@Override
-	public void visit(Path aBean) {
-		this.executionPath.add(aBean.getId().toString());
+	public void visit(Block aBean) {
 		Iterator<HumElement> iterator = aBean.getChildren().iterator();
 		while(iterator.hasNext())
 			iterator.next().accept(this);
@@ -308,7 +336,7 @@ public class Executor implements Visitor {
 
 	@Override
 	public void visit(RequestBody element) {
-		// TODO Auto-generated method stub
+			stack.push(getBody());
 	}
 	
 	@Override
@@ -541,11 +569,17 @@ public class Executor implements Visitor {
 	}
 
 	@Override
-	public void visit(SetData element) {
+	public void visit(PutData element) {
 		element.getQuery().accept(this);
 		element.getUpdate().accept(this);
 		DBObject update = (DBObject)JSON.parse((String)this.stack.pop() );
 		DBObject query = (DBObject)JSON.parse((String)this.stack.pop() );
 
+		collection.update(query, update);
+	}
+	
+	@Override
+	public void visit(SetData element) {
+		collection.insert((DBObject)JSON.parse(handleMixedChildren(element.getChildren()) ));
 	}
 }

@@ -6,31 +6,44 @@ import com.google.code.morphia.annotations.Embedded;
 @Embedded
 public class If extends HumElement{
     private HumElement child;
-    private Path path;
+    private Block path;
+    private Else elseElement;
     
     @Override
     public void accept(Visitor visitor) {
         visitor.visit(this);
     }
     
-    public void addChild(Or element){  
-        child = element;
-    }
-    
+    @Override
     public void addChild(And element){  
         child = element;
     }
-
-    public void addChild(Path element) {
-    	 this.path = element;
+    
+    @Override
+    public void addChild(Else element){  
+    	elseElement = element;
+    }
+    
+    @Override
+    public void addChild(Or element){  
+        child = element;
     }
 
-    public Path getPath() {
+    @Override
+    public void addChild(Block element) {
+    	 path = element;
+    }
+
+    public Block getPath() {
         return path;
     }
     
     public HumElement getChild() {
         return child;
+    }
+    
+    public Else getElse(){
+    	return elseElement;
     }
 
 	@Override

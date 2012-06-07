@@ -12,13 +12,9 @@ import com.bryanreinero.hum.element.persistence.*;
 
 public interface Visitor {
     
-    public void visit(Deterministic element);
-    
     public void visit(If element);
     
-    public void visit(NonDetermintistic element);
-    
-    public void visit(Path element);
+    public void visit(Block element);
 
     public void visit(Or element);
 
@@ -126,5 +122,7 @@ public interface Visitor {
 	
 	public void visit(Update element);
 	
-	public void visit(SetData element);
+	public void visit(PutData element);
+
+	public void visit(SetData setData);
 }

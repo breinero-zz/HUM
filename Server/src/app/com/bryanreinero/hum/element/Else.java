@@ -5,20 +5,33 @@ import com.google.code.morphia.annotations.Embedded;
 
 @Embedded
 public class Else extends HumElement {
-    private Path path;
+    private Block path;
+    private If ifElement;
     
+    @Override
     public void accept(Visitor visitor) {
         visitor.visit(this);
     }
     
-    public void addChild(Path path) {
+    @Override
+    public void addChild(Block path) {
         this.path = path;
     }
 
-    public Path getPath() {
+    @Override
+    public void addChild(If element) {
+        this.ifElement = element;
+    }
+    
+    public Block getPath() {
         return path;
     }
     
+    public If getIf(){
+    	return ifElement;
+    }
+    
+    @Override
     public void addParent(HumElement element) throws IllegalArgumentException {
         element.addChild(this);
     }

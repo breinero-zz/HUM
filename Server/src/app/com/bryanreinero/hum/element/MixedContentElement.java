@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import com.bryanreinero.hum.element.http.*;
 import com.bryanreinero.hum.element.persistence.GetData;
+import com.bryanreinero.hum.element.persistence.PutData;
+import com.bryanreinero.hum.element.persistence.SetData;
 
 public abstract class MixedContentElement extends HumElement {
 	
@@ -37,7 +39,13 @@ public abstract class MixedContentElement extends HumElement {
 		children.add(element);
 	}
 	
+	@Override
 	public void addChild(Country element){
+		children.add(element);
+	}
+	
+	@Override
+	public void addChild(PutData element){
 		children.add(element);
 	}
 	
@@ -52,6 +60,16 @@ public abstract class MixedContentElement extends HumElement {
 	}
 	
 	@Override
+	public void addChild(RequestBody element){
+		children.add(element);
+	}
+	
+	@Override
+	public void addChild(RequestContentType element){
+		children.add(element);
+	}
+	
+	@Override
 	public void addChild(RequestHost element){
 		children.add(element);
 	}
@@ -61,19 +79,28 @@ public abstract class MixedContentElement extends HumElement {
 		children.add(element);
 	}
 	
+	@Override
 	public void addChild(RequestURI element){
 		children.add(element);
 	}
 	
+	@Override
 	public void addChild(RequestURLPage element){
 		children.add(element);
 	}
 	
+	@Override
 	public void addChild(RequestURLPort element){
 		children.add(element);
 	}
 	
+	@Override
 	public void addChild(RequestURLProtocol element){
+		children.add(element);
+	}
+	
+	@Override
+	public void addChild(SetData element){
 		children.add(element);
 	}
 	

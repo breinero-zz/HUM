@@ -11,6 +11,7 @@ public abstract class HumElement implements  Visitable {
 	public void addChild(HumElement element) {
         throw new IllegalArgumentException();
     }
+	
 	public void addChild(And element) {
         throw new IllegalArgumentException();
     }
@@ -24,9 +25,6 @@ public abstract class HumElement implements  Visitable {
         throw new IllegalArgumentException();
     }
 	public void addChild(Compare element) {
-        throw new IllegalArgumentException();
-    }
-	public void addChild(Deterministic element) {
         throw new IllegalArgumentException();
     }
 	public void addChild(Continent element) {
@@ -59,10 +57,7 @@ public abstract class HumElement implements  Visitable {
 	public void addChild(Or element) {
         throw new IllegalArgumentException();
     }
-	public void addChild(Path element) {
-        throw new IllegalArgumentException();
-    }
-	public void addChild(NonDetermintistic element) {
+	public void addChild(Block element) {
         throw new IllegalArgumentException();
     }
 	public void addChild(RandomNumber element) {
@@ -72,6 +67,9 @@ public abstract class HumElement implements  Visitable {
         throw new IllegalArgumentException();
     }
 	public void addChild(RequestBody element) {
+        throw new IllegalArgumentException();
+    }
+	public void addChild(RequestContentType element) {
         throw new IllegalArgumentException();
     }
 	public void addChild(RequestHeader element) {
@@ -176,7 +174,16 @@ public abstract class HumElement implements  Visitable {
 		throw new IllegalArgumentException();
 	}
 
+	public void addChild(PutData element) {
+		throw new IllegalArgumentException();
+	}
+	
 	public void addChild(SetData element) {
 		throw new IllegalArgumentException();
 	}
+
+	public void addChild(RequestURLPort element) {
+		throw new IllegalArgumentException();
+	}
+
 }
