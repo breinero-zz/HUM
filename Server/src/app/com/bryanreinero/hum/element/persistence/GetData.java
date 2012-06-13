@@ -1,9 +1,10 @@
 package com.bryanreinero.hum.element.persistence;
 
 import com.bryanreinero.hum.element.HumElement;
+import com.bryanreinero.hum.element.Name;
 import com.bryanreinero.hum.visitor.Visitor;
 
-public class GetData extends HumElement {
+public class GetData extends PersistenceElement {
 
 	String type = null;
 	Query query;
@@ -16,7 +17,7 @@ public class GetData extends HumElement {
 	public Fields getFields() {
 		return fields;
 	}
-
+	
 	public String getType() {
 		return type;
 	}

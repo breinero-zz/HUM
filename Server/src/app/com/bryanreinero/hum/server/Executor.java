@@ -9,7 +9,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Random;
 import java.util.Stack;
 
@@ -37,10 +36,6 @@ import java.util.regex.Matcher;
 
 public class Executor implements Visitor {
 
-	private Mongo mongo;
-	private DB db;
-	private DBCollection collection;
-	
 	private HttpServletRequest req;
 	private String requestBody = null;
 	private Response response = null; 
@@ -57,14 +52,6 @@ public class Executor implements Visitor {
 		this.req = req;
 		this.geoLocation = GeoLocation.getLocation(req);
 		this.response = new Response();
-		
-		try {
-		mongo = new Mongo();
-		db = mongo.getDB("configurations");
-		collection = db.getCollection("ConfigurationTree");
-		}catch (Exception e){
-			e.printStackTrace();
-		}
 	}
 	
 	private String getBody() {
@@ -230,24 +217,7 @@ public class Executor implements Visitor {
 	public void visit(DMA aBean) {
 		this.stack.push(this.geoLocation.getDMA());
 	}
-
-//	@Override
-//	public void visit(Deterministic element) {
-//		
-//		If ifElement = (If)element.getChildren().get(0);
-//		Else elseElement = null;
-//		
-//		if(element.getChildren().size() == 2)
-//			elseElement = (Else)element.getChildren().get(1);
-//			
-//		ifElement.accept(this);
-//		
-//		if( ((Boolean)this.stack.pop()).booleanValue() ) 
-//			ifElement.getPath().accept(this);
-//		else if(elseElement != null)
-//			elseElement.accept(this);
-//	}
-
+	
 	@Override
 	public void visit(Else element) {
 		if(element.getIf() != null)
@@ -495,7 +465,7 @@ public class Executor implements Visitor {
 	public void visit(Name element) {
 		stack.push(handleMixedChildren(element.getChildren()));
 	}
-
+	
 	@Override
 	public void visit(RegularExpression element) {
 		int group = element.getPattern().getGroup();
@@ -544,6 +514,9 @@ public class Executor implements Visitor {
 
 	@Override
 	public void visit(GetData element) {
+		
+		element.getName().accept(this);
+		DBCollection collection = HUMServer.getDataService((String)stack.pop());
 		DBCursor results;
 		element.getQuery().accept(this);
 		DBObject query = (DBObject)JSON.parse((String)this.stack.pop() );
@@ -575,11 +548,14 @@ public class Executor implements Visitor {
 		DBObject update = (DBObject)JSON.parse((String)this.stack.pop() );
 		DBObject query = (DBObject)JSON.parse((String)this.stack.pop() );
 
-		collection.update(query, update);
+		element.getName().accept(this);
+		HUMServer.getDataService((String)stack.pop()).update(query, update);
 	}
 	
 	@Override
 	public void visit(SetData element) {
-		collection.insert((DBObject)JSON.parse(handleMixedChildren(element.getChildren()) ));
+		element.getValue().accept(this);
+		element.getName().accept(this);
+		HUMServer.getDataService((String)stack.pop()).insert((DBObject)JSON.parse( (String)stack.pop() ));
 	}
 }

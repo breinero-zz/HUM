@@ -533,10 +533,11 @@ public class XMLParser extends DefaultHandler implements Deserializer<String, De
 		elements.put("Pattern", new HumSAXHandler()
         {
             public void handleEnd(XMLParser parser) throws Exception {
-                parser.unite();
+            	parser.unite();
             }
             
             public void handleStart(XMLParser parser, Attributes atts) throws Exception {
+            	
             	Pattern pattern = new Pattern();
             	int group;
             	try{
@@ -587,7 +588,7 @@ public class XMLParser extends DefaultHandler implements Deserializer<String, De
 		elements.put("GetData", new HumSAXHandler()
         {
             public void handleEnd(XMLParser parser) throws Exception {
-                parser.unite();
+            	parser.unite();
             }
             
             public void handleStart(XMLParser parser, Attributes atts) throws Exception {

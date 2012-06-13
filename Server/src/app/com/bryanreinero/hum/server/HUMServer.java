@@ -1,6 +1,7 @@
 package com.bryanreinero.hum.server;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServlet;
@@ -12,16 +13,24 @@ import org.xml.sax.SAXException;
 import com.bryanreinero.hum.element.DecisionTree;
 import com.bryanreinero.hum.parser.XMLParser;
 import com.bryanreinero.hum.persistence.ConfigDAO;
+import com.bryanreinero.hum.persistence.DataService;
+import com.mongodb.DBCollection;
+import com.mongodb.Mongo;
 import com.mongodb.MongoException;
 
 public class HUMServer extends HttpServlet {
 
 	private static final long serialVersionUID = -6170830231570604200L;
 	public static DataAccessObject<String, DecisionTree> store; 
+	private static final String rootTreeId = "root";
+	
+	private static DataService dataServices;
 	
 	public void init(ServletConfig config){
-		ConfigDAO<String, DecisionTree> treestore = new ConfigDAO <String, DecisionTree>();
 		try {
+			Mongo mongo = new Mongo();
+			dataServices = new DataService(mongo);
+			ConfigDAO<String, DecisionTree> treestore = new ConfigDAO <String, DecisionTree>(mongo, "configurations");
 			treestore.setDeserializer(new XMLParser());
 			store = treestore;
 		} catch (SAXException e) {
@@ -30,12 +39,15 @@ public class HUMServer extends HttpServlet {
 		} catch (MongoException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}	
 	}
 	
 	public void service(HttpServletRequest req, HttpServletResponse resp) {
 		Executor executor = new Executor(req);
-		store.get("root").accept(executor);
+		store.get(rootTreeId).accept(executor);
 		
 		try{
 			Responder.respond(resp, executor.getResponse());
@@ -43,5 +55,9 @@ public class HUMServer extends HttpServlet {
 			//TODO: real exception handling needs to happen here
 			ioe.printStackTrace();
 		}
+	}
+	
+	public static DBCollection getDataService(String namespace){
+		return dataServices.getDataStore(namespace);
 	}
 }

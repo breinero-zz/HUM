@@ -3,7 +3,7 @@ package com.bryanreinero.hum.element.persistence;
 import com.bryanreinero.hum.element.HumElement;
 import com.bryanreinero.hum.visitor.Visitor;
 
-public class PutData extends HumElement {
+public class PutData extends PersistenceElement {
 	
 	Query query;
 	Update update;

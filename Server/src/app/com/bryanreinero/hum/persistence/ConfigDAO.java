@@ -1,7 +1,5 @@
 package com.bryanreinero.hum.persistence;
 
-import java.net.UnknownHostException;
-
 import com.bryanreinero.hum.element.DecisionTree;
 import com.bryanreinero.hum.server.DataAccessObject;
 
@@ -13,7 +11,6 @@ import com.mongodb.MongoException;
 
 public class ConfigDAO<K, E> implements DataAccessObject<K, E> {
 
-	private Mongo connection;
 	private Datastore ds;
 	private Morphia morphia = new Morphia();
 	private Deserializer<String, DecisionTree> deserializer;
@@ -26,14 +23,10 @@ public class ConfigDAO<K, E> implements DataAccessObject<K, E> {
 		this.deserializer = deserializer;
 	}
 
-	public ConfigDAO() {
+	public ConfigDAO(Mongo connection, String collection) {
 		try {
-			connection = new Mongo( "localhost" , 27017 );
-			ds = morphia.createDatastore(connection, "configurations");
+			ds = morphia.createDatastore(connection, collection);
 			morphia.map(ConfigurationTree.class);
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (MongoException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -43,7 +36,7 @@ public class ConfigDAO<K, E> implements DataAccessObject<K, E> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public E get(K key) {
-		ConfigurationTree config = ds.find(ConfigurationTree.class).field("name").equal(key).get();
+		ConfigurationTree config = ds.find(ConfigurationTree.class, "name", key).get();
 		return (E)deserializer.deserialize(config.getValue());
 	}
 
