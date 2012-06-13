@@ -13,8 +13,7 @@ public class DataService {
 	}
 	
 	public DBCollection getDataStore(String namespace){
-		Matcher match = pattern.matcher(namespace);
-		int count = match.groupCount();
+		Matcher match = pattern.matcher(namespace);	
 		if(match.matches()){
 			String database = match.group(1);
 			
