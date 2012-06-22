@@ -1,0 +1,27 @@
+<DecisionTree name="root" timetolive="60" >
+<SubTree>StandardCookie</SubTree>
+<SetVariable>
+	<Name>client_id</Name>
+	<Value><RegularExpression>
+			<Input><RequestURI/></Input>
+			<Pattern>/HUMServer/hum/(\d*)</Pattern>
+			</RegularExpression></Value>
+</SetVariable>
+<SetVariable>
+	<Name>resource</Name>
+	<Value><RegularExpression>
+		<Input><RequestURI/></Input>
+        <Pattern><![CDATA[/HUMServer/hum/\d*/(\w*)]]></Pattern>
+		</RegularExpression></Value>
+</SetVariable>
+<SetVariable>
+	<Name>page</Name>
+	<Value><RegularExpression>
+            <Input><RequestURI/></Input>
+            <Pattern><![CDATA[/HUMServer/hum/\d*/\w*/(\w*)]]></Pattern>
+			</RegularExpression></Value>
+</SetVariable>
+
+<SubTree><GetVariable>resource</GetVariable></SubTree>
+
+</DecisionTree>

@@ -1,0 +1,61 @@
+<DecisionTree name="display" timetolive="60" >
+
+<If>
+<Or>
+<Compare op="seq">
+<Value><RequestParameter>action</RequestParameter></Value>
+<Value>impression</Value>
+</Compare>
+</Or>
+<Block>
+    <SetData>
+        <Name>hum.logs</Name>
+        <Value>{ date : { "$date" : "<DateTime/>" }, userid : <GetVariable>HUMCookie</GetVariable>, client : <GetVariable>client_id</GetVariable>, action : "impression", site : "<RequestParameter>site</RequestParameter>", creative : "<GetVariable>page</GetVariable>" }</Value>
+    </SetData>
+    <ResponseBody><![CDATA[<a href="http://localhost:8080/HUMServer/hum/0/display/Dynamic300x194?action=click&site=yahoo"><img src="http://localhost/~breinero/New-York-Times-Logo-300x194"
+  width="300" height="194" border="0" /></a>]]></ResponseBody>
+    <!-- Set the response headers -->
+    <ResponseHeader>
+    <Name>Content-Type</Name>
+    <Value><![CDATA[text/html]]></Value>
+    </ResponseHeader>
+    <ResponseCode>200</ResponseCode>
+</Block>
+<Else>
+    <If>
+    <Or>
+    <Compare op="seq">
+    <Value><RequestParameter>action</RequestParameter></Value>
+    <Value>click</Value>
+    </Compare>
+    </Or>
+    <Block>
+    <SetData>
+        <Name>hum.logs</Name>
+        <Value>{ date : { "$date" : "<DateTime/>" }, userid : <GetVariable>HUMCookie</GetVariable>, client : <GetVariable>client_id</GetVariable>, action : "click", site : "<RequestParameter>site</RequestParameter>", creative : "<GetVariable>page</GetVariable>" }</Value>
+    </SetData>
+    <!-- Set the response headers -->
+    <ResponseHeader>
+    <Name>Location</Name>
+    <Value><![CDATA[http://nytimes.com/]]></Value>
+    </ResponseHeader>
+    <ResponseCode>302</ResponseCode>
+    </Block>
+    <Else>
+        <If>
+        <Or>
+        <Compare op="seq">
+        <Value><RequestParameter>action</RequestParameter></Value>
+        <Value>conversion</Value>
+        </Compare>
+        </Or>
+        <Block>
+        <SubTree>conversion</SubTree>
+        </Block>
+        </If>
+    </Else>
+    </If>
+</Else>
+</If>
+
+</DecisionTree> 

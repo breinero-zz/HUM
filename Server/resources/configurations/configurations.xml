@@ -1,0 +1,54 @@
+<DecisionTree name="configurations" timetolive="60" >
+<If>
+<Or>
+<Compare op="seq">
+<Value><RequestMethod/></Value>
+<Value>GET</Value>
+</Compare>
+</Or>
+
+<Block>
+    <If><Or><Compare op="seq"><Value><GetVariable>page</GetVariable></Value><Value></Value></Compare></Or>
+        <Block>
+        <ResponseBody><GetData>
+        <Name>configurations.ConfigurationTree</Name>
+        <Query>{"client" : <GetVariable>client_id</GetVariable>}</Query>
+        <Fields>{client : 0, value : 0}</Fields>
+        </GetData></ResponseBody>
+        </Block>
+
+    <Else>
+        <Block>
+        <ResponseBody><GetData>
+        <Name>configurations.ConfigurationTree</Name>
+        <Query>{"name" : "<GetVariable>page</GetVariable>", "client" : <GetVariable>client_id</GetVariable>}</Query>
+        <Fields>{_id : 0,value : 1}</Fields>
+        </GetData></ResponseBody>
+        </Block>
+    </Else>
+    </If>
+
+    <!-- Set the response headers -->
+    <ResponseHeader>
+    <Name>Content-Type</Name>
+    <Value><![CDATA[application/json]]></Value>
+    </ResponseHeader>
+</Block>
+
+<Else>
+    <If><Or><Compare op="seq"><Value><RequestMethod/></Value><Value>PUT</Value></Compare></Or>
+    <Block>
+    <SetData>
+    <Name>configurations.ConfigurationTree</Name>
+    <Value>{"name" : "<GetVariable>page</GetVariable>", "client" : <GetVariable>client_id</GetVariable>, "type" : "<RequestContentType/>", "value" : "<RequestBody/>"}</Value>
+    </SetData>
+    <SetData>
+    <Name>administrator.log</Name>
+    <Value>{"client" : <GetVariable>client_id</GetVariable>, "action" : "<RequestMethod/> <GetVariable>page</GetVariable>"}</Value>
+    </SetData>
+    <ResponseCode>200</ResponseCode>
+    </Block>
+    </If>
+</Else>
+</If>
+</DecisionTree>

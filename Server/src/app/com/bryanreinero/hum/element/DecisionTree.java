@@ -4,10 +4,8 @@ import java.util.ArrayList;
 
 import org.bson.types.ObjectId;
 
-import com.bryanreinero.hum.element.http.Redirect;
-import com.bryanreinero.hum.element.http.ResponseBody;
-import com.bryanreinero.hum.element.http.ResponseHeader;
-import com.bryanreinero.hum.element.http.SetCookie;
+import com.bryanreinero.hum.element.http.*;
+import com.bryanreinero.hum.element.persistence.SetData;
 import com.bryanreinero.hum.visitor.Visitor;
 import com.google.code.morphia.annotations.*;
 
@@ -106,12 +104,22 @@ public class DecisionTree extends HumElement {
 	}
 	
 	@Override
+	public void addChild(ResponseCode element){
+		children.add(element);
+	}
+	
+	@Override
 	public void addChild(ResponseHeader element){
 		children.add(element);
 	}
 	
 	@Override
 	public void addChild(SetCookie element){
+		children.add(element);
+	}
+	
+	@Override
+	public void addChild(SetData element){
 		children.add(element);
 	}
 	

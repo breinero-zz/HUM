@@ -128,6 +128,17 @@ public class XMLParser extends DefaultHandler implements Deserializer<String, De
             }
         });
 
+		elements.put("DateTime", new HumSAXHandler()
+        {
+            public void handleEnd(XMLParser parser) throws Exception {
+            	parser.unite();
+            }
+            
+            public void handleStart(XMLParser parser, Attributes atts) throws Exception {
+            	parser.stack.push(new DateTime());
+            }
+        });
+
 		elements.put("DMA", new HumSAXHandler()
         {
             public void handleEnd(XMLParser parser) throws Exception {
@@ -155,6 +166,16 @@ public class XMLParser extends DefaultHandler implements Deserializer<String, De
 				tree.setName(name);
 				tree.setClient(Integer.parseInt(timeToLive));
 				parser.stack.push(tree);
+			}
+		});
+		
+		elements.put("Format", new HumSAXHandler() {
+			public void handleEnd(XMLParser parser) throws Exception {
+				parser.unite();
+			}
+
+			public void handleStart(XMLParser parser, Attributes atts) throws Exception {
+				parser.stack.push(new Format());
 			}
 		});
 		
@@ -264,6 +285,17 @@ public class XMLParser extends DefaultHandler implements Deserializer<String, De
             
             public void handleStart(XMLParser parser, Attributes atts) throws Exception {
                 parser.stack.push(new Language());
+            }
+        });
+
+		elements.put("Limit", new HumSAXHandler()
+        {
+            public void handleEnd(XMLParser parser) throws Exception {
+                parser.unite();
+            }
+            
+            public void handleStart(XMLParser parser, Attributes atts) throws Exception {
+                parser.stack.push(new Limit());
             }
         });
 		
@@ -394,6 +426,17 @@ public class XMLParser extends DefaultHandler implements Deserializer<String, De
             }
         });
 		
+		elements.put("RequestParameter", new HumSAXHandler()
+        {
+            public void handleEnd(XMLParser parser) throws Exception {
+                parser.unite();
+            }
+            
+            public void handleStart(XMLParser parser, Attributes atts) throws Exception {
+                parser.stack.push(new RequestParameter());
+            }
+        });
+		
 		elements.put("RequestMethod", new HumSAXHandler()
         {
             public void handleEnd(XMLParser parser) throws Exception {
@@ -496,6 +539,17 @@ public class XMLParser extends DefaultHandler implements Deserializer<String, De
                 parser.stack.push(new SetVariable());
             }
         });
+		
+		elements.put("Sort", new HumSAXHandler()
+        {
+            public void handleEnd(XMLParser parser) throws Exception {
+                  parser.unite();
+            }
+            
+            public void handleStart(XMLParser parser, Attributes atts) throws Exception {
+                parser.stack.push(new Sort());
+            }
+        });
 
 		elements.put("State", new HumSAXHandler()
         {
@@ -505,17 +559,6 @@ public class XMLParser extends DefaultHandler implements Deserializer<String, De
             
             public void handleStart(XMLParser parser, Attributes atts) throws Exception {
                 parser.stack.push(new State());
-            }
-        });
-		
-		elements.put("StringReplace", new HumSAXHandler()
-        {
-            public void handleEnd(XMLParser parser) throws Exception {
-                parser.unite();
-            }
-            
-            public void handleStart(XMLParser parser, Attributes atts) throws Exception {
-                parser.stack.push(new StringReplace());
             }
         });
 		
@@ -537,18 +580,7 @@ public class XMLParser extends DefaultHandler implements Deserializer<String, De
             }
             
             public void handleStart(XMLParser parser, Attributes atts) throws Exception {
-            	
-            	Pattern pattern = new Pattern();
-            	int group;
-            	try{
-            	if(atts.getValue("group") != null){
-            		group = Integer.parseInt(atts.getValue("group"));
-            		pattern.setGroup(group);
-            	}
-            	}catch(NumberFormatException e){
-            		e.printStackTrace();
-            	}
-                parser.stack.push(pattern);
+                parser.stack.push(new Pattern());
             }
         });
 

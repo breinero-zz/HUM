@@ -1,0 +1,10 @@
+<DecisionTree name="search" timetolive="60" >
+<SetVariable>
+	<Name>referer</Name>
+	<Value><RegularExpression>
+<Input><RequestHeader>referer</RequestHeader></Input>
+<Pattern><![CDATA[q=([^&]+)]]></Pattern>
+</RegularExpression></Value>
+</SetVariable>
+<ResponseBody>referring URL: <GetVariable>referer</GetVariable></ResponseBody>
+</DecisionTree>

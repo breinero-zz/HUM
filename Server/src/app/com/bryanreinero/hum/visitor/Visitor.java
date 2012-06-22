@@ -68,8 +68,6 @@ public interface Visitor {
 
 	public void visit(Else element);
 
-	public void visit(StringReplace element);
-
 	public void visit(ResponseCode element);
 
 	public void visit(ResponseHeader element);
@@ -125,4 +123,14 @@ public interface Visitor {
 	public void visit(PutData element);
 
 	public void visit(SetData setData);
+
+	public void visit(DateTime dateTime);
+
+	public void visit(Format format);
+
+	public void visit(RequestParameter requestParameter);
+
+	public void visit(Sort sort);
+
+	public void visit(Limit limit);
 }

@@ -11,7 +11,6 @@ public abstract class HumElement implements  Visitable {
 	public void addChild(HumElement element) {
         throw new IllegalArgumentException();
     }
-	
 	public void addChild(And element) {
         throw new IllegalArgumentException();
     }
@@ -78,6 +77,9 @@ public abstract class HumElement implements  Visitable {
 	public void addChild(RequestHost element) {
         throw new IllegalArgumentException();
     }
+	public void addChild(RequestParameter element) {
+		throw new IllegalArgumentException();
+	}
 	public void addChild(RequestMethod element) {
         throw new IllegalArgumentException();
     }
@@ -106,9 +108,6 @@ public abstract class HumElement implements  Visitable {
         throw new IllegalArgumentException();
     }
 	public void addChild(State element) {
-        throw new IllegalArgumentException();
-    }
-	public void addChild(StringReplace element) {
         throw new IllegalArgumentException();
     }
 	public void addChild(UserAgent element) {
@@ -181,8 +180,20 @@ public abstract class HumElement implements  Visitable {
 	public void addChild(SetData element) {
 		throw new IllegalArgumentException();
 	}
+	
+	public void addChild(Sort element) {
+		throw new IllegalArgumentException();
+	}
 
 	public void addChild(RequestURLPort element) {
+		throw new IllegalArgumentException();
+	}
+
+	public void addChild(DateTime element) {
+		throw new IllegalArgumentException();
+	}
+
+	public void addChild(Limit element) {
 		throw new IllegalArgumentException();
 	}
 

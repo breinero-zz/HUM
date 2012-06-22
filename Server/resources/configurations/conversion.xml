@@ -1,0 +1,22 @@
+<DecisionTree name="conversion" timetolive="60" >
+<SetVariable>
+    <Name>lastClick</Name>
+    <Value><GetData>
+	<Name>hum.logs</Name>
+   	<Query>{action : "click", userid : null}</Query>
+    <Fields>{ _id : 0, site : 1, creative : 1}</Fields>
+    <Sort>{date : -1}</Sort>
+    <Limit>1</Limit>
+    </GetData></Value>
+</SetVariable>
+    
+<SetData>
+    <Name>hum.logs</Name>
+    <Value>{ date : { "$date" : "<DateTime/>" }, userid : <GetVariable>HUMCookie</GetVariable>, client : <GetVariable>client_id</GetVariable>, action : "conversion", <RegularExpression>
+    <Input><GetVariable>lastClick</GetVariable></Input>
+	<Pattern><![CDATA[\{([^\}]+)\}]]></Pattern>
+</RegularExpression> }</Value>
+</SetData>
+
+<ResponseCode>204</ResponseCode>
+</DecisionTree>

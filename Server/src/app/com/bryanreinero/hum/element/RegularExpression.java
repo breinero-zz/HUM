@@ -1,5 +1,8 @@
 package com.bryanreinero.hum.element;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.bryanreinero.hum.visitor.Visitor;
 import com.google.code.morphia.annotations.Embedded;
 
@@ -7,14 +10,19 @@ import com.google.code.morphia.annotations.Embedded;
 public class RegularExpression extends HumElement {
 	
 	private Pattern pattern = null;
-	private Substitute substitute = null;
+	private Input input = null;
+	private List<Substitute> substitutes = new ArrayList<Substitute>();
 
 	public Pattern getPattern() {
 		return pattern;
 	}
 
-	public Substitute getSubstitute() {
-		return substitute;
+	public List<Substitute> getSubstitutes() {
+		return substitutes;
+	}
+	
+    public Input getInput() {
+		return input;
 	}
 
 	@Override
@@ -29,11 +37,16 @@ public class RegularExpression extends HumElement {
 	
 	@Override
 	public void addChild(Substitute element){
-		substitute = element;
+		substitutes.add(element);
 	}
 	
 	@Override
 	public void addChild(Pattern element){
 		pattern = element;
+	}
+	
+	@Override
+	public void addChild(Input element){
+		this.input = element;
 	}
 }

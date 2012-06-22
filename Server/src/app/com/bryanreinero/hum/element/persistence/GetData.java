@@ -1,7 +1,6 @@
 package com.bryanreinero.hum.element.persistence;
 
 import com.bryanreinero.hum.element.HumElement;
-import com.bryanreinero.hum.element.Name;
 import com.bryanreinero.hum.visitor.Visitor;
 
 public class GetData extends PersistenceElement {
@@ -9,6 +8,8 @@ public class GetData extends PersistenceElement {
 	String type = null;
 	Query query;
 	Fields fields;
+	Sort sort;
+	Limit limit;
 	
 	public Query getQuery() {
 		return query;
@@ -16,6 +17,14 @@ public class GetData extends PersistenceElement {
 
 	public Fields getFields() {
 		return fields;
+	}
+
+	public Limit getLimit() {
+		return limit;
+	}
+	
+	public Sort getSort(){
+		return sort;
 	}
 	
 	public String getType() {
@@ -44,5 +53,15 @@ public class GetData extends PersistenceElement {
 	@Override
 	public void addChild(Fields element){
 		fields = element;
+	}
+	
+	@Override
+	public void addChild(Limit element){
+		limit = element;
+	}
+	
+	@Override
+	public void addChild(Sort element){
+		sort = element;
 	}
 }

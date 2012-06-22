@@ -21,6 +21,11 @@ public abstract class MixedContentElement extends HumElement {
 	}
 	
 	@Override
+	public void addChild(DateTime element){
+		children.add(element);
+	}
+	
+	@Override
 	public void addChild(GetCookie element){
 		children.add(element);
 	}
@@ -70,7 +75,16 @@ public abstract class MixedContentElement extends HumElement {
 	}
 	
 	@Override
+	public void addChild(RequestHeader element){
+		children.add(element);
+	}
+	
+	@Override
 	public void addChild(RequestHost element){
+		children.add(element);
+	}
+	
+	public void addChild(RequestParameter	 element){
 		children.add(element);
 	}
 	
@@ -105,10 +119,6 @@ public abstract class MixedContentElement extends HumElement {
 	}
 	
 	public void addChild(State element){
-		children.add(element);
-	}	
-	
-	public void addChild(StringReplace element){
 		children.add(element);
 	}
 	

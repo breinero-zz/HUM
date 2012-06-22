@@ -6,10 +6,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Random;
+import java.util.SimpleTimeZone;
 import java.util.Stack;
 
 import javax.servlet.http.Cookie;
@@ -17,18 +20,12 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.bryanreinero.hum.element.*;
 import com.bryanreinero.hum.element.http.*;
-import com.bryanreinero.hum.element.persistence.Fields;
-import com.bryanreinero.hum.element.persistence.GetData;
-import com.bryanreinero.hum.element.persistence.Query;
-import com.bryanreinero.hum.element.persistence.PutData;
-import com.bryanreinero.hum.element.persistence.SetData;
-import com.bryanreinero.hum.element.persistence.Update;
+import com.bryanreinero.hum.element.persistence.*;
 import com.bryanreinero.hum.visitor.*;
-import com.mongodb.DB;
+
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
-import com.mongodb.Mongo;
 import com.mongodb.util.JSON;
 
 import java.util.regex.Pattern;
@@ -360,14 +357,6 @@ public class Executor implements Visitor {
 	}
 
 	@Override
-	public void visit(StringReplace element) {
-		element.getInput().accept(this);
-		Iterator<RegularExpression> iterator = element.getReplacements().iterator();
-		while(iterator.hasNext())
-			iterator.next().accept(this);
-	}
-
-	@Override
 	public void visit(UserAgent aBean) {
 		this.stack.push(req.getHeader("User-Agent"));
 	}
@@ -442,10 +431,8 @@ public class Executor implements Visitor {
 	}
 
 	@Override
-	public void visit(RequestHeader aBean) {
-		aBean.getValue().accept(this);
-		aBean.getName().accept(this);
-		this.setVariable((String)stack.pop(), (String)stack.pop());
+	public void visit(RequestHeader element) {
+		stack.push(req.getHeader(handleMixedChildren(element.getChildren())));
 	}
 
 	public void setResponse(Response response) {
@@ -454,6 +441,11 @@ public class Executor implements Visitor {
 
 	public Response getResponse() {
 		return response;
+	}
+
+	@Override
+	public void visit(Limit element) {
+		this.stack.push(Integer.parseInt(handleMixedChildren(element.getChildren())));
 	}
 
 	@Override
@@ -468,23 +460,26 @@ public class Executor implements Visitor {
 	
 	@Override
 	public void visit(RegularExpression element) {
-		int group = element.getPattern().getGroup();
+		
 		element.getPattern().accept(this);
-		String regex = (String)stack.pop();
+		String patternS = (String)stack.pop();
+		Pattern pattern = Pattern.compile(patternS);
 		
-		Substitute substitute = element.getSubstitute();
+		element.getInput().accept(this);
+		String input = (String)stack.pop();
+		Matcher matcher = pattern.matcher(input);
 		
-		if(substitute != null ){
-			String replacement = (String)stack.pop();
-			String input = (String)stack.pop();
-			stack.push(input.replaceAll(regex, replacement));
+		if(element.getSubstitutes().size() != 0 ){
+			for(Substitute substitute : element.getSubstitutes()){
+				substitute.accept(this);
+				stack.push(matcher.replaceAll((String)stack.pop()));
+			}
 		}
 		else {
-			String input = (String)stack.pop();
-			Pattern pattern = Pattern.compile(regex);
-			Matcher matcher = pattern.matcher(input);
-			stack.push(((matcher.find())? matcher.group(group) : "" ));
+			if(matcher.find())
+				stack.push( matcher.group(1) );
 		}
+			
 	}
 
 	@Override
@@ -499,7 +494,8 @@ public class Executor implements Visitor {
 
 	@Override
 	public void visit(SubTree subTree) {
-		HUMServer.store.get(subTree.getId()).accept(this);
+		//HUMServer.store.get(subTree.getId()).accept(this);
+		HUMServer.store.get(handleMixedChildren(subTree.getChildren())).accept(this);
 	}
 
 	@Override
@@ -530,6 +526,16 @@ public class Executor implements Visitor {
 			results = collection.find(query);
 		}
 		
+		if(element.getSort() != null){
+			element.getSort().accept(this);
+			results.sort((DBObject)JSON.parse((String)stack.pop()));
+		}
+		
+		if(element.getLimit() != null){
+			element.getLimit().accept(this);
+			results.limit(((Integer)stack.pop()).intValue());
+		}
+		
 		StringBuffer sb = new StringBuffer();
 		for(DBObject result : results)
 			sb.append(result.toString());
@@ -557,5 +563,30 @@ public class Executor implements Visitor {
 		element.getValue().accept(this);
 		element.getName().accept(this);
 		HUMServer.getDataService((String)stack.pop()).insert((DBObject)JSON.parse( (String)stack.pop() ));
+	}
+	
+	@Override
+	public void visit(Sort element) {
+		stack.push(handleMixedChildren(element.getChildren()));
+	}
+
+	@Override
+	public void visit(DateTime element) {
+		SimpleDateFormat format = 
+			new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+		GregorianCalendar calendar = new GregorianCalendar();
+		calendar.setTimeZone(new SimpleTimeZone(0, "GMT"));
+        stack.push(format.format(calendar.getTime()));
+	}
+
+	@Override
+	public void visit(Format format) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visit(RequestParameter element) {
+		stack.push(req.getParameter(handleMixedChildren(element.getChildren())));
 	}
 }

@@ -1,19 +1,19 @@
 package com.bryanreinero.hum.element;
 
 import com.bryanreinero.hum.visitor.Visitor;
-import com.google.code.morphia.annotations.Embedded;
 
-@Embedded
-public class SubTree extends MixedContentElement {
-    private String id = null; 
-    
-	public String getId() {
-		return id;
-	}
+public class DateTime extends MixedContentElement {
+	
+	private Format format;
 
-	public void setId(String id) {
-		this.id = id;
+	public void addChild(Format format) {
+		this.format = format;
 	}
+	
+	public Format getFormat(){
+		return format;
+	}
+	
 
 	@Override
 	public void accept(Visitor visitor) {
@@ -24,4 +24,5 @@ public class SubTree extends MixedContentElement {
 	public void addParent(HumElement element) {
 		element.addChild(this);
 	}
+
 }
