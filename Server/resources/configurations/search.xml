@@ -1,10 +1,30 @@
 <DecisionTree name="search" timetolive="60" >
 <SetVariable>
-	<Name>referer</Name>
-	<Value><RegularExpression>
+	<Name>searchTerms</Name>
+	<Value><URLDecode><RegularExpression>
 <Input><RequestHeader>referer</RequestHeader></Input>
 <Pattern><![CDATA[q=([^&]+)]]></Pattern>
+</RegularExpression></URLDecode></Value>
+</SetVariable>
+
+<SetVariable>
+    <Name>site</Name>
+    <Value><RegularExpression>
+<Input><RequestHeader>referer</RequestHeader></Input>
+<Pattern><![CDATA[^https?://([^/]+)]]></Pattern>
 </RegularExpression></Value>
 </SetVariable>
-<ResponseBody>referring URL: <GetVariable>referer</GetVariable></ResponseBody>
+
+<ResponseBody>{ terms : "<GetVariable>searchTerms</GetVariable>" }</ResponseBody>
+<SetData>
+    <Name>hum.logs</Name>
+    <Value>{ date : { "$date" : "<DateTime/>" }, userid : <GetVariable>HUMCookie</GetVariable>, client : <GetVariable>client_id</GetVariable>, action : "natural search", site : "<GetVariable>site</GetVariable>", terms : "<GetVariable>searchTerms</GetVariable>" }</Value>
+</SetData>
+
+<ResponseHeader>
+<Name>Content-Length</Name>
+<Value>0</Value>
+</ResponseHeader> 
+
+<ResponseCode>200</ResponseCode>
 </DecisionTree>

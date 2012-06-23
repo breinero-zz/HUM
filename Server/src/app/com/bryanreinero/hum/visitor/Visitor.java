@@ -133,4 +133,8 @@ public interface Visitor {
 	public void visit(Sort sort);
 
 	public void visit(Limit limit);
+
+	public void visit(URLDecode urlDecode);
+
+	public void visit(URLEncode urlEncode);
 }

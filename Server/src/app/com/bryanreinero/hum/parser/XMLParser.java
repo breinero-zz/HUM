@@ -675,6 +675,28 @@ public class XMLParser extends DefaultHandler implements Deserializer<String, De
                 parser.stack.push(new Query());
             }
         });
+		
+		elements.put("URLDecode", new HumSAXHandler()
+        {
+            public void handleEnd(XMLParser parser) throws Exception {
+                parser.unite();
+            }
+            
+            public void handleStart(XMLParser parser, Attributes atts) throws Exception {
+                parser.stack.push(new URLDecode());
+            }
+        });
+		
+		elements.put("URLEncode", new HumSAXHandler()
+        {
+            public void handleEnd(XMLParser parser) throws Exception {
+                parser.unite();
+            }
+            
+            public void handleStart(XMLParser parser, Attributes atts) throws Exception {
+                parser.stack.push(new URLDecode());
+            }
+        });
 	}
 	
 	public void unite() {

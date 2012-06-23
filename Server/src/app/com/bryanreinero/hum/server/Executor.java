@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -14,6 +15,9 @@ import java.util.Iterator;
 import java.util.Random;
 import java.util.SimpleTimeZone;
 import java.util.Stack;
+
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -588,5 +592,25 @@ public class Executor implements Visitor {
 	@Override
 	public void visit(RequestParameter element) {
 		stack.push(req.getParameter(handleMixedChildren(element.getChildren())));
+	}
+
+	@Override
+	public void visit(URLDecode element) {
+		try {
+			stack.push(URLDecoder.decode(handleMixedChildren(element.getChildren()), "UTF-8"));
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void visit(URLEncode element) {
+		try {
+			stack.push(URLEncoder.encode(handleMixedChildren(element.getChildren()), "UTF-8"));
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

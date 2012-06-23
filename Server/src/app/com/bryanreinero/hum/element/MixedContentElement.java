@@ -121,6 +121,14 @@ public abstract class MixedContentElement extends HumElement {
 	public void addChild(State element){
 		children.add(element);
 	}
+
+	public void addChild(URLDecode element){
+		children.add(element);
+	}
+	
+	public void addChild(URLEncode element){
+		children.add(element);
+	}
 	
 	public void addChild(ZipCode element){
 		children.add(element);
