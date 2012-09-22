@@ -1,10 +1,12 @@
-package com.bryanreinero.hum.element;
+package com.bryanreinero.hum.element.geo;
 
+import com.bryanreinero.hum.element.HumElement;
 import com.bryanreinero.hum.visitor.*;
 import com.google.code.morphia.annotations.Embedded;
 
 @Embedded
-public class Carriers extends HumElement {
+public class Continent extends HumElement {
+
     @Override
     public void addParent(HumElement element) throws IllegalArgumentException {
         element.addChild(this);

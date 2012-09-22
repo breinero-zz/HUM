@@ -1,17 +1,20 @@
 package com.bryanreinero.hum.element;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import com.bryanreinero.hum.element.geo.City;
+import com.bryanreinero.hum.element.geo.Country;
+import com.bryanreinero.hum.element.geo.State;
+import com.bryanreinero.hum.element.geo.ZipCode;
 import com.bryanreinero.hum.element.http.*;
-import com.bryanreinero.hum.element.persistence.GetData;
-import com.bryanreinero.hum.element.persistence.PutData;
-import com.bryanreinero.hum.element.persistence.SetData;
+import com.bryanreinero.hum.element.persistence.*;
 
 public abstract class MixedContentElement extends HumElement {
 	
 	ArrayList<HumElement> children = new ArrayList<HumElement>();
 
-	public ArrayList<HumElement> getChildren() {
+	public List<HumElement> getChildren() {
 		return children;
 	}
 	
@@ -22,6 +25,11 @@ public abstract class MixedContentElement extends HumElement {
 	
 	@Override
 	public void addChild(DateTime element){
+		children.add(element);
+	}
+	
+	@Override
+	public void addChild(DBCommand element){
 		children.add(element);
 	}
 	
@@ -118,18 +126,22 @@ public abstract class MixedContentElement extends HumElement {
 		children.add(element);
 	}
 	
+	@Override
 	public void addChild(State element){
 		children.add(element);
 	}
 
+	@Override
 	public void addChild(URLDecode element){
 		children.add(element);
 	}
 	
+	@Override
 	public void addChild(URLEncode element){
 		children.add(element);
 	}
 	
+	@Override
 	public void addChild(ZipCode element){
 		children.add(element);
 	}

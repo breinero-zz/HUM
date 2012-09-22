@@ -1,5 +1,16 @@
 package com.bryanreinero.hum.element;
 
+import com.bryanreinero.hum.element.geo.AreaCode;
+import com.bryanreinero.hum.element.geo.Block;
+import com.bryanreinero.hum.element.geo.Carriers;
+import com.bryanreinero.hum.element.geo.City;
+import com.bryanreinero.hum.element.geo.Continent;
+import com.bryanreinero.hum.element.geo.Country;
+import com.bryanreinero.hum.element.geo.IP;
+import com.bryanreinero.hum.element.geo.L1Domain;
+import com.bryanreinero.hum.element.geo.L2Domain;
+import com.bryanreinero.hum.element.geo.State;
+import com.bryanreinero.hum.element.geo.ZipCode;
 import com.bryanreinero.hum.element.http.*;
 import com.bryanreinero.hum.element.persistence.*;
 import com.bryanreinero.hum.visitor.Visitable;
@@ -16,6 +27,7 @@ public abstract class HumElement implements  Visitable {
 	public void addChild(Compare element) { throw new IllegalArgumentException(); }
 	public void addChild(Continent element) { throw new IllegalArgumentException(); }
 	public void addChild(Country element) { throw new IllegalArgumentException(); }
+	public void addChild(DBCommand element) { throw new IllegalArgumentException(); }
 	public void addChild(DMA element) { throw new IllegalArgumentException(); }
 	public void addChild(Else element) { throw new IllegalArgumentException(); }
 	public void addChild(IP element) { throw new IllegalArgumentException(); }
@@ -45,15 +57,9 @@ public abstract class HumElement implements  Visitable {
 	public void addChild(UserAgent element) { throw new IllegalArgumentException(); }
 	public void addChild(Value element) { throw new IllegalArgumentException(); }
 	public void addChild(ZipCode element) { throw new IllegalArgumentException(); }
-	public void addChild(Redirect element) {
-		throw new IllegalArgumentException();
-	}
-	public void addChild(Literal element) {
-		throw new IllegalArgumentException();
-	}
-	public void addChild(Name element) {
-		throw new IllegalArgumentException();
-	}
+	public void addChild(Redirect element) { throw new IllegalArgumentException(); }
+	public void addChild(Literal element) { throw new IllegalArgumentException(); }
+	public void addChild(Name element) { throw new IllegalArgumentException(); }
 	public void addChild(Input element) {
 		throw new IllegalArgumentException();
 	}

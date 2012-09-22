@@ -1,10 +1,11 @@
-package com.bryanreinero.hum.element;
+package com.bryanreinero.hum.element.geo;
 
+import com.bryanreinero.hum.element.HumElement;
 import com.bryanreinero.hum.visitor.*;
 import com.google.code.morphia.annotations.Embedded;
 
 @Embedded
-public class AreaCode extends HumElement {
+public class L2Domain extends HumElement {
 
     @Override
     public void addParent(HumElement element) throws IllegalArgumentException {

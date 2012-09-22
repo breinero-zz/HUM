@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.bson.types.ObjectId;
 
+import com.bryanreinero.hum.element.geo.Block;
 import com.bryanreinero.hum.element.http.*;
 import com.bryanreinero.hum.element.persistence.SetData;
 import com.bryanreinero.hum.visitor.Visitor;

@@ -8,10 +8,11 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.SimpleTimeZone;
 import java.util.Stack;
@@ -23,6 +24,17 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 import com.bryanreinero.hum.element.*;
+import com.bryanreinero.hum.element.geo.AreaCode;
+import com.bryanreinero.hum.element.geo.Block;
+import com.bryanreinero.hum.element.geo.Carriers;
+import com.bryanreinero.hum.element.geo.City;
+import com.bryanreinero.hum.element.geo.Continent;
+import com.bryanreinero.hum.element.geo.Country;
+import com.bryanreinero.hum.element.geo.IP;
+import com.bryanreinero.hum.element.geo.L1Domain;
+import com.bryanreinero.hum.element.geo.L2Domain;
+import com.bryanreinero.hum.element.geo.State;
+import com.bryanreinero.hum.element.geo.ZipCode;
 import com.bryanreinero.hum.element.http.*;
 import com.bryanreinero.hum.element.persistence.*;
 import com.bryanreinero.hum.visitor.*;
@@ -41,9 +53,9 @@ public class Executor implements Visitor {
 	private String requestBody = null;
 	private Response response = null; 
 	
-	private Stack<Object> stack = new Stack<Object>();
-	private HashMap<String, String> variables;
-	private Random randGen = new Random();
+	private final Stack<Object> stack = new Stack<Object>();
+	private final Map<String, String> variables = new HashMap<String, String>();
+	private final Random randGen = new Random();
 
 	private GeoLocation geoLocation;
 	
@@ -100,9 +112,9 @@ public class Executor implements Visitor {
 		return requestURL;
 	}
 	
-	private String handleMixedChildren(ArrayList<HumElement> elements) {
+	private String handleMixedChildren(List<HumElement> list) {
 		StringBuffer sb = new StringBuffer();
-		Iterator<HumElement> iterator = elements.iterator();
+		Iterator<HumElement> iterator = list.iterator();
 		while (iterator.hasNext()) {
 			iterator.next().accept(this);
 			sb.append(this.stack.pop());
@@ -111,16 +123,10 @@ public class Executor implements Visitor {
 	}
 	
 	public void setVariable(String name, String value){
-		if(variables == null)
-			variables = new HashMap<String, String>();
-		
 		variables.put(name, value);
 	}
 	
 	public String getVariable(String name){
-		if(variables == null)
-			return null;
-		
 		return variables.get(name);
 	}
 
@@ -612,5 +618,17 @@ public class Executor implements Visitor {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public void visit(DBCommand element) {
+		element.getQuery().accept(this);
+		DBObject object = (DBObject)JSON.parse((String)stack.pop());
+		element.getName().accept(this);
+		
+		stack.push(
+				HUMServer.getDataService((String)stack.pop()).getDB().command( object )
+				);
+		
 	}
 }

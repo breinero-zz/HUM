@@ -1,7 +1,13 @@
-package com.bryanreinero.hum.element;
+package com.bryanreinero.hum.element.geo;
 
 import java.util.ArrayList;
 
+import com.bryanreinero.hum.element.ContentType;
+import com.bryanreinero.hum.element.GetVariable;
+import com.bryanreinero.hum.element.HumElement;
+import com.bryanreinero.hum.element.If;
+import com.bryanreinero.hum.element.SetVariable;
+import com.bryanreinero.hum.element.SubTree;
 import com.bryanreinero.hum.element.http.*;
 import com.bryanreinero.hum.element.persistence.SetData;
 import com.bryanreinero.hum.visitor.*;
