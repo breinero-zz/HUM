@@ -1,6 +1,11 @@
 package com.bryanreinero.hum.persistence;
 
 import com.bryanreinero.hum.element.DecisionTree;
+import com.bryanreinero.hum.element.Name;
+import com.bryanreinero.hum.element.Value;
+import com.bryanreinero.hum.element.http.ResponseCode;
+import com.bryanreinero.hum.element.http.ResponseHeader;
+import com.bryanreinero.hum.element.Literal;
 import com.bryanreinero.hum.server.DataAccessObject;
 
 import com.google.code.morphia.Datastore;
@@ -9,11 +14,50 @@ import com.google.code.morphia.Morphia;
 import com.mongodb.Mongo;
 import com.mongodb.MongoException;
 
-public class ConfigDAO<K, E> implements DataAccessObject<K, E> {
+public class ConfigDAO implements DataAccessObject<String, DecisionTree> {
 
 	private Datastore ds;
 	private Morphia morphia = new Morphia();
 	private Deserializer<String, DecisionTree> deserializer;
+	
+	// this is tree is returned when the reqested match in not found
+	private static final DecisionTree defaultTree = new DecisionTree ();
+	
+	private static final String defaultTreeConfig =
+		"<DecisionTree name=\"fnf_error\" timetolive=\"60\" >" +
+		"<ResponseHeader><Name>Content-Type</Name><Value><![CDATA[text]]></Value></ResponseHeader>" +
+		"<ResponseBody>Unknown Resource</ResponseBody>" +
+		"<ResponseCode>404</ResponseCode>"+
+		"</DecisionTree>";
+	
+	public static final int defaultErrorCode = 404;
+	public static final String defaultContentType = "text";
+	
+	// initialize the defaultTree
+	static {
+		defaultTree.setTimeToLive(600);
+
+		Literal literal = new Literal();
+		Name headerName = new Name();
+		literal.setValue("Content-Type");
+		headerName.addChild(literal);
+		
+		literal = new Literal();
+		literal.setValue("text");
+		Value headerValue = new Value();
+		headerValue.addChild(literal);
+		
+		ResponseCode notFoundHeader = new ResponseCode();
+		literal = new Literal();
+		literal.setValue("404");
+		notFoundHeader.addChild(literal);
+		
+		ResponseHeader contentType = new ResponseHeader();
+		contentType.addChild(headerName);
+		contentType.addChild(headerValue);
+		defaultTree.addChild(contentType);
+		defaultTree.addChild(notFoundHeader);
+	}
 	
 	public Deserializer<String, DecisionTree> getDeserializer() {
 		return deserializer;
@@ -33,16 +77,18 @@ public class ConfigDAO<K, E> implements DataAccessObject<K, E> {
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
-	public E get(K key) {
+	public DecisionTree get(String key) {
 		ConfigurationTree config = ds.find(ConfigurationTree.class, "name", key).get();
-		return (E)deserializer.deserialize(config.getValue());
+		
+		if ( config == null ) 
+			return defaultTree;
+		
+		return deserializer.deserialize(config.getValue());
 	}
 
 	@Override
-	public void persist(E object) {
+	public void persist(DecisionTree object) {
 		ds.save(object);
 	}
-
 }

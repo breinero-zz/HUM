@@ -30,9 +30,9 @@ public class HUMServer extends HttpServlet {
 		try {
 			Mongo mongo = new Mongo();
 			dataServices = new DataService(mongo);
-			ConfigDAO<String, DecisionTree> treestore = new ConfigDAO <String, DecisionTree>(mongo, "configurations");
-			treestore.setDeserializer(new XMLParser());
-			store = treestore;
+			ConfigDAO dao = new ConfigDAO (mongo, "configurations");
+			dao.setDeserializer(new XMLParser());
+			store = dao;
 		} catch (SAXException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

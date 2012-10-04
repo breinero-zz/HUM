@@ -30,6 +30,7 @@ import com.bryanreinero.hum.element.geo.Carriers;
 import com.bryanreinero.hum.element.geo.City;
 import com.bryanreinero.hum.element.geo.Continent;
 import com.bryanreinero.hum.element.geo.Country;
+import com.bryanreinero.hum.element.geo.DMA;
 import com.bryanreinero.hum.element.geo.IP;
 import com.bryanreinero.hum.element.geo.L1Domain;
 import com.bryanreinero.hum.element.geo.L2Domain;
@@ -49,17 +50,16 @@ import java.util.regex.Matcher;
 
 public class Executor implements Visitor {
 
-	private HttpServletRequest req;
+	private final HttpServletRequest req;
 	private String requestBody = null;
-	private Response response = null; 
+	private final GeoLocation geoLocation;
+	private URL requestURL;
 	
 	private final Stack<Object> stack = new Stack<Object>();
 	private final Map<String, String> variables = new HashMap<String, String>();
 	private final Random randGen = new Random();
 
-	private GeoLocation geoLocation;
-	
-	private URL requestURL;
+	private Response response = null; 
 	
 	public Executor(HttpServletRequest req) {
 		this.req = req;
@@ -122,12 +122,8 @@ public class Executor implements Visitor {
 		return sb.toString();
 	}
 	
-	public void setVariable(String name, String value){
-		variables.put(name, value);
-	}
-	
-	public String getVariable(String name){
-		return variables.get(name);
+	public Response getResponse() {
+		return response;
 	}
 
 	@Override
@@ -415,7 +411,7 @@ public class Executor implements Visitor {
 	public void visit(SetVariable aBean) {
 		aBean.getValue().accept(this);
 		aBean.getName().accept(this);
-		this.setVariable((String)stack.pop(), (String)stack.pop());
+		variables.put((String)stack.pop(), (String)stack.pop());
 	}
 
 	@Override
@@ -443,14 +439,6 @@ public class Executor implements Visitor {
 	@Override
 	public void visit(RequestHeader element) {
 		stack.push(req.getHeader(handleMixedChildren(element.getChildren())));
-	}
-
-	public void setResponse(Response response) {
-		this.response = response;
-	}
-
-	public Response getResponse() {
-		return response;
 	}
 
 	@Override
@@ -546,10 +534,13 @@ public class Executor implements Visitor {
 			results.limit(((Integer)stack.pop()).intValue());
 		}
 		
-		StringBuffer sb = new StringBuffer();
-		for(DBObject result : results)
-			sb.append(result.toString());
-		stack.push(sb.toString());
+		StringBuffer sb = new StringBuffer("{ \"results\" : [ ");
+		boolean first = true;
+		for(DBObject result : results) {
+			sb.append(((first)? result.toString() : ", "+result.toString() ) );
+			first = false;
+		}
+		stack.push(sb.toString()+" ] }");
 	}
 
 	@Override

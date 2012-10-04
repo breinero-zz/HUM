@@ -19,6 +19,7 @@ import com.bryanreinero.hum.element.geo.Carriers;
 import com.bryanreinero.hum.element.geo.City;
 import com.bryanreinero.hum.element.geo.Continent;
 import com.bryanreinero.hum.element.geo.Country;
+import com.bryanreinero.hum.element.geo.DMA;
 import com.bryanreinero.hum.element.geo.IP;
 import com.bryanreinero.hum.element.geo.L1Domain;
 import com.bryanreinero.hum.element.geo.L2Domain;
