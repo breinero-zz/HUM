@@ -5,7 +5,7 @@
 		<servlet-class>com.bryanreinero.hum.server.HUMServer</servlet-class>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>HumServer</servlet-name>
-		<url-pattern>/hum/*</url-pattern>
+		<servlet-name>hum</servlet-name>
+		<url-pattern>/*</url-pattern>
 	</servlet-mapping>
 </web-app>
