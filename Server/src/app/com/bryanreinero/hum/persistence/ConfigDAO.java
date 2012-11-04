@@ -20,15 +20,8 @@ public class ConfigDAO implements DataAccessObject<String, DecisionTree> {
 	private Morphia morphia = new Morphia();
 	private Deserializer<String, DecisionTree> deserializer;
 	
-	// this is tree is returned when the reqested match in not found
+	// this is tree is returned when the requested match in not found
 	private static final DecisionTree defaultTree = new DecisionTree ();
-	
-	private static final String defaultTreeConfig =
-		"<DecisionTree name=\"fnf_error\" timetolive=\"60\" >" +
-		"<ResponseHeader><Name>Content-Type</Name><Value><![CDATA[text]]></Value></ResponseHeader>" +
-		"<ResponseBody>Unknown Resource</ResponseBody>" +
-		"<ResponseCode>404</ResponseCode>"+
-		"</DecisionTree>";
 	
 	public static final int defaultErrorCode = 404;
 	public static final String defaultContentType = "text";
@@ -67,14 +60,9 @@ public class ConfigDAO implements DataAccessObject<String, DecisionTree> {
 		this.deserializer = deserializer;
 	}
 
-	public ConfigDAO(Mongo connection, String collection) {
-		try {
+	public ConfigDAO(Mongo connection, String collection) throws MongoException {
 			ds = morphia.createDatastore(connection, collection);
 			morphia.map(ConfigurationTree.class);
-		} catch (MongoException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 	
 	@Override

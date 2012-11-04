@@ -19,6 +19,18 @@ public abstract class MixedContentElement extends HumElement {
 	}
 	
 	@Override
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		
+		if(children.size() > 0 )
+		{
+			sb.append( children );
+		}
+		
+		return sb.toString();
+	}
+	
+	@Override
 	public void addChild(Literal element){
 		children.add(element);
 	}
@@ -145,4 +157,6 @@ public abstract class MixedContentElement extends HumElement {
 	public void addChild(ZipCode element){
 		children.add(element);
 	}
+	
+	
 }

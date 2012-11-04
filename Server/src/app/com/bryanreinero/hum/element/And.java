@@ -70,4 +70,15 @@ public class And extends HumElement {
 	public void addParent(HumElement element) throws IllegalArgumentException {
 		element.addChild(this);
 	}
+	
+	@Override
+	public String toString () {
+		StringBuffer sb = new StringBuffer( ( (not)? "!" : "" )  );
+		sb.append("And : [ ");
+		
+		for ( HumElement child : children )
+			sb.append(child);
+			
+		return sb.append(" ]").toString();
+	}
 }

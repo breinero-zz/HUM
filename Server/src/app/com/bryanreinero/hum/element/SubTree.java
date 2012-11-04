@@ -5,15 +5,6 @@ import com.google.code.morphia.annotations.Embedded;
 
 @Embedded
 public class SubTree extends MixedContentElement {
-    private String id = null; 
-    
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
 
 	@Override
 	public void accept(Visitor visitor) {

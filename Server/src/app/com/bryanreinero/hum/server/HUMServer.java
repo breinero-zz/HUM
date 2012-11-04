@@ -8,6 +8,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import org.xml.sax.SAXException;
 
 import com.bryanreinero.hum.element.DecisionTree;
@@ -19,6 +22,10 @@ import com.mongodb.Mongo;
 import com.mongodb.MongoException;
 
 public class HUMServer extends HttpServlet {
+	
+	private static final String MONGODB_CONNECTION_PARAMETER = "mongodb";
+	private static final String HUM_LOGGING_PARAMETER = "humlogger";
+	private static final String HUM_CONFIGURATION_MONGO_NAMESPACE_PARAMETER = "configuration_namespace";
 
 	private static final long serialVersionUID = -6170830231570604200L;
 	public static DataAccessObject<String, DecisionTree> store; 
@@ -26,22 +33,26 @@ public class HUMServer extends HttpServlet {
 	
 	private static DataService dataServices;
 	
+	public static Logger logger;
+	
 	public void init(ServletConfig config){
+		
+		logger = LogManager.getLogger( config.getInitParameter( HUM_LOGGING_PARAMETER) );
+		
 		try {
-			Mongo mongo = new Mongo();
+			
+			Mongo mongo = new Mongo( config.getInitParameter( MONGODB_CONNECTION_PARAMETER ) );
 			dataServices = new DataService(mongo);
-			ConfigDAO dao = new ConfigDAO (mongo, "configurations");
+			ConfigDAO dao = new ConfigDAO (mongo, config.getInitParameter( HUM_CONFIGURATION_MONGO_NAMESPACE_PARAMETER ) );
 			dao.setDeserializer(new XMLParser());
 			store = dao;
-		} catch (SAXException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (MongoException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			
 		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.getMessage());
+		} catch (SAXException e) {
+			logger.error(e.getMessage());
+		} catch (MongoException e) {
+			logger.error(e.getMessage());
 		}	
 	}
 	
@@ -52,8 +63,7 @@ public class HUMServer extends HttpServlet {
 		try{
 			Responder.respond(resp, executor.getResponse());
 		}catch(IOException ioe){
-			//TODO: real exception handling needs to happen here
-			ioe.printStackTrace();
+			logger.error(ioe);
 		}
 	}
 	

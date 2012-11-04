@@ -25,5 +25,9 @@ public class Literal extends HumElement {
 	public void addParent(HumElement element) {
 		element.addChild(this);
 	}
-
+	
+	@Override
+	public String toString() {
+		return value;
+	}
 }

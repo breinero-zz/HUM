@@ -114,9 +114,9 @@ public class Executor implements Visitor {
 	
 	private String handleMixedChildren(List<HumElement> list) {
 		StringBuffer sb = new StringBuffer();
-		Iterator<HumElement> iterator = list.iterator();
-		while (iterator.hasNext()) {
-			iterator.next().accept(this);
+		
+		for (HumElement element : list ) {
+			element.accept(this);
 			sb.append(this.stack.pop());
 		}
 		return sb.toString();
@@ -492,8 +492,11 @@ public class Executor implements Visitor {
 
 	@Override
 	public void visit(SubTree subTree) {
-		//HUMServer.store.get(subTree.getId()).accept(this);
-		HUMServer.store.get(handleMixedChildren(subTree.getChildren())).accept(this);
+		List<HumElement> children = subTree.getChildren() ;
+		String name = handleMixedChildren(children );
+		
+		DecisionTree tree = HUMServer.store.get( name );
+		tree.accept(this);
 	}
 
 	@Override

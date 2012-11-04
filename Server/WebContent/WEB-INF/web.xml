@@ -1,8 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app id="WebApp_ID" version="3.0" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
 	<servlet>
-		<servlet-name>HumServer</servlet-name>
+		<servlet-name>hum</servlet-name>
 		<servlet-class>com.bryanreinero.hum.server.HUMServer</servlet-class>
+		
+		<init-param>
+            <param-name>mongodb</param-name>
+            <param-value>localhost</param-value>
+        </init-param>
+        
+        <init-param>
+            <param-name>humlogger</param-name>
+            <param-value>humlogger</param-value>
+        </init-param>
+        
+        <init-param>
+            <param-name>configuration_namespace</param-name>
+            <param-value>configurations</param-value>
+        </init-param>
+        
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>hum</servlet-name>
