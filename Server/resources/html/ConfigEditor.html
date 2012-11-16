@@ -1,0 +1,158 @@
+<html>
+<head>
+<title>Catalog</title>
+<!--  <script src="jquery.js"></script>  -->
+
+<script>
+
+var baseURL = "http://localhost:8080/hum/0/configurations/";
+
+// This function asks the HUM server for a list of all the configurations
+function httpGet(theUrl) {
+    var xmlHttp = null;
+
+    xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "GET", theUrl, false );
+    xmlHttp.send( null );
+
+    return xmlHttp.responseText;
+}
+
+function httpPut(theUrl, data) {
+    var http = null;
+    
+    http = new XMLHttpRequest();
+    http.open( "PUT", theUrl, false );
+
+    http.onreadystatechange = function() {
+        if(http.readyState == 4 && http.status == 200) {
+            return xmlHttp.responseText;
+        }
+    }
+    http.send( data );
+}
+
+
+function parseXML( txt ) {
+    var xmlDoc;
+    
+    if (window.DOMParser)
+      {
+      parser=new DOMParser();
+      xmlDoc=parser.parseFromString(txt,"text/xml");
+      }
+    else // Internet Explorer
+      {
+      xmlDoc=new ActiveXObject("Microsoft.XMLDOM");
+      xmlDoc.async=false;
+      xmlDoc.loadXML(txt); 
+      }
+    
+    return xmlDoc;
+}
+
+function displayObject( obj, div ) {
+    for( field in obj ) {
+        var newdiv = document.createElement('div');
+        newdiv.innerHTML = "<br><div id='"+field+"'>"+field+"</div><div id='"+field+"div'>"+obj[field]+"</div>";
+        div.appendChild(newdiv);
+    }
+}
+
+function displayConf( obj ) {
+    for( field in obj ) {
+        var newdiv = document.createElement('div');
+        newdiv.innerHTML = "<br><div id='"+field+"'>"+field+"</div><div id='"+field+"div'>"+obj[field]+"</div>";
+        var div = document.getElementById(obj.name);
+        div.appendChild(newdiv);
+    }
+}
+
+function postConfig() {
+    
+    var confObj = {};
+    
+    confObj.name = document.getElementById("configName").value;
+    confObj.client = document.getElementById("clientInput").value;
+    confObj.timetolive = document.getElementById("ttlInput").value;
+    confObj.description = document.getElementById("descInput").value;
+    confObj.value = document.getElementById("configText").value;
+
+    var resultTxt = httpPut( baseURL+confObj.name, JSON.stringify( confObj ) );
+    document.getElementById("editor").value =  confObj;
+}
+
+function showDescription ( element ) {
+    var configs = JSON.parse( httpGet(baseURL) );
+    for( var i = 0; i < configs.results.length; i++ ) {
+        if ( configs.results[i].name == element.id ) {
+            element.innerHTML = configs.results[i].name +": "+ configs.results[i].description;
+            break;
+        }
+    }
+}
+
+function showName ( element ) {
+    element.innerHTML = element.id ;
+}
+
+function showFullConfig ( element ) {
+    var name = element.id;
+    var object = JSON.parse( httpGet(baseURL+name) );
+    
+    var configClientInput = document.getElementById("clientInput");
+    var configNameInput = document.getElementById("configName");
+    var configTTLInput = document.getElementById("ttlInput");
+    var configDescInput = document.getElementById("descInput");
+    var configTextInput = document.getElementById("configText");
+    
+    
+
+    var conf = object.results[0];
+    
+    document.getElementById("idDiv").innerHTML = conf._id.$oid;
+    configNameInput.value = conf.name;
+    configClientInput.value = conf.client;
+    configTTLInput.value = conf.timetolive;
+    document.getElementById("descInput").value = conf.description;
+    configTextInput.value = conf.value;
+    
+}
+</script>
+
+</head>
+<body>
+<p id="demo">HUM Configurations Editor</p>
+
+<ul>
+<script>
+
+// convert the rawResult into a JSON object
+var object = JSON.parse( httpGet(baseURL) );
+
+// iterate over the 'results' array embedded within
+for( var i = 0; i < object.results.length; i++ ) { 
+    var configName = object.results[i].name;
+ 
+    var divString= "<div id=\""+configName+"\""
+    +" onmouseover=\"showDescription(this)\""
+    +" onmouseout=\"showName(this)\""
+    +" onclick=\"showFullConfig(this)\""
+    +">"+configName+
+    "</div>";
+    document.write(divString);
+}
+</script>
+</ul>
+
+<div id="editor" >
+<button type="button" id="putButton" onclick="postConfig()" >Submit</button>
+Id: <div id="idDiv"></div><br>
+Client: <input type="text" id="clientInput" /><br>
+Name: <input type="text" id="configName" /><br>
+Time to Live: <input type="text" id="ttlInput" /><br>
+Description: <input type="text" id="descInput" /><br>
+Value: <textarea id="configText" width="50" height="600"></textarea><br>
+</div>
+</body>
+</html>
