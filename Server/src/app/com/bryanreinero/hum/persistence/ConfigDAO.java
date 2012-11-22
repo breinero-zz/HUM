@@ -61,17 +61,18 @@ public class ConfigDAO implements DataAccessObject<String, DecisionTree> {
 	}
 
 	public ConfigDAO(Mongo connection, String collection) throws MongoException {
-			ds = morphia.createDatastore(connection, collection);
-			morphia.map(ConfigurationTree.class);
+		ds = morphia.createDatastore(connection, collection);
+		morphia.map(ConfigurationTree.class);
 	}
-	
+
 	@Override
 	public DecisionTree get(String key) {
-		ConfigurationTree config = ds.find(ConfigurationTree.class, "name", key).get();
-		
-		if ( config == null ) 
+		ConfigurationTree config = ds
+				.find(ConfigurationTree.class, "name", key).get();
+
+		if (config == null)
 			return defaultTree;
-		
+
 		return deserializer.deserialize(config.getValue());
 	}
 

@@ -1,7 +1,6 @@
 package com.bryanreinero.hum.element.persistence;
 
 import com.bryanreinero.hum.element.HumElement;
-import com.bryanreinero.hum.element.MixedContentElement;
 import com.bryanreinero.hum.element.Value;
 import com.bryanreinero.hum.visitor.Visitor;
 

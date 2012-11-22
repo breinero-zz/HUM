@@ -500,10 +500,7 @@ public class XMLParser extends DefaultHandler implements Deserializer<String, De
             }
             
             public void handleStart(XMLParser parser, Attributes atts) throws Exception {
-            	ResponseBody obj = new ResponseBody();
-            	if(atts.getValue("group") != null)
-            		obj.setGroup(Integer.parseInt(atts.getValue("group")));
-                parser.stack.push(obj);
+                parser.stack.push(new ResponseBody());
             }
         });
 

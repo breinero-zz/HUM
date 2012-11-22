@@ -22,52 +22,56 @@ import com.mongodb.Mongo;
 import com.mongodb.MongoException;
 
 public class HUMServer extends HttpServlet {
-	
+
 	private static final String MONGODB_CONNECTION_PARAMETER = "mongodb";
 	private static final String HUM_LOGGING_PARAMETER = "humlogger";
 	private static final String HUM_CONFIGURATION_MONGO_NAMESPACE_PARAMETER = "configuration_namespace";
 
 	private static final long serialVersionUID = -6170830231570604200L;
-	public static DataAccessObject<String, DecisionTree> store; 
+	public static DataAccessObject<String, DecisionTree> store;
 	private static final String rootTreeId = "root";
-	
+
 	private static DataService dataServices;
-	
+
 	public static Logger logger;
-	
-	public void init(ServletConfig config){
-		
-		logger = LogManager.getLogger( config.getInitParameter( HUM_LOGGING_PARAMETER) );
-		
+
+	public void init(ServletConfig config) {
+
+		logger = LogManager.getLogger(config
+				.getInitParameter(HUM_LOGGING_PARAMETER));
+
 		try {
-			
-			Mongo mongo = new Mongo( config.getInitParameter( MONGODB_CONNECTION_PARAMETER ) );
+
+			Mongo mongo = new Mongo(
+					config.getInitParameter(MONGODB_CONNECTION_PARAMETER));
 			dataServices = new DataService(mongo);
-			ConfigDAO dao = new ConfigDAO (mongo, config.getInitParameter( HUM_CONFIGURATION_MONGO_NAMESPACE_PARAMETER ) );
+			ConfigDAO dao = new ConfigDAO(
+					mongo,
+					config.getInitParameter(HUM_CONFIGURATION_MONGO_NAMESPACE_PARAMETER));
 			dao.setDeserializer(new XMLParser());
 			store = dao;
-			
+
 		} catch (UnknownHostException e) {
 			logger.error(e.getMessage());
 		} catch (SAXException e) {
 			logger.error(e.getMessage());
 		} catch (MongoException e) {
 			logger.error(e.getMessage());
-		}	
+		}
 	}
-	
+
 	public void service(HttpServletRequest req, HttpServletResponse resp) {
 		Executor executor = new Executor(req);
 		store.get(rootTreeId).accept(executor);
-		
-		try{
+
+		try {
 			Responder.respond(resp, executor.getResponse());
-		}catch(IOException ioe){
+		} catch (IOException ioe) {
 			logger.error(ioe);
 		}
 	}
-	
-	public static DBCollection getDataService(String namespace){
+
+	public static DBCollection getDataService(String namespace) {
 		return dataServices.getDataStore(namespace);
 	}
 }
