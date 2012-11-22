@@ -23,6 +23,9 @@ import java.net.URLEncoder;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.bryanreinero.hum.element.*;
 import com.bryanreinero.hum.element.geo.AreaCode;
 import com.bryanreinero.hum.element.geo.Block;
@@ -53,7 +56,7 @@ public class Executor implements Visitor {
 	private final HttpServletRequest req;
 	private String requestBody = null;
 	private final GeoLocation geoLocation;
-	private URL requestURL;
+	private final URL requestURL;
 	
 	private final Stack<Object> stack = new Stack<Object>();
 	private final Map<String, String> variables = new HashMap<String, String>();
@@ -61,8 +64,12 @@ public class Executor implements Visitor {
 
 	private Response response = null; 
 	
-	public Executor(HttpServletRequest req) {
+	
+	private static final Logger logger = LogManager.getLogger( Executor.class.getName() );
+	
+	public Executor(HttpServletRequest req) throws MalformedURLException {
 		this.req = req;
+		requestURL = new URL(req.getRequestURL().toString());
 		this.geoLocation = GeoLocation.getLocation(req);
 		this.response = new Response();
 	}
@@ -85,14 +92,14 @@ public class Executor implements Visitor {
 					stringBuilder.append("");
 				}
 			} catch(IOException ioe) {
-				//TODO: do something
+				logger.warn( ioe.getMessage() );
 			}
 			finally {
 				if (bufferedReader != null) {
 					try {
 						bufferedReader.close();
 					} catch (IOException ex) {
-						//TODO: do something
+						logger.warn( ex.getMessage() );
 					}
 				}
 			}
@@ -102,13 +109,6 @@ public class Executor implements Visitor {
 	}
 	
 	private URL getRequestURL() {
-		if(requestURL == null)
-			try {
-				requestURL = new URL(req.getRequestURL().toString());
-			} catch (MalformedURLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		return requestURL;
 	}
 	
@@ -599,8 +599,7 @@ public class Executor implements Visitor {
 		try {
 			stack.push(URLDecoder.decode(handleMixedChildren(element.getChildren()), "UTF-8"));
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.warn( e.getMessage() );
 		}
 	}
 
@@ -609,8 +608,7 @@ public class Executor implements Visitor {
 		try {
 			stack.push(URLEncoder.encode(handleMixedChildren(element.getChildren()), "UTF-8"));
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.warn( e.getMessage() );
 		}
 	}
 
@@ -620,9 +618,7 @@ public class Executor implements Visitor {
 		DBObject object = (DBObject)JSON.parse((String)stack.pop());
 		element.getName().accept(this);
 		
-		stack.push(
-				HUMServer.getDataService((String)stack.pop()).getDB().command( object )
-				);
-		
+		stack.push(HUMServer.getDataService((String) stack.pop()).getDB()
+				.command(object));
 	}
 }

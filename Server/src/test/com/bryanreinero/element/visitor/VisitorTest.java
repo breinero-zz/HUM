@@ -1,5 +1,8 @@
 package com.bryanreinero.element.visitor;
 
+import java.net.MalformedURLException;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.testng.annotations.Test;
@@ -17,7 +20,13 @@ public class VisitorTest {
 	private Executor executor;
 	
 	public VisitorTest () {
-		executor = new Executor(null);
+		HttpServletRequest req = null;
+		try {
+			executor = new Executor( req );
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Test(groups = { "basic" }) 

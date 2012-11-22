@@ -3,7 +3,6 @@ package com.bryanreinero.hum.parser;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Stack;
 
@@ -53,7 +52,7 @@ public class XMLParser extends DefaultHandler implements Deserializer<String, De
             public void handleEnd(XMLParser parser) throws Exception {
                 parser.unite();
             }
-            public void handleStart(XMLParser parser, Attributes atts) throws Exception {
+            public void handleStart(XMLParser parser, Attributes atts) {
             	Boolean not = ((atts.getValue("not") != null )? Boolean.parseBoolean(atts.getValue("not")) : false);
                 And node = new And();
                 node.setNot(not);
@@ -740,23 +739,23 @@ public class XMLParser extends DefaultHandler implements Deserializer<String, De
 		if (elements.containsKey(name)) {
 			try {
 				elements.get(name).handleStart(this, atts);
-			} catch (Exception ex) {
-				ex.printStackTrace();
+			} catch (Exception e ) {
+				throw new SAXException( e );
 			}
 		}
     }
 
     @Override
-    public void endElement(String namespaceURI, String name, String qName) throws SAXException
+    public void endElement(String namespaceURI, String name, String qName)
+    	throws SAXException
     {
-		if (elements.containsKey(name)) {
+		if (elements.containsKey(name))
 			try {
 				elements.get(name).handleEnd(this);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				throw new SAXException( e );
 			}
-		}
+		
     }
     
     @Override
@@ -774,21 +773,11 @@ public class XMLParser extends DefaultHandler implements Deserializer<String, De
     }
 
 	@Override
-	public DecisionTree deserialize(String input) {
+	public DecisionTree deserialize(String input) throws IllegalArgumentException {
 		try {
 			return parse(new ByteArrayInputStream(input.getBytes("UTF-8")));
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SAXException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+			throw new IllegalArgumentException( e );	
 		}
-		return null;
 	}
-    
-    
 }

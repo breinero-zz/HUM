@@ -1,5 +1,9 @@
 package com.bryanreinero.hum.element;
 
+import java.net.MalformedURLException;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.testng.annotations.Test;
 
 import com.bryanreinero.hum.server.Executor;
@@ -26,7 +30,14 @@ public class HumElementTest {
 		regex.addChild(pattern);
 		regex.addChild(input);
 
-		Executor visitor = new Executor(null);
+		HttpServletRequest req = null;
+		Executor visitor = null;
+		try {
+			visitor = new Executor(req);
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		visitor.visit(regex);
 
 		Substitute sub = new Substitute();

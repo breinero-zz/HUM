@@ -1,5 +1,9 @@
 package com.bryanreinero.hum.persistence;
 
+import java.net.MalformedURLException;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.testng.annotations.Test;
 
 import static org.testng.AssertJUnit.assertEquals;
@@ -19,8 +23,14 @@ public class ConfigDAOTest {
 		DecisionTree defaultTree = treestore.get("unknown");
 
 		assertNotNull(defaultTree);
-		
-		Executor visitor = new Executor(null);
+		HttpServletRequest req = null;
+		Executor visitor = null;
+		try {
+			visitor = new Executor(req);
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		defaultTree.accept(visitor);
 		Response response = visitor.getResponse();
 		

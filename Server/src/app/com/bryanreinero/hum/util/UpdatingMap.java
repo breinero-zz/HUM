@@ -8,11 +8,15 @@ import java.util.concurrent.DelayQueue;
 import java.util.concurrent.Delayed;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class UpdatingMap<K, V> implements Map<K, V> {
 	
 	private HashMap <K, V> map = new HashMap<K, V>();
 	private static Thread ConfigRetirerThread;
 	private CacheCleanser cleanser;
+	private static Logger logger = LogManager.getLogger( UpdatingMap.class.getName() );
 	
 	private class CacheCleanser implements Runnable {
 
@@ -61,16 +65,13 @@ public class UpdatingMap<K, V> implements Map<K, V> {
 					K key = delayQueue.take().getConfigID();
 					map.remove(key);
 				} catch (InterruptedException e) {
-					// TODO log the interruption
-					e.printStackTrace();
+					logger.info( e.getMessage() );
 				}
 			}
 		}
 		
 		public void enqueue(K key){
-			KillConfig kill = new KillConfig();
-			kill.setConfigID(key);
-			delayQueue.add(kill);
+			enqueue(key, default_time_to_live );
 		}
 		
 		public void enqueue(K key, long TTL){

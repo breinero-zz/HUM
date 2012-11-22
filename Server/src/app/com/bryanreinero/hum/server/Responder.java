@@ -45,11 +45,7 @@ public class Responder {
 			response.setLocale(new Locale(responseObj.getLocale()));
 
 		response.setStatus(responseObj.getResponseStatus());
-
-	//    ServletOutputStream out = response.getOutputStream();
 	    PrintWriter pw = response.getWriter();
 	    pw.println(responseObj.getResponseBody());
-		//out.write(responseObj.getResponseBody().getBytes());
-		//out.flush();
 	}
 }

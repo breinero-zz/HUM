@@ -24,7 +24,6 @@ import com.mongodb.MongoException;
 public class HUMServer extends HttpServlet {
 
 	private static final String MONGODB_CONNECTION_PARAMETER = "mongodb";
-	private static final String HUM_LOGGING_PARAMETER = "humlogger";
 	private static final String HUM_CONFIGURATION_MONGO_NAMESPACE_PARAMETER = "configuration_namespace";
 
 	private static final long serialVersionUID = -6170830231570604200L;
@@ -37,8 +36,7 @@ public class HUMServer extends HttpServlet {
 
 	public void init(ServletConfig config) {
 
-		logger = LogManager.getLogger(config
-				.getInitParameter(HUM_LOGGING_PARAMETER));
+		logger = LogManager.getLogger( HUMServer.class.getName() );
 
 		try {
 
@@ -61,9 +59,17 @@ public class HUMServer extends HttpServlet {
 	}
 
 	public void service(HttpServletRequest req, HttpServletResponse resp) {
-		Executor executor = new Executor(req);
-		store.get(rootTreeId).accept(executor);
-
+		Executor executor = null;
+		try {
+			executor = new Executor(req);
+			store.get(rootTreeId).accept(executor);
+		}
+		catch( Exception e ) {
+			logger.warn( e.getMessage() );
+			
+			// TODO: set executor to static 404 error
+		}
+		
 		try {
 			Responder.respond(resp, executor.getResponse());
 		} catch (IOException ioe) {
