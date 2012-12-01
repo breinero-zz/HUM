@@ -1,8 +1,8 @@
 package com.bryanreinero.hum.element;
 
-import com.bryanreinero.hum.visitor.Visitor;
+import com.bryanreinero.hum.visitor.*;
 
-public class DateTime extends MixedContentElement {
+public class DateTime extends MixedContentElement implements Visitable {
 	
 	private Format format;
 
@@ -14,7 +14,6 @@ public class DateTime extends MixedContentElement {
 		return format;
 	}
 	
-
 	@Override
 	public void accept(Visitor visitor) {
 		visitor.visit(this);

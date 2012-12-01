@@ -1,9 +1,9 @@
 package com.bryanreinero.hum.element.persistence;
 
 import com.bryanreinero.hum.element.HumElement;
-import com.bryanreinero.hum.visitor.Visitor;
+import com.bryanreinero.hum.visitor.*;
 
-public class PutData extends PersistenceElement {
+public class PutData extends PersistenceElement implements Visitable {
 	
 	Query query;
 	Update update;

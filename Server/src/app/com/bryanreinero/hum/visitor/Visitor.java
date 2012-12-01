@@ -8,19 +8,18 @@ package com.bryanreinero.hum.visitor;
 
 import com.bryanreinero.hum.element.*;
 import com.bryanreinero.hum.element.geo.AreaCode;
-import com.bryanreinero.hum.element.geo.Block;
 import com.bryanreinero.hum.element.geo.Carriers;
 import com.bryanreinero.hum.element.geo.City;
 import com.bryanreinero.hum.element.geo.Continent;
 import com.bryanreinero.hum.element.geo.Country;
 import com.bryanreinero.hum.element.geo.DMA;
-import com.bryanreinero.hum.element.geo.IP;
 import com.bryanreinero.hum.element.geo.L1Domain;
 import com.bryanreinero.hum.element.geo.L2Domain;
 import com.bryanreinero.hum.element.geo.State;
 import com.bryanreinero.hum.element.geo.ZipCode;
 import com.bryanreinero.hum.element.http.*;
 import com.bryanreinero.hum.element.persistence.*;
+import com.bryanreinero.hum.event.*;
 
 public interface Visitor {
     
@@ -151,4 +150,6 @@ public interface Visitor {
 	public void visit(URLEncode urlEncode);
 
 	public void visit(DBCommand dbCommand);
+	
+	public void visit(Profile profile);
 }

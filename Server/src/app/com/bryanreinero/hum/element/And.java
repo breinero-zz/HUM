@@ -7,14 +7,13 @@
 package com.bryanreinero.hum.element;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.bryanreinero.hum.visitor.*;
-import com.google.code.morphia.annotations.Embedded;
 
-@Embedded
-public class And extends HumElement {
+public class And extends HumElement implements Visitable {
 
-	ArrayList<HumElement> children;
+	List<Visitable> children = new ArrayList<Visitable>();
 	protected Boolean not;
 
 	/**
@@ -42,20 +41,14 @@ public class And extends HumElement {
     }
 
 	public void addChild(And element){
-		if(children == null)
-			children = new ArrayList<HumElement>();
 		children.add(element);
 	}
 
 	public void addChild(Or element){
-		if(children == null)
-			children = new ArrayList<HumElement>();
 		children.add(element);
 	}
 	
 	public void addChild(Compare element){
-		if(children == null)
-			children = new ArrayList<HumElement>();
 		children.add(element);
 	}
 
@@ -63,7 +56,7 @@ public class And extends HumElement {
 		visitor.visit(this);
 	}
 
-	public ArrayList<HumElement> getChildren(){
+	public List<Visitable> getChildren(){
 		return children;
 	}
 
@@ -76,7 +69,7 @@ public class And extends HumElement {
 		StringBuffer sb = new StringBuffer( ( (not)? "!" : "" )  );
 		sb.append("And : [ ");
 		
-		for ( HumElement child : children )
+		for ( Visitable child : children )
 			sb.append(child);
 			
 		return sb.append(" ]").toString();

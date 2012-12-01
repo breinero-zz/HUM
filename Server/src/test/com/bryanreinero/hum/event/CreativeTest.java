@@ -1,18 +1,22 @@
 package com.bryanreinero.hum.event;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.testng.annotations.Test;
 
 public class CreativeTest {
   @Test
   public void TestCreative() {
-	  List<Object> creativeAttributes = new ArrayList<Object>();
-	  creativeAttributes.add("static creative");
+	  Set<Attribute> attributes = new HashSet<Attribute>();
+	  Attribute attribute = new Attribute();
+	  attribute.setName("testname");
+	  attribute.setValue("testvalue");
+	  attributes.add(attribute);
 		
-	  Creative testCreative = 
-			new Creative("test creative", 300, 105, creativeAttributes);
+	  Creative creative = 
+			new Creative("test creative", 300, 105, attributes);
 	  
+	 System.out.println( Persistor.convertToDBObject(creative) );
   }
 }

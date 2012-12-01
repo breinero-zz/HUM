@@ -1,7 +1,7 @@
 package com.bryanreinero.hum.event;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.testng.annotations.Test;
 
@@ -18,23 +18,24 @@ public class PersistorTest {
 
 	public PersistorTest() {
 
-		List<Object> creativeAttributes = new ArrayList<Object>();
-		creativeAttributes.add("static creative");
+		Attribute attribute = new Attribute();
+		attribute.setName("testname");
+		attribute.setValue("testvalue");
+		Set<Attribute> creativeAttributes = new HashSet<Attribute>();
+		creativeAttributes.add(attribute);
 
 		creative = new Creative("test creative", 300, 105, creativeAttributes);
 
-		List<Object> placementAttributes = new ArrayList<Object>();
-		placementAttributes.add("ficticious");
+		attribute = new Attribute();
+		attribute.setName("type");
+		attribute.setValue("test");
+		Set<Attribute> placementAttributes = new HashSet<Attribute>();
+		placementAttributes.add(attribute);
 
 		placement = new Placement("test site", "test page",
 				"masthead", "BryanMedia", placementAttributes);
 		
-		
-		List<Object> impressionAttributes = new ArrayList<Object>();
-		impressionAttributes.add("ficticious impression");
-		
 		impression = new Impression();
-		impression.setAttributes(impressionAttributes);
 		impression.setClient(client);
 		impression.setCampaign(campaign);
 		impression.setCreative(creative);

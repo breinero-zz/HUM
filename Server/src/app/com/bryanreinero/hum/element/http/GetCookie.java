@@ -2,11 +2,9 @@ package com.bryanreinero.hum.element.http;
 
 import com.bryanreinero.hum.element.HumElement;
 import com.bryanreinero.hum.element.MixedContentElement;
-import com.bryanreinero.hum.visitor.Visitor;
-import com.google.code.morphia.annotations.Embedded;
+import com.bryanreinero.hum.visitor.*;
 
-@Embedded
-public class GetCookie extends MixedContentElement {
+public class GetCookie extends MixedContentElement implements Visitable {
 
 	@Override
 	public void addParent(HumElement element) throws IllegalArgumentException {

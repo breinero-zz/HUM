@@ -1,17 +1,17 @@
 package com.bryanreinero.hum.element;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.bson.types.ObjectId;
 
-import com.bryanreinero.hum.element.geo.Block;
+import com.bryanreinero.hum.visitor.*;
 import com.bryanreinero.hum.element.http.*;
 import com.bryanreinero.hum.element.persistence.SetData;
-import com.bryanreinero.hum.visitor.Visitor;
 import com.google.code.morphia.annotations.*;
 
 @Entity
-public class DecisionTree extends HumElement {
+public class DecisionTree extends HumElement implements Visitable {
 
 	@Id
 	private ObjectId id;
@@ -29,7 +29,7 @@ public class DecisionTree extends HumElement {
 	private String type;
 	
 	@Embedded
-	private ArrayList<HumElement> children = new ArrayList<HumElement>();
+	private List<Visitable> children = new ArrayList<Visitable>();
 	
 	public String getType() {
 		return type;
@@ -55,11 +55,11 @@ public class DecisionTree extends HumElement {
 		this.timeToLive = timeToLive;
 	}
 
-	public ArrayList<HumElement> getChildren() {
+	public List<Visitable> getChildren() {
 		return children;
 	}
 
-	public void setChildren(ArrayList<HumElement> children) {
+	public void setChildren( List<Visitable> children) {
 		this.children = children;
 	}
 
@@ -69,7 +69,7 @@ public class DecisionTree extends HumElement {
 	}
 
 	@Override
-	public void accept(Visitor visitor){
+	public void accept( Visitor visitor){
 		visitor.visit(this);
 	}
 

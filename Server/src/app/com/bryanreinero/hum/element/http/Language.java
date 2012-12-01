@@ -2,13 +2,11 @@ package com.bryanreinero.hum.element.http;
 
 import com.bryanreinero.hum.element.HumElement;
 import com.bryanreinero.hum.visitor.*;
-import com.google.code.morphia.annotations.Embedded;
 
-@Embedded
-public class Language extends HumElement {
+public class Language extends HumElement implements Visitable {
     
     @Override
-    public void addParent(HumElement element) throws IllegalArgumentException {
+    public void addParent( HumElement element) {
         element.addChild(this);
     }
 

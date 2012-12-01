@@ -10,7 +10,6 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -27,20 +26,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.bryanreinero.hum.element.*;
-import com.bryanreinero.hum.element.geo.AreaCode;
-import com.bryanreinero.hum.element.geo.Block;
-import com.bryanreinero.hum.element.geo.Carriers;
-import com.bryanreinero.hum.element.geo.City;
-import com.bryanreinero.hum.element.geo.Continent;
-import com.bryanreinero.hum.element.geo.Country;
-import com.bryanreinero.hum.element.geo.DMA;
-import com.bryanreinero.hum.element.geo.IP;
-import com.bryanreinero.hum.element.geo.L1Domain;
-import com.bryanreinero.hum.element.geo.L2Domain;
-import com.bryanreinero.hum.element.geo.State;
-import com.bryanreinero.hum.element.geo.ZipCode;
+import com.bryanreinero.hum.element.geo.*;
 import com.bryanreinero.hum.element.http.*;
 import com.bryanreinero.hum.element.persistence.*;
+import com.bryanreinero.hum.event.*;
 import com.bryanreinero.hum.visitor.*;
 
 import com.mongodb.DBCollection;
@@ -112,10 +101,10 @@ public class Executor implements Visitor {
 		return requestURL;
 	}
 	
-	private String handleMixedChildren(List<HumElement> list) {
+	private String handleMixedChildren( List<Visitable> list) {
 		StringBuffer sb = new StringBuffer();
 		
-		for (HumElement element : list ) {
+		for ( Visitable element : list ) {
 			element.accept(this);
 			sb.append(this.stack.pop());
 		}
@@ -129,15 +118,14 @@ public class Executor implements Visitor {
 	@Override
 	public void visit(And element) {
 		boolean result = true;
-		Iterator<HumElement> iterator = element.getChildren().iterator();
-		while (iterator.hasNext()) {
-			((Visitable)iterator.next()).accept(this);
+		for ( Visitable child : element.getChildren() ) {
+			child.accept(this);
 			if (!((Boolean) this.stack.pop()).booleanValue()) {
 				result = false;
 				break;
 			}
 		}
-		stack.push(new Boolean(result && !element.isNot()));
+		stack.push(new Boolean( result && !element.isNot() ) );
 	}
 
 	@Override
@@ -278,10 +266,9 @@ public class Executor implements Visitor {
 	@Override
 	public void visit(Or aBean) {
 		boolean result = false;
-		
-		Iterator<HumElement> iterator = aBean.getChildren().iterator();
-		while (iterator.hasNext()) {
-			iterator.next().accept(this);
+			
+	    for ( Visitable element : aBean.getChildren() ) {
+	    	element.accept(this);
 			if (((Boolean) this.stack.pop()).booleanValue()) {
 				result = true;
 				break;
@@ -292,9 +279,8 @@ public class Executor implements Visitor {
 	
 	@Override
 	public void visit(Block aBean) {
-		Iterator<HumElement> iterator = aBean.getChildren().iterator();
-		while(iterator.hasNext())
-			iterator.next().accept(this);
+		for ( Visitable element : aBean.getChildren() ) 
+			element.accept(this);
 	}
 
 	@Override
@@ -421,9 +407,8 @@ public class Executor implements Visitor {
 
 	@Override
 	public void visit(DecisionTree aBean) {
-		Iterator<HumElement> it = aBean.getChildren().iterator();
-		while(it.hasNext())
-			it.next().accept(this);
+		for( Visitable element : aBean.getChildren() )
+			element.accept(this);
 	}
 
 	@Override
@@ -476,8 +461,7 @@ public class Executor implements Visitor {
 		else {
 			if(matcher.find())
 				stack.push( matcher.group(1) );
-		}
-			
+		}		
 	}
 
 	@Override
@@ -492,11 +476,8 @@ public class Executor implements Visitor {
 
 	@Override
 	public void visit(SubTree subTree) {
-		List<HumElement> children = subTree.getChildren() ;
-		String name = handleMixedChildren(children );
-		
-		DecisionTree tree = HUMServer.store.get( name );
-		tree.accept(this);
+		String name = handleMixedChildren( subTree.getChildren() );
+		HUMServer.store.get( name ).accept(this);
 	}
 
 	@Override
@@ -585,8 +566,7 @@ public class Executor implements Visitor {
 
 	@Override
 	public void visit(Format format) {
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-generated method stub	
 	}
 
 	@Override
@@ -620,5 +600,11 @@ public class Executor implements Visitor {
 		
 		stack.push(HUMServer.getDataService((String) stack.pop()).getDB()
 				.command(object));
+	}
+
+	@Override
+	public void visit(Profile profile) {
+		// TODO Auto-generated method stub
+		
 	}
 }

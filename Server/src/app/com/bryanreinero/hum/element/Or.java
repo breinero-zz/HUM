@@ -6,15 +6,14 @@
 
 package com.bryanreinero.hum.element;
 
+import com.bryanreinero.hum.visitor.Visitable;
+import com.bryanreinero.hum.visitor.Visitor;
+
 import java.util.*;
 
-import com.bryanreinero.hum.visitor.*;
-import com.google.code.morphia.annotations.Embedded;
-
-@Embedded
-public class Or extends HumElement {
+public class Or extends HumElement implements Visitable {
     
-    private ArrayList<HumElement> children;
+    private List<Visitable> children = new ArrayList<Visitable>();
     protected Boolean not;
 
 	/**
@@ -52,27 +51,20 @@ public class Or extends HumElement {
     
 	@Override
 	public void addChild(And element){
-		if(children == null)
-			children = new ArrayList<HumElement>();
 		children.add(element);
 	}
 
 	@Override
 	public void addChild(Or element){
-		if(children == null)
-			children = new ArrayList<HumElement>();
 		children.add(element);
 	}
 	
 	@Override
 	public void addChild(Compare element){
-		if(children == null)
-			children = new ArrayList<HumElement>();
 		children.add(element);
 	}
 
-    
-    public ArrayList<HumElement> getChildren(){
+    public List<Visitable> getChildren(){
         return children;
     }
 }

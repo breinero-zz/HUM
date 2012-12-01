@@ -2,7 +2,8 @@ package com.bryanreinero.hum.persistence;
 
 import com.google.code.morphia.annotations.Id;
 
-public class ConfigurationTree{
+public class ConfigurationTree extends ConfigurationElement {
+	
 	@Id
 	private String id;
 	private String name;
@@ -11,7 +12,7 @@ public class ConfigurationTree{
 	private int timeToLive;
 	private String value;
 	
-	private ConfigurationTree(){};
+	public ConfigurationTree(){};
 	
 	public String getId() {
 		return id;
@@ -52,5 +53,19 @@ public class ConfigurationTree{
 
 	public void setTimeToLive(int timeToLive) {
 		this.timeToLive = timeToLive;
+	}
+
+	public void addChild(TimeToLive timeToLive ) {
+		setTimeToLive( timeToLive.getValue() );
+	}
+
+	@Override
+	public void addParent(ConfigurationElement element) {
+		//element.addChild( this );
+	}
+
+	@Override
+	public void accept(ConfigurationVisitor visitor) {
+		visitor.visit( this );
 	}
 }

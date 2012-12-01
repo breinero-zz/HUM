@@ -1,35 +1,22 @@
 package com.bryanreinero.hum.event;
 
-import java.util.List;
+public class Conversion extends Event {
 
-public class Conversion {
-
-	private List<Object> attributes;
-	private int client;
-	private List<Event> events;
 	private String name;
 	
-	public Conversion(String name, List<Object> attributes, int client, List<Event> events) {
+	public static final String NAME_FIELD = "name";
+	
+	public static final Type type = Event.Type.conversion;
+	
+	public Conversion(String name) {
 		this.name = name;
-		this.attributes = attributes;
-		this.client = client;
-		this.events = events;
-	}
-
-	public List<Object> getAttributes() {
-		return attributes;
-	}
-
-	public int getClient() {
-		return client;
-	}
-
-	public List<Event> getEvents() {
-		return events;
 	}
 
 	public String getName() {
 		return name;
 	}
 
+	public void setName(String name) {
+		this.name = name;
+	}
 }

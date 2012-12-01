@@ -1,11 +1,9 @@
 package com.bryanreinero.hum.element.http;
 
 import com.bryanreinero.hum.element.HumElement;
-import com.bryanreinero.hum.visitor.Visitor;
-import com.google.code.morphia.annotations.Embedded;
+import com.bryanreinero.hum.visitor.*;
 
-@Embedded
-public class RequestURLPort extends HumElement {
+public class RequestURLPort extends HumElement implements Visitable {
 
 	@Override
 	public void accept(Visitor visitor) {

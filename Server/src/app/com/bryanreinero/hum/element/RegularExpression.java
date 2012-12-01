@@ -3,11 +3,9 @@ package com.bryanreinero.hum.element;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.bryanreinero.hum.visitor.Visitor;
-import com.google.code.morphia.annotations.Embedded;
+import com.bryanreinero.hum.visitor.*;
 
-@Embedded
-public class RegularExpression extends HumElement {
+public class RegularExpression extends HumElement implements Visitable {
 	
 	private Pattern pattern = null;
 	private Input input = null;

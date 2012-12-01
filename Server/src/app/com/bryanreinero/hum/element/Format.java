@@ -1,8 +1,8 @@
 package com.bryanreinero.hum.element;
 
-import com.bryanreinero.hum.visitor.Visitor;
+import com.bryanreinero.hum.visitor.*;
 
-public class Format extends MixedContentElement {
+public class Format extends MixedContentElement implements Visitable {
 
 	@Override
 	public void accept(Visitor visitor) {

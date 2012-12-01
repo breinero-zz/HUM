@@ -1,24 +1,13 @@
 package com.bryanreinero.hum.element;
 
-import com.bryanreinero.hum.element.geo.AreaCode;
-import com.bryanreinero.hum.element.geo.Block;
-import com.bryanreinero.hum.element.geo.Carriers;
-import com.bryanreinero.hum.element.geo.City;
-import com.bryanreinero.hum.element.geo.Continent;
-import com.bryanreinero.hum.element.geo.Country;
-import com.bryanreinero.hum.element.geo.DMA;
-import com.bryanreinero.hum.element.geo.IP;
-import com.bryanreinero.hum.element.geo.L1Domain;
-import com.bryanreinero.hum.element.geo.L2Domain;
-import com.bryanreinero.hum.element.geo.State;
-import com.bryanreinero.hum.element.geo.ZipCode;
+import com.bryanreinero.hum.element.geo.*;
 import com.bryanreinero.hum.element.http.*;
 import com.bryanreinero.hum.element.persistence.*;
-import com.bryanreinero.hum.visitor.Visitable;
+import com.bryanreinero.hum.event.Profile;
 
-public abstract class HumElement implements  Visitable {
-	
-	public abstract void addParent(HumElement element);
+public abstract class HumElement {
+
+	public abstract void addParent( HumElement parent );
 	
 	public void addChild(HumElement element) { throw new IllegalArgumentException(); }
 	public void addChild(And element) { throw new IllegalArgumentException(); }
@@ -128,4 +117,6 @@ public abstract class HumElement implements  Visitable {
 	
 	public void addChild(URLDecode element) { throw new IllegalArgumentException(); }
 	public void addChild(URLEncode element) { throw new IllegalArgumentException(); }
+	
+	public void addChild(Profile element) { throw new IllegalArgumentException(); }
 }

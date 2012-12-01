@@ -1,46 +1,30 @@
 package com.bryanreinero.hum.element;
 
 import java.util.ArrayList;
-
-import javax.xml.bind.annotation.XmlEnumValue;
+import java.util.List;
 
 import com.bryanreinero.hum.visitor.*;
-import com.google.code.morphia.annotations.Embedded;
 
-@Embedded
-public class Compare extends HumElement {
+public class Compare extends HumElement implements Visitable {
     
-    private ArrayList<HumElement> children;
+    private List<Visitable> children = new ArrayList<Visitable>();
     private Operator op;
     
     public enum Operator {
-
-        @XmlEnumValue("eq")
         EQ("eq"),
-        @XmlEnumValue("ge")
         GE("ge"),
-        @XmlEnumValue("le")
         LE("le"),
-        @XmlEnumValue("lt")
         LT("lt"),
-        @XmlEnumValue("gt")
         GT("gt"),
-        @XmlEnumValue("ne")
         NE("ne"),
-        @XmlEnumValue("seq")
         SEQ("seq"),
-        @XmlEnumValue("iseq")
         ISEQ("iseq"),
-        @XmlEnumValue("inseq")
         INSEQ("inseq"),
-        @XmlEnumValue("contains")
         CONTAINS("contains"),
-        @XmlEnumValue("starts-with")
         STARTS_WITH("starts-with"),
-        @XmlEnumValue("ends-with")
         ENDS_WITH("ends-with"),
-        @XmlEnumValue("any")
         ANY("any");
+        
         private final String value;
 
         Operator(String v) {
@@ -86,14 +70,11 @@ public class Compare extends HumElement {
         this.op = value;
     }
     
-    public ArrayList<HumElement> getChildren() {
+    public List<Visitable> getChildren() {
         return children;
     }
 
     public void addChild(Value element){
-    	if(children == null)
-    		children = new ArrayList<HumElement>();
-    	
     	children.add(element);
     }
 

@@ -1,12 +1,9 @@
 package com.bryanreinero.hum.element;
 
-import com.bryanreinero.hum.element.geo.Block;
 import com.bryanreinero.hum.visitor.*;
-import com.google.code.morphia.annotations.Embedded;
 
-@Embedded
-public class If extends HumElement{
-    private HumElement child;
+public class If extends HumElement implements Visitable {
+    private Visitable child;
     private Block path;
     private Else elseElement;
     
@@ -39,7 +36,7 @@ public class If extends HumElement{
         return path;
     }
     
-    public HumElement getChild() {
+    public Visitable getChild() {
         return child;
     }
     

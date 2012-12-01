@@ -1,14 +1,9 @@
 package com.bryanreinero.hum.element;
 
-import javax.xml.bind.annotation.XmlAttribute;
+import com.bryanreinero.hum.visitor.*;
 
-import com.bryanreinero.hum.visitor.Visitor;
-import com.google.code.morphia.annotations.Embedded;
+public class RandomNumber extends HumElement implements Visitable {
 
-@Embedded
-public class RandomNumber extends HumElement {
-
-    @XmlAttribute(name = "max")
     protected Integer max;
 
     /**

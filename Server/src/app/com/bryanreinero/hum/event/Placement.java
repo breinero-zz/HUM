@@ -1,6 +1,6 @@
 package com.bryanreinero.hum.event;
 
-import java.util.List;
+import java.util.Set;
 
 public class Placement {
 	
@@ -8,9 +8,16 @@ public class Placement {
 	private String page;
 	private String position;
 	private String publisher;
-	private List attributes;
+	private Set<Attribute> attributes;
 	
-	public Placement ( String site, String page, String position, String publisher, List attributes ) {
+	public static final String SITE_FIELD = "site";
+	public static final String PAGE_FIELD = "page";
+	public static final String POSITION_FIELD = "position";
+	public static final String PUBLISHER_FIELD = "publisher";
+	public static final String ATTRIBUTES_FIELD = "attributes";
+	
+	
+	public Placement ( String site, String page, String position, String publisher, Set<Attribute> attributes ) {
 		this.site = site;
 		this.page = page;
 		this.position = position;
@@ -34,7 +41,7 @@ public class Placement {
 		return publisher;
 	}
 
-	public List getAttributes() {
+	public Set<Attribute> getAttributes() {
 		return attributes;
 	}
 	

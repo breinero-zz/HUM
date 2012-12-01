@@ -1,11 +1,10 @@
 package com.bryanreinero.hum.element.geo;
 
 import com.bryanreinero.hum.element.HumElement;
-import com.bryanreinero.hum.visitor.*;
-import com.google.code.morphia.annotations.Embedded;
+import com.bryanreinero.hum.visitor.Visitable;
+import com.bryanreinero.hum.visitor.Visitor;
 
-@Embedded
-public class L1Domain extends HumElement {
+public class L1Domain extends HumElement implements Visitable {
 
     @Override
     public void addParent(HumElement element) throws IllegalArgumentException {

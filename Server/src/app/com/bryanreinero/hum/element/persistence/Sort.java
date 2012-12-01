@@ -1,10 +1,10 @@
 package com.bryanreinero.hum.element.persistence;
 
 import com.bryanreinero.hum.element.HumElement;
+import com.bryanreinero.hum.visitor.*;
 import com.bryanreinero.hum.element.MixedContentElement;
-import com.bryanreinero.hum.visitor.Visitor;
 
-public class Sort extends MixedContentElement {
+public class Sort extends MixedContentElement implements Visitable {
 
 	@Override
 	public void accept(Visitor visitor) {

@@ -3,10 +3,8 @@ package com.bryanreinero.hum.element.http;
 import com.bryanreinero.hum.element.HumElement;
 import com.bryanreinero.hum.element.NamedVariableElement;
 import com.bryanreinero.hum.visitor.*;
-import com.google.code.morphia.annotations.Embedded;
 
-@Embedded
-public class ResponseHeader extends NamedVariableElement {
+public class ResponseHeader extends NamedVariableElement  implements Visitable {
 
     @Override
     public void addParent(HumElement element) throws IllegalArgumentException {

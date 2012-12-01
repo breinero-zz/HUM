@@ -9,12 +9,13 @@ import com.bryanreinero.hum.element.geo.State;
 import com.bryanreinero.hum.element.geo.ZipCode;
 import com.bryanreinero.hum.element.http.*;
 import com.bryanreinero.hum.element.persistence.*;
+import com.bryanreinero.hum.visitor.*;
 
-public abstract class MixedContentElement extends HumElement {
+public abstract class MixedContentElement extends HumElement implements Visitable {
 	
-	ArrayList<HumElement> children = new ArrayList<HumElement>();
+	List<Visitable> children = new ArrayList<Visitable>();
 
-	public List<HumElement> getChildren() {
+	public List<Visitable> getChildren() {
 		return children;
 	}
 	

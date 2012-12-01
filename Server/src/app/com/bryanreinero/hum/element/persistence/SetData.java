@@ -1,10 +1,10 @@
 package com.bryanreinero.hum.element.persistence;
 
 import com.bryanreinero.hum.element.HumElement;
+import com.bryanreinero.hum.visitor.*;
 import com.bryanreinero.hum.element.Value;
-import com.bryanreinero.hum.visitor.Visitor;
 
-public class SetData extends PersistenceElement {
+public class SetData extends PersistenceElement implements Visitable {
 
 	private Value value = null;
 	

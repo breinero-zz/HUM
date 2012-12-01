@@ -6,7 +6,7 @@ import com.bryanreinero.hum.visitor.*;
 import com.google.code.morphia.annotations.Embedded;
 
 @Embedded
-public class RequestHeader extends MixedContentElement {
+public class RequestHeader extends MixedContentElement implements Visitable {
 	
     @Override
     public void addParent(HumElement element) throws IllegalArgumentException {

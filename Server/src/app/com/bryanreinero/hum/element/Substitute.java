@@ -1,10 +1,7 @@
 package com.bryanreinero.hum.element;
 
-import com.bryanreinero.hum.visitor.Visitor;
-import com.google.code.morphia.annotations.Embedded;
-
-@Embedded
-public class Substitute extends MixedContentElement {
+import com.bryanreinero.hum.visitor.*;
+public class Substitute extends MixedContentElement implements Visitable {
 
 	@Override
 	public void accept(Visitor visitor) {

@@ -1,36 +1,56 @@
 package com.bryanreinero.hum.event;
 
-import java.util.List;
-import java.util.StringTokenizer;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.bson.BSONObject;
 
-public class Profile {
+import com.bryanreinero.hum.element.HumElement;
+import com.bryanreinero.hum.visitor.*;
+
+public class Profile extends HumElement implements Visitable {
 	
-	private List<BSONObject> documents;
+	private Set<Event> events = new HashSet<Event>();
+	private Set<Attribute> attributes = new HashSet<Attribute>();
 	
-	public int count( List<BSONObject> docs ) {
+	public int count( Set<BSONObject> docs ) {
 		if ( docs == null )
 			return 0;
 		
 		return docs.size();
 	}
-	
-	private Object getField ( Object object, StringTokenizer tokenizer ) {
-		if ( tokenizer.hasMoreTokens() && object instanceof BSONObject ) {
-			String targetName = tokenizer.nextToken(".");
-			return getField( ((BSONObject)object).get(targetName ), tokenizer  );
-		}
-		return object;	
+
+	public Set<Event> getEvents() {
+		return events;
+	}
+
+	public void setEvents(Set<Event> events) {
+		this.events = events;
 	}
 	
-	private boolean checkNull(Object a, Object b ) { 
-		if( a == null && b == null)
-			return true;
- 
-		if( ( a == null && b != null ) || (a != null && b == null ) )
-				return false;
-		
-		return true;
+	public void addEvent( Event event ) {
+		events.add( event );
+	}
+
+	public Set<Attribute> getAttributes() {
+		return attributes;
+	}
+
+	public void setAttributes(Set<Attribute> attributes) {
+		this.attributes = attributes;
+	}
+	
+	public void addAttribute( Attribute attribute ) {
+		attributes.add(attribute);
+	}
+
+	@Override
+	public void addParent( HumElement parent ) {
+		parent.addChild( this );
+	}
+
+	@Override
+	public void accept( Visitor visitor) {
+		visitor.visit( this );
 	}
 }

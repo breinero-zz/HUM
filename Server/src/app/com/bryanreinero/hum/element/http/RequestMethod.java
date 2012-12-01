@@ -1,9 +1,9 @@
 package com.bryanreinero.hum.element.http;
 
 import com.bryanreinero.hum.element.HumElement;
-import com.bryanreinero.hum.visitor.Visitor;
+import com.bryanreinero.hum.visitor.*;
 
-public class RequestMethod extends HumElement {
+public class RequestMethod extends HumElement implements Visitable {
 
 	@Override
 	public void accept(Visitor visitor) {
@@ -14,5 +14,4 @@ public class RequestMethod extends HumElement {
 	public void addParent(HumElement element) {
 		element.addChild(this);
 	}
-
 }

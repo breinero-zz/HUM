@@ -1,7 +1,7 @@
 package com.bryanreinero.hum.event;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
@@ -11,7 +11,7 @@ public class Persistor {
 	public static DBObject convertToDBObject ( Event event ) {
 		DBObject evn = new BasicDBObject( "type", event.getType());
 		evn.put("attribtes", event.getAttributes());
-		
+
 		return evn;
 	}
 	
@@ -19,7 +19,11 @@ public class Persistor {
 		DBObject ctv = new BasicDBObject( "name", creative.getName());
 		ctv.put("width", creative.getWidth());
 		ctv.put("height", creative.getHeight());
-		ctv.put("attribtes", creative.getAttributes());
+		
+		Set<DBObject> attributes = new HashSet<DBObject>();
+		for( Attribute attr : creative.getAttributes() )
+			attributes.add( convertToDBObject( attr ) );
+		ctv.put("attribtes", attributes );
 		
 		return ctv;
 	}
@@ -29,7 +33,11 @@ public class Persistor {
 		plc.put("page", placement.getPage());
 		plc.put("position", placement.getPosition());
 		plc.put("publisher", placement.getPublisher());
-		plc.put("attribtes", placement.getAttributes());
+		
+		Set<DBObject> attributes = new HashSet<DBObject>();
+		for( Attribute attr : placement.getAttributes() )
+			attributes.add( convertToDBObject( attr ) );
+		plc.put("attribtes", attributes );
 		
 		return plc;
 	}
@@ -41,7 +49,6 @@ public class Persistor {
 		imp.put("creative", creative);
 		DBObject placement  = convertToDBObject(impression.getPlacement());
 		imp.put("placement", placement);
-		imp.put("attributes", impression.getAttributes());
 		imp.put("campaign", impression.getCampaign());
 	
 		return imp;
@@ -53,7 +60,6 @@ public class Persistor {
 		clk.put("creative", creative);
 		DBObject placement  = convertToDBObject(click.getPlacement());
 		clk.put("placement", placement);
-		clk.put("attributes", click.getAttributes());
 		clk.put("campaign", click.getCampaign());
 	
 		return clk;
@@ -62,14 +68,15 @@ public class Persistor {
 	public static DBObject convertToDBObject ( Conversion conversion ) {
 		DBObject cnv = new BasicDBObject("type", "conversion");
 		cnv.put("name", conversion.getName());
-		List<DBObject> events = new ArrayList<DBObject>();
-		for ( Event event : conversion.getEvents() ){
-			events.add( convertToDBObject( event ) );
-		}
-		cnv.put("events", events);
 		cnv.put("attributes", conversion.getAttributes());
-		
 		return cnv;
 	}
 
+	public static DBObject convertToDBObject ( Attribute attribute ) {
+		DBObject attr = new BasicDBObject();
+		attr.put("name", attribute.getName());
+		attr.put("value", attribute.getValue() );
+		return attr;
+	}
+	
 }

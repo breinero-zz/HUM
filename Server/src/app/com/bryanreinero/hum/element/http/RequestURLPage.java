@@ -5,7 +5,7 @@ import com.bryanreinero.hum.visitor.*;
 import com.google.code.morphia.annotations.Embedded;
 
 @Embedded
-public class RequestURLPage extends HumElement {
+public class RequestURLPage extends HumElement implements Visitable {
 
     @Override
     public void addParent(HumElement element) throws IllegalArgumentException {

@@ -1,10 +1,8 @@
 package com.bryanreinero.hum.element;
 
-import com.bryanreinero.hum.visitor.Visitor;
-import com.google.code.morphia.annotations.Embedded;
+import com.bryanreinero.hum.visitor.*;
 
-@Embedded
-public class Value extends MixedContentElement {
+public class Value extends MixedContentElement implements Visitable {
 
 	@Override
 	public void addParent(HumElement element) throws IllegalArgumentException {
@@ -12,7 +10,7 @@ public class Value extends MixedContentElement {
 	}
 
 	@Override
-	public void accept(Visitor visitor) {
+	public void accept( Visitor visitor ) {
 		visitor.visit(this);
 	}
 

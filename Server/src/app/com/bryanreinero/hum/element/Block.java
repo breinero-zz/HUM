@@ -1,27 +1,23 @@
-package com.bryanreinero.hum.element.geo;
+package com.bryanreinero.hum.element;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import com.bryanreinero.hum.element.ContentType;
-import com.bryanreinero.hum.element.GetVariable;
-import com.bryanreinero.hum.element.HumElement;
-import com.bryanreinero.hum.element.If;
-import com.bryanreinero.hum.element.SetVariable;
-import com.bryanreinero.hum.element.SubTree;
 import com.bryanreinero.hum.element.http.*;
 import com.bryanreinero.hum.element.persistence.SetData;
 import com.bryanreinero.hum.visitor.*;
+
 import com.google.code.morphia.annotations.Embedded;
 
 @Embedded
-public class Block extends HumElement {
-    private ArrayList <HumElement> children = new ArrayList<HumElement>();
+public class Block extends HumElement implements Visitable {
+    private List <Visitable> children = new ArrayList<Visitable>();
 
-    public void setChildren(ArrayList <HumElement> children) {
+    public void setChildren(ArrayList <Visitable> children) {
         this.children = children;
     }
 
-    public ArrayList <HumElement> getChildren() {
+    public List <Visitable> getChildren() {
         return children;
     }
     

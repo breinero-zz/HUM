@@ -1,10 +1,8 @@
 package com.bryanreinero.hum.element;
 
 import com.bryanreinero.hum.visitor.*;
-import com.google.code.morphia.annotations.Embedded;
 
-@Embedded
-public class SetVariable extends NamedVariableElement {
+public class SetVariable extends NamedVariableElement implements Visitable {
 
     @Override
     public void addParent(HumElement element) throws IllegalArgumentException {
