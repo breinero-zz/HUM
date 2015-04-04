@@ -8,8 +8,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import org.xml.sax.SAXException;
 
@@ -18,7 +18,7 @@ import com.bryanreinero.hum.parser.XMLParser;
 import com.bryanreinero.hum.persistence.ConfigDAO;
 import com.bryanreinero.hum.persistence.DataService;
 import com.mongodb.DBCollection;
-import com.mongodb.Mongo;
+import com.mongodb.MongoClient;
 import com.mongodb.MongoException;
 
 public class HUMServer extends HttpServlet {
@@ -40,7 +40,7 @@ public class HUMServer extends HttpServlet {
 
 		try {
 
-			Mongo mongo = new Mongo(
+			MongoClient mongo = new MongoClient(
 					config.getInitParameter(MONGODB_CONNECTION_PARAMETER));
 			dataServices = new DataService(mongo);
 			ConfigDAO dao = new ConfigDAO(

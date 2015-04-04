@@ -18,11 +18,11 @@ import com.bryanreinero.hum.persistence.ConfigDAO;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
-import com.mongodb.Mongo;
+import com.mongodb.MongoClient;
 import com.mongodb.MongoException;
 
 public class TreeLoader {
-	Mongo connection;
+	MongoClient connection;
 	DB db;
 	DBCollection collection;
 	private XMLParser parser;
@@ -30,7 +30,7 @@ public class TreeLoader {
 	private ConfigDAO treestore;
 	
 	public TreeLoader() throws UnknownHostException, MongoException, SAXException{
-		connection = new Mongo( "localhost" , 27017 );
+		connection = new MongoClient( "localhost" , 27017 );
 		db = connection.getDB("configurations");
 		collection = db.getCollection("ConfigurationTree");
 		parser = new XMLParser();
