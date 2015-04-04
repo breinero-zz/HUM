@@ -24,8 +24,11 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
+import com.bryanreinero.firehose.Transformer;
 import com.bryanreinero.hum.element.*;
 import com.bryanreinero.hum.element.http.*;
+import com.bryanreinero.hum.element.json.Document;
+import com.bryanreinero.hum.element.json.Field;
 import com.bryanreinero.hum.element.persistence.*;
 import com.bryanreinero.hum.event.*;
 import com.bryanreinero.hum.visitor.*;
@@ -42,7 +45,6 @@ public class Executor implements Visitor {
 	private final HttpServletRequest req;
 	private String requestBody = null;
 	private final URL requestURL;
-	
 	private final Stack<Object> stack = new Stack<Object>();
 	private final Map<String, String> variables = new HashMap<String, String>();
 	private final Random randGen = new Random();
@@ -551,5 +553,34 @@ public class Executor implements Visitor {
 	public void visit(Profile profile) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void visit(Document document) {
+		Map<String, Object> doc = new HashMap<String, Object>();
+		this.stack.push( doc );
+		for( Field field : document.getFields() )
+			field.accept(this);
+	}
+
+	@Override
+	public void visit(Field field) {
+		field.getName().accept( this );
+		String name = (String)this.stack.pop();
+		field.getType().accept( this );
+		String type = (String)this.stack.pop();
+		field.getValue().accept( this );
+		String value = (String)this.stack.pop();
+		
+		
+		@SuppressWarnings("unchecked")
+		Map<String, Object> document = (Map<String, Object> )this.stack.peek();
+		document.put( name, Transformer.getTransformer( type ).transform( value ) );
+		
+	}
+
+	@Override
+	public void visit(Type type) {
+		stack.push(handleMixedChildren(type.getChildren()));
 	}
 }

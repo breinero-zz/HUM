@@ -110,10 +110,9 @@ public abstract class HumElement {
 	
 	public void addChild(URLDecode element) { throw new IllegalArgumentException(); }
 	public void addChild(URLEncode element) { throw new IllegalArgumentException(); }
-	
-	public void addChild(Profile element) { throw new IllegalArgumentException(); }
 
 	public void addChild(Field element) { throw new IllegalArgumentException(); }
 
 	public void addChild(Type type) { throw new IllegalArgumentException(); }
+	
 }

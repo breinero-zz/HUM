@@ -8,12 +8,13 @@ package com.bryanreinero.hum.visitor;
 
 import com.bryanreinero.hum.element.*;
 import com.bryanreinero.hum.element.http.*;
+import com.bryanreinero.hum.element.json.*;
 import com.bryanreinero.hum.element.persistence.*;
 import com.bryanreinero.hum.event.*;
 
 public interface Visitor {
     
-    public void visit(If element);
+    public void visit(Document document);
     
     public void visit(Block element);
 
@@ -122,4 +123,10 @@ public interface Visitor {
 	public void visit(DBCommand dbCommand);
 	
 	public void visit(Profile profile);
+
+	public void visit(Field field);
+
+	public void visit(Type type);
+
+	void visit(If element);
 }

@@ -17,21 +17,19 @@ import com.bryanreinero.hum.persistence.Deserializer;
 
 public class XMLParser extends DefaultHandler implements Deserializer<String, DecisionTree> {
 	
-    private static HashMap<String, HumSAXHandler> elements;
+    private HashMap<String, HumSAXHandler> elements = new HashMap<String, HumSAXHandler>();
 
     private static XMLReader parser = null;
     private static final String PARSER_NAME = "org.apache.xerces.parsers.SAXParser";
-    private Stack<HumElement> stack;
+    private Stack<HumElement> stack = new Stack<HumElement>();
     
-    private interface HumSAXHandler 
+    public interface HumSAXHandler 
     { 
         void handleEnd(XMLParser parser) throws Exception;
         void handleStart(XMLParser parser, Attributes atts) throws Exception;
     }
     
-	static{
-		
-		elements = new HashMap<String, HumSAXHandler>();
+	private void initialize () {
 		
 		elements.put("And",
                 new HumSAXHandler()
@@ -583,6 +581,18 @@ public class XMLParser extends DefaultHandler implements Deserializer<String, De
         });
 	}
 	
+	public void addHandler ( String name, HumSAXHandler handler ) {
+		elements.put( name, handler );
+	}
+	
+	public void push ( HumElement o ) {
+		this.stack.push(o);
+	}
+	
+	public HumElement pop() {
+		return this.stack.pop();
+	}
+	
 	public void unite() {
 		HumElement element = null;
         try{
@@ -595,7 +605,6 @@ public class XMLParser extends DefaultHandler implements Deserializer<String, De
 	
     public DecisionTree parse(InputStream is) throws IOException, SAXException 
     {
-        stack = new Stack<HumElement>();
         parser.parse( new InputSource(is) );
         return (DecisionTree)stack.pop();
     }
@@ -605,7 +614,7 @@ public class XMLParser extends DefaultHandler implements Deserializer<String, De
         parser = XMLReaderFactory.createXMLReader( PARSER_NAME );
         parser.setContentHandler( this );
         parser.setErrorHandler( this );
-        
+        this.initialize();
         stack = new Stack<HumElement>();
     }
     
