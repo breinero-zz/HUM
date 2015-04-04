@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.bryanreinero.hum.element.http.*;
-import com.bryanreinero.hum.element.persistence.*;
 import com.bryanreinero.hum.visitor.*;
 
 public abstract class MixedContentElement extends HumElement implements Visitable {
@@ -38,27 +37,12 @@ public abstract class MixedContentElement extends HumElement implements Visitabl
 	}
 	
 	@Override
-	public void addChild(DBCommand element){
-		children.add(element);
-	}
-	
-	@Override
 	public void addChild(GetCookie element){
 		children.add(element);
 	}
 	
 	@Override
-	public void addChild(GetData element){
-		children.add(element);
-	}
-	
-	@Override
 	public void addChild(GetVariable element){
-		children.add(element);
-	}
-	
-	@Override
-	public void addChild(PutData element){
 		children.add(element);
 	}
 	
@@ -118,11 +102,6 @@ public abstract class MixedContentElement extends HumElement implements Visitabl
 	
 	@Override
 	public void addChild(RequestURLProtocol element){
-		children.add(element);
-	}
-	
-	@Override
-	public void addChild(SetData element){
 		children.add(element);
 	}
 

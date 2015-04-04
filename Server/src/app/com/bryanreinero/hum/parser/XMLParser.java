@@ -12,7 +12,6 @@ import org.apache.commons.lang3.StringEscapeUtils;
 
 import com.bryanreinero.hum.element.*;
 import com.bryanreinero.hum.element.http.*;
-import com.bryanreinero.hum.element.persistence.*;
 import com.bryanreinero.hum.persistence.Deserializer;
 
 public class XMLParser extends DefaultHandler implements Deserializer<String, DecisionTree> {
@@ -192,17 +191,6 @@ public class XMLParser extends DefaultHandler implements Deserializer<String, De
             
             public void handleStart(XMLParser parser, Attributes atts) throws Exception {
                 parser.stack.push(new Language());
-            }
-        });
-
-		elements.put("Limit", new HumSAXHandler()
-        {
-            public void handleEnd(XMLParser parser) throws Exception {
-                parser.unite();
-            }
-            
-            public void handleStart(XMLParser parser, Attributes atts) throws Exception {
-                parser.stack.push(new Limit());
             }
         });
 		
@@ -444,17 +432,6 @@ public class XMLParser extends DefaultHandler implements Deserializer<String, De
             }
         });
 		
-		elements.put("Sort", new HumSAXHandler()
-        {
-            public void handleEnd(XMLParser parser) throws Exception {
-                  parser.unite();
-            }
-            
-            public void handleStart(XMLParser parser, Attributes atts) throws Exception {
-                parser.stack.push(new Sort());
-            }
-        });
-		
 		elements.put("Substitute", new HumSAXHandler()
         {
             public void handleEnd(XMLParser parser) throws Exception {
@@ -496,65 +473,6 @@ public class XMLParser extends DefaultHandler implements Deserializer<String, De
             
             public void handleStart(XMLParser parser, Attributes atts) throws Exception {
                 parser.stack.push(new Value());
-            }
-        });
-		
-		elements.put("GetData", new HumSAXHandler()
-        {
-            public void handleEnd(XMLParser parser) throws Exception {
-            	parser.unite();
-            }
-            
-            public void handleStart(XMLParser parser, Attributes atts) throws Exception {
-            	GetData element = new GetData();
-            	String type = atts.getValue("type");
-            	if(type != null && type.length() != 0)
-            		element.setType(type);
-                parser.stack.push(element);
-            }
-        });
-		
-		elements.put("SetData", new HumSAXHandler()
-        {
-            public void handleEnd(XMLParser parser) throws Exception {
-                parser.unite();
-            }
-            
-            public void handleStart(XMLParser parser, Attributes atts) throws Exception {
-                parser.stack.push(new SetData());
-            }
-        });
-		
-		elements.put("Update", new HumSAXHandler()
-        {
-            public void handleEnd(XMLParser parser) throws Exception {
-                parser.unite();
-            }
-            
-            public void handleStart(XMLParser parser, Attributes atts) throws Exception {
-                parser.stack.push(new Update());
-            }
-        });
-		
-		elements.put("Fields", new HumSAXHandler()
-        {
-            public void handleEnd(XMLParser parser) throws Exception {
-                parser.unite();
-            }
-            
-            public void handleStart(XMLParser parser, Attributes atts) throws Exception {
-                parser.stack.push(new Fields());
-            }
-        });
-		
-		elements.put("Query", new HumSAXHandler()
-        {
-            public void handleEnd(XMLParser parser) throws Exception {
-                parser.unite();
-            }
-            
-            public void handleStart(XMLParser parser, Attributes atts) throws Exception {
-                parser.stack.push(new Query());
             }
         });
 		

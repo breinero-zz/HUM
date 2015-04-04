@@ -2,8 +2,6 @@ package com.bryanreinero.hum.element;
 
 import com.bryanreinero.hum.element.http.*;
 import com.bryanreinero.hum.element.json.Field;
-import com.bryanreinero.hum.element.persistence.*;
-import com.bryanreinero.hum.event.Profile;
 
 public abstract class HumElement {
 
@@ -12,7 +10,6 @@ public abstract class HumElement {
 	public void addChild(HumElement element) { throw new IllegalArgumentException(); }
 	public void addChild(And element) { throw new IllegalArgumentException(); }
 	public void addChild(Compare element) { throw new IllegalArgumentException(); }
-	public void addChild(DBCommand element) { throw new IllegalArgumentException(); }
 	public void addChild(Else element) { throw new IllegalArgumentException(); }
 	public void addChild(IP element) { throw new IllegalArgumentException(); }
 	public void addChild(If element) { throw new IllegalArgumentException(); }
@@ -71,42 +68,10 @@ public abstract class HumElement {
 	public void addChild(GetCookie element) {
 		throw new IllegalArgumentException();
 	}
-
-	public void addChild(GetData element) {
-		throw new IllegalArgumentException();
-	}
-
-	public void addChild(Fields element) {
-		throw new IllegalArgumentException();
-	}
-
-	public void addChild(Update element) { throw new IllegalArgumentException(); }
-
-	public void addChild(Query element) {
-		throw new IllegalArgumentException();
-	}
-
-	public void addChild(PutData element) {
-		throw new IllegalArgumentException();
-	}
 	
-	public void addChild(SetData element) {
-		throw new IllegalArgumentException();
-	}
-	
-	public void addChild(Sort element) {
-		throw new IllegalArgumentException();
-	}
-
-	public void addChild(RequestURLPort element) {
-		throw new IllegalArgumentException();
-	}
+	public void addChild(RequestURLPort element) { throw new IllegalArgumentException(); }
 
 	public void addChild(DateTime element) { throw new IllegalArgumentException(); }
-
-	public void addChild(Limit element) {
-		throw new IllegalArgumentException();
-	}
 	
 	public void addChild(URLDecode element) { throw new IllegalArgumentException(); }
 	public void addChild(URLEncode element) { throw new IllegalArgumentException(); }

@@ -9,7 +9,6 @@ package com.bryanreinero.hum.visitor;
 import com.bryanreinero.hum.element.*;
 import com.bryanreinero.hum.element.http.*;
 import com.bryanreinero.hum.element.json.*;
-import com.bryanreinero.hum.element.persistence.*;
 import com.bryanreinero.hum.event.*;
 
 public interface Visitor {
@@ -93,18 +92,6 @@ public interface Visitor {
 	public void visit(RequestURI element);
 
 	public void visit(RequestContextPath element);
-	
-	public void visit(Fields element);
-	
-	public void visit(Query element);
-	
-	public void visit(GetData element);
-	
-	public void visit(Update element);
-	
-	public void visit(PutData element);
-
-	public void visit(SetData setData);
 
 	public void visit(DateTime dateTime);
 
@@ -112,15 +99,9 @@ public interface Visitor {
 
 	public void visit(RequestParameter requestParameter);
 
-	public void visit(Sort sort);
-
-	public void visit(Limit limit);
-
 	public void visit(URLDecode urlDecode);
 
 	public void visit(URLEncode urlEncode);
-
-	public void visit(DBCommand dbCommand);
 	
 	public void visit(Profile profile);
 

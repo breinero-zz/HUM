@@ -29,7 +29,6 @@ import com.bryanreinero.hum.element.*;
 import com.bryanreinero.hum.element.http.*;
 import com.bryanreinero.hum.element.json.Document;
 import com.bryanreinero.hum.element.json.Field;
-import com.bryanreinero.hum.element.persistence.*;
 import com.bryanreinero.hum.event.*;
 import com.bryanreinero.hum.visitor.*;
 import com.mongodb.DBCollection;
@@ -374,11 +373,6 @@ public class Executor implements Visitor {
 	}
 
 	@Override
-	public void visit(Limit element) {
-		this.stack.push(Integer.parseInt(handleMixedChildren(element.getChildren())));
-	}
-
-	@Override
 	public void visit(Literal element) {
 		this.stack.push(element.getValue());
 	}
@@ -428,81 +422,6 @@ public class Executor implements Visitor {
 	}
 
 	@Override
-	public void visit(Fields element) {
-		stack.push(handleMixedChildren(element.getChildren()));
-	}
-
-	@Override
-	public void visit(Query element) {
-		stack.push(handleMixedChildren(element.getChildren()));
-	}
-
-	@Override
-	public void visit(GetData element) {
-		
-		element.getName().accept(this);
-		DBCollection collection = HUMServer.getDataService((String)stack.pop());
-		DBCursor results;
-		element.getQuery().accept(this);
-		DBObject query = (DBObject)JSON.parse((String)this.stack.pop() );
-		
-		if(element.getFields() != null){
-			element.getFields().accept(this);
-			DBObject fields = (DBObject)JSON.parse((String)this.stack.pop() );
-			results = collection.find(query, fields);
-		}
-		else{
-			results = collection.find(query);
-		}
-		
-		if(element.getSort() != null){
-			element.getSort().accept(this);
-			results.sort((DBObject)JSON.parse((String)stack.pop()));
-		}
-		
-		if(element.getLimit() != null){
-			element.getLimit().accept(this);
-			results.limit(((Integer)stack.pop()).intValue());
-		}
-		
-		StringBuffer sb = new StringBuffer("{ \"results\" : [ ");
-		boolean first = true;
-		for(DBObject result : results) {
-			sb.append(((first)? result.toString() : ", "+result.toString() ) );
-			first = false;
-		}
-		stack.push(sb.toString()+" ] }");
-	}
-
-	@Override
-	public void visit(Update element) {
-		stack.push(variables.get(handleMixedChildren(element.getChildren())));
-	}
-
-	@Override
-	public void visit(PutData element) {
-		element.getQuery().accept(this);
-		element.getUpdate().accept(this);
-		DBObject update = (DBObject)JSON.parse((String)this.stack.pop() );
-		DBObject query = (DBObject)JSON.parse((String)this.stack.pop() );
-
-		element.getName().accept(this);
-		HUMServer.getDataService((String)stack.pop()).update(query, update);
-	}
-	
-	@Override
-	public void visit(SetData element) {
-		element.getValue().accept(this);
-		element.getName().accept(this);
-		HUMServer.getDataService((String)stack.pop()).insert((DBObject)JSON.parse( (String)stack.pop() ));
-	}
-	
-	@Override
-	public void visit(Sort element) {
-		stack.push(handleMixedChildren(element.getChildren()));
-	}
-
-	@Override
 	public void visit(DateTime element) {
 		SimpleDateFormat format = 
 			new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
@@ -537,16 +456,6 @@ public class Executor implements Visitor {
 		} catch (UnsupportedEncodingException e) {
 			logger.warn( e.getMessage() );
 		}
-	}
-
-	@Override
-	public void visit(DBCommand element) {
-		element.getQuery().accept(this);
-		DBObject object = (DBObject)JSON.parse((String)stack.pop());
-		element.getName().accept(this);
-		
-		stack.push(HUMServer.getDataService((String) stack.pop()).getDB()
-				.command(object));
 	}
 
 	@Override

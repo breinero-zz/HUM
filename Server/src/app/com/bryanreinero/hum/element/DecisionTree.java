@@ -7,7 +7,6 @@ import org.bson.types.ObjectId;
 
 import com.bryanreinero.hum.visitor.*;
 import com.bryanreinero.hum.element.http.*;
-import com.bryanreinero.hum.element.persistence.SetData;
 import com.google.code.morphia.annotations.*;
 
 @Entity
@@ -116,11 +115,6 @@ public class DecisionTree extends HumElement implements Visitable {
 	
 	@Override
 	public void addChild(SetCookie element){
-		children.add(element);
-	}
-	
-	@Override
-	public void addChild(SetData element){
 		children.add(element);
 	}
 	

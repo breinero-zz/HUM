@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.bryanreinero.hum.element.http.*;
-import com.bryanreinero.hum.element.persistence.SetData;
 import com.bryanreinero.hum.visitor.*;
 import com.google.code.morphia.annotations.Embedded;
 
@@ -67,11 +66,6 @@ public class Block extends HumElement implements Visitable {
 	
 	@Override
 	public void addChild(SetCookie element){
-		children.add(element);
-	}
-	
-	@Override
-	public void addChild(SetData element){
 		children.add(element);
 	}
 	
