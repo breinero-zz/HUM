@@ -1,17 +1,17 @@
 package com.bryanreinero.hum.persistence;
 
+import java.net.UnknownHostException;
+
 import com.bryanreinero.hum.element.DecisionTree;
 import com.bryanreinero.hum.element.Name;
 import com.bryanreinero.hum.element.Value;
+import com.bryanreinero.hum.element.Literal;
 import com.bryanreinero.hum.element.http.ResponseCode;
 import com.bryanreinero.hum.element.http.ResponseHeader;
-import com.bryanreinero.hum.element.Literal;
 import com.bryanreinero.hum.server.DataAccessObject;
-
 import com.google.code.morphia.Datastore;
 import com.google.code.morphia.Morphia;
-
-import com.mongodb.Mongo;
+import com.mongodb.MongoClient;
 import com.mongodb.MongoException;
 
 public class ConfigDAO implements DataAccessObject<String, DecisionTree> {
@@ -60,7 +60,7 @@ public class ConfigDAO implements DataAccessObject<String, DecisionTree> {
 		this.deserializer = deserializer;
 	}
 
-	public ConfigDAO(Mongo connection, String collection) throws MongoException {
+	public ConfigDAO(MongoClient connection, String collection) throws MongoException {
 		ds = morphia.createDatastore(connection, collection);
 		morphia.map(ConfigurationTree.class);
 	}
@@ -79,5 +79,20 @@ public class ConfigDAO implements DataAccessObject<String, DecisionTree> {
 	@Override
 	public void persist(DecisionTree object) {
 		ds.save(object);
+	}
+	
+	public static void main ( String[] args ) {
+		try {
+			MongoClient client = new MongoClient();
+			ConfigDAO dao = new ConfigDAO( client, "test" );
+			
+			DecisionTree tree = dao.get("default");
+			
+			
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 }
