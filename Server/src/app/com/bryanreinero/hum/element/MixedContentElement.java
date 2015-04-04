@@ -3,10 +3,6 @@ package com.bryanreinero.hum.element;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.bryanreinero.hum.element.geo.City;
-import com.bryanreinero.hum.element.geo.Country;
-import com.bryanreinero.hum.element.geo.State;
-import com.bryanreinero.hum.element.geo.ZipCode;
 import com.bryanreinero.hum.element.http.*;
 import com.bryanreinero.hum.element.persistence.*;
 import com.bryanreinero.hum.visitor.*;
@@ -58,15 +54,6 @@ public abstract class MixedContentElement extends HumElement implements Visitabl
 	
 	@Override
 	public void addChild(GetVariable element){
-		children.add(element);
-	}
-	
-	public void addChild(City element){
-		children.add(element);
-	}
-	
-	@Override
-	public void addChild(Country element){
 		children.add(element);
 	}
 	
@@ -138,11 +125,6 @@ public abstract class MixedContentElement extends HumElement implements Visitabl
 	public void addChild(SetData element){
 		children.add(element);
 	}
-	
-	@Override
-	public void addChild(State element){
-		children.add(element);
-	}
 
 	@Override
 	public void addChild(URLDecode element){
@@ -153,11 +135,4 @@ public abstract class MixedContentElement extends HumElement implements Visitabl
 	public void addChild(URLEncode element){
 		children.add(element);
 	}
-	
-	@Override
-	public void addChild(ZipCode element){
-		children.add(element);
-	}
-	
-	
 }

@@ -15,23 +15,20 @@ import java.util.Map;
 import java.util.Random;
 import java.util.SimpleTimeZone;
 import java.util.Stack;
-
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import com.bryanreinero.hum.element.*;
-import com.bryanreinero.hum.element.geo.*;
 import com.bryanreinero.hum.element.http.*;
 import com.bryanreinero.hum.element.persistence.*;
 import com.bryanreinero.hum.event.*;
 import com.bryanreinero.hum.visitor.*;
-
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
@@ -44,7 +41,6 @@ public class Executor implements Visitor {
 
 	private final HttpServletRequest req;
 	private String requestBody = null;
-	private final GeoLocation geoLocation;
 	private final URL requestURL;
 	
 	private final Stack<Object> stack = new Stack<Object>();
@@ -59,7 +55,6 @@ public class Executor implements Visitor {
 	public Executor(HttpServletRequest req) throws MalformedURLException {
 		this.req = req;
 		requestURL = new URL(req.getRequestURL().toString());
-		this.geoLocation = GeoLocation.getLocation(req);
 		this.response = new Response();
 	}
 	
@@ -129,21 +124,6 @@ public class Executor implements Visitor {
 	}
 
 	@Override
-	public void visit(AreaCode aBean) {
-		this.stack.push(this.geoLocation.getAreaCode());
-	}
-
-	@Override
-	public void visit(Carriers aBean) {
-		this.stack.push(this.geoLocation.getCarriers());
-	}
-
-	@Override
-	public void visit(City aBean) {
-		this.stack.push(this.geoLocation.getCity());
-	}
-
-	@Override
 	public void visit(Compare aBean) {
 		aBean.getChildren().get(0).accept(this);
 		aBean.getChildren().get(1).accept(this);
@@ -195,21 +175,6 @@ public class Executor implements Visitor {
 	}
 	
 	@Override
-	public void visit(Continent aBean) {
-		this.stack.push(this.geoLocation.getContinent());
-	}
-
-	@Override
-	public void visit(Country aBean) {
-		this.stack.push(this.geoLocation.getCountry());
-	}
-
-	@Override
-	public void visit(DMA aBean) {
-		this.stack.push(this.geoLocation.getDMA());
-	}
-	
-	@Override
 	public void visit(Else element) {
 		if(element.getIf() != null)
 			element.getIf().accept(this);
@@ -246,16 +211,6 @@ public class Executor implements Visitor {
 			element.getPath().accept(this);
 		else if(element.getElse() != null)
 			element.getElse().accept(this);
-	}
-
-	@Override
-	public void visit(L1Domain aBean) {
-		this.stack.push(this.geoLocation.getL1domain());
-	}
-
-	@Override
-	public void visit(L2Domain aBean) {
-		this.stack.push(this.geoLocation.getL2domain());
 	}
 
 	@Override
@@ -344,18 +299,8 @@ public class Executor implements Visitor {
 	}
 
 	@Override
-	public void visit(State element) {
-		this.stack.push(this.geoLocation.getState());
-	}
-
-	@Override
 	public void visit(UserAgent aBean) {
 		this.stack.push(req.getHeader("User-Agent"));
-	}
-
-	@Override
-	public void visit(ZipCode aBean) {
-		this.stack.push(this.geoLocation.getZipCode());
 	}
 
 	@Override

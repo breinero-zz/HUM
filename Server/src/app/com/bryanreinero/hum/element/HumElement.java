@@ -1,7 +1,7 @@
 package com.bryanreinero.hum.element;
 
-import com.bryanreinero.hum.element.geo.*;
 import com.bryanreinero.hum.element.http.*;
+import com.bryanreinero.hum.element.json.Field;
 import com.bryanreinero.hum.element.persistence.*;
 import com.bryanreinero.hum.event.Profile;
 
@@ -11,19 +11,12 @@ public abstract class HumElement {
 	
 	public void addChild(HumElement element) { throw new IllegalArgumentException(); }
 	public void addChild(And element) { throw new IllegalArgumentException(); }
-	public void addChild(AreaCode element) { throw new IllegalArgumentException(); }
-	public void addChild(Carriers element) { throw new IllegalArgumentException(); }
-	public void addChild(City element) { throw new IllegalArgumentException(); }
 	public void addChild(Compare element) { throw new IllegalArgumentException(); }
-	public void addChild(Continent element) { throw new IllegalArgumentException(); }
-	public void addChild(Country element) { throw new IllegalArgumentException(); }
 	public void addChild(DBCommand element) { throw new IllegalArgumentException(); }
-	public void addChild(DMA element) { throw new IllegalArgumentException(); }
 	public void addChild(Else element) { throw new IllegalArgumentException(); }
 	public void addChild(IP element) { throw new IllegalArgumentException(); }
 	public void addChild(If element) { throw new IllegalArgumentException(); }
-	public void addChild(L1Domain element) { throw new IllegalArgumentException(); }
-	public void addChild(L2Domain element) { throw new IllegalArgumentException(); }
+
 	public void addChild(Language element) { throw new IllegalArgumentException(); }
 	public void addChild(Or element) { throw new IllegalArgumentException(); }
 	public void addChild(Block element) { throw new IllegalArgumentException(); }
@@ -43,10 +36,10 @@ public abstract class HumElement {
 	public void addChild(ResponseHeader element) { throw new IllegalArgumentException(); }
 	public void addChild(SetCookie element) { throw new IllegalArgumentException(); }
 	public void addChild(SetVariable element) { throw new IllegalArgumentException(); }
-	public void addChild(State element) { throw new IllegalArgumentException(); }
+
 	public void addChild(UserAgent element) { throw new IllegalArgumentException(); }
 	public void addChild(Value element) { throw new IllegalArgumentException(); }
-	public void addChild(ZipCode element) { throw new IllegalArgumentException(); }
+
 	public void addChild(Redirect element) { throw new IllegalArgumentException(); }
 	public void addChild(Literal element) { throw new IllegalArgumentException(); }
 	public void addChild(Name element) { throw new IllegalArgumentException(); }
@@ -119,4 +112,8 @@ public abstract class HumElement {
 	public void addChild(URLEncode element) { throw new IllegalArgumentException(); }
 	
 	public void addChild(Profile element) { throw new IllegalArgumentException(); }
+
+	public void addChild(Field element) { throw new IllegalArgumentException(); }
+
+	public void addChild(Type type) { throw new IllegalArgumentException(); }
 }

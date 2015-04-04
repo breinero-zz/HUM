@@ -8,20 +8,9 @@ import java.util.Stack;
 
 import org.xml.sax.*;
 import org.xml.sax.helpers.*;
-
 import org.apache.commons.lang3.StringEscapeUtils;
 
 import com.bryanreinero.hum.element.*;
-import com.bryanreinero.hum.element.geo.AreaCode;
-import com.bryanreinero.hum.element.geo.Carriers;
-import com.bryanreinero.hum.element.geo.City;
-import com.bryanreinero.hum.element.geo.Continent;
-import com.bryanreinero.hum.element.geo.Country;
-import com.bryanreinero.hum.element.geo.DMA;
-import com.bryanreinero.hum.element.geo.L1Domain;
-import com.bryanreinero.hum.element.geo.L2Domain;
-import com.bryanreinero.hum.element.geo.State;
-import com.bryanreinero.hum.element.geo.ZipCode;
 import com.bryanreinero.hum.element.http.*;
 import com.bryanreinero.hum.element.persistence.*;
 import com.bryanreinero.hum.persistence.Deserializer;
@@ -57,40 +46,6 @@ public class XMLParser extends DefaultHandler implements Deserializer<String, De
                 parser.stack.push(node);
             }
         });
-		
-		elements.put("AreaCode", new HumSAXHandler()
-        {
-            public void handleEnd(XMLParser parser) throws Exception {
-                  parser.unite();
-            }
-            
-            public void handleStart(XMLParser parser, Attributes atts) throws Exception {
-            	parser.stack.push(new AreaCode());
-            }
-        });
-
-		elements.put("Carriers", new HumSAXHandler()
-        {
-            public void handleEnd(XMLParser parser) throws Exception {
-                  parser.unite();
-            }
-            
-            public void handleStart(XMLParser parser, Attributes atts) throws Exception {
-            	parser.stack.push(new Carriers());
-            }
-        });
-
-		elements.put("City", new HumSAXHandler()
-        {
-            public void handleEnd(XMLParser parser) throws Exception {
-                  parser.unite();
-            }
-            
-            public void handleStart(XMLParser parser, Attributes atts) throws Exception {
-            	parser.stack.push(new City());
-            }
-        });
-		
 		elements.put("Compare", new HumSAXHandler()
         {
             public void handleEnd(XMLParser parser) throws Exception {
@@ -114,28 +69,6 @@ public class XMLParser extends DefaultHandler implements Deserializer<String, De
                 parser.stack.push(new ContentType());
             }
         });
-		
-		elements.put("Continent", new HumSAXHandler()
-        {
-            public void handleEnd(XMLParser parser) throws Exception {
-                parser.unite();
-            }
-            
-            public void handleStart(XMLParser parser, Attributes atts) throws Exception {
-                parser.stack.push(new Continent());
-            }
-        });
-
-		elements.put("Country", new HumSAXHandler()
-        {
-            public void handleEnd(XMLParser parser) throws Exception {
-                parser.unite();
-            }
-            
-            public void handleStart(XMLParser parser, Attributes atts) throws Exception {
-            	parser.stack.push(new Country());
-            }
-        });
 
 		elements.put("DateTime", new HumSAXHandler()
         {
@@ -145,17 +78,6 @@ public class XMLParser extends DefaultHandler implements Deserializer<String, De
             
             public void handleStart(XMLParser parser, Attributes atts) throws Exception {
             	parser.stack.push(new DateTime());
-            }
-        });
-
-		elements.put("DMA", new HumSAXHandler()
-        {
-            public void handleEnd(XMLParser parser) throws Exception {
-                parser.unite();
-            }
-            
-            public void handleStart(XMLParser parser, Attributes atts) throws Exception {
-            	parser.stack.push(new DMA());
             }
         });
 		
@@ -261,28 +183,6 @@ public class XMLParser extends DefaultHandler implements Deserializer<String, De
             
             public void handleStart(XMLParser parser, Attributes atts) throws Exception {
                 parser.stack.push(new Input());
-            }
-        });
-		
-		elements.put("L1Domain", new HumSAXHandler()
-        {
-            public void handleEnd(XMLParser parser) throws Exception {
-                parser.unite();
-            }
-            
-            public void handleStart(XMLParser parser, Attributes atts) throws Exception {
-                parser.stack.push(new L1Domain());
-            }
-        });
-
-		elements.put("L2Domain", new HumSAXHandler()
-        {
-            public void handleEnd(XMLParser parser) throws Exception {
-                parser.unite();
-            }
-            
-            public void handleStart(XMLParser parser, Attributes atts) throws Exception {
-                parser.stack.push(new L2Domain());
             }
         });
 
@@ -556,17 +456,6 @@ public class XMLParser extends DefaultHandler implements Deserializer<String, De
                 parser.stack.push(new Sort());
             }
         });
-
-		elements.put("State", new HumSAXHandler()
-        {
-            public void handleEnd(XMLParser parser) throws Exception {
-                parser.unite();
-            }
-            
-            public void handleStart(XMLParser parser, Attributes atts) throws Exception {
-                parser.stack.push(new State());
-            }
-        });
 		
 		elements.put("Substitute", new HumSAXHandler()
         {
@@ -609,17 +498,6 @@ public class XMLParser extends DefaultHandler implements Deserializer<String, De
             
             public void handleStart(XMLParser parser, Attributes atts) throws Exception {
                 parser.stack.push(new Value());
-            }
-        });
-		
-		elements.put("ZipCode", new HumSAXHandler()
-        {
-            public void handleEnd(XMLParser parser) throws Exception {
-                parser.unite();
-            }
-            
-            public void handleStart(XMLParser parser, Attributes atts) throws Exception {
-                parser.stack.push(new ZipCode());
             }
         });
 		
