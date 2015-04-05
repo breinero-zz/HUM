@@ -27,9 +27,7 @@ import org.apache.log4j.Logger;
 import com.bryanreinero.firehose.Transformer;
 import com.bryanreinero.hum.element.*;
 import com.bryanreinero.hum.element.http.*;
-import com.bryanreinero.hum.element.json.Document;
-import com.bryanreinero.hum.element.json.Field;
-import com.bryanreinero.hum.event.*;
+import com.bryanreinero.hum.element.json.*;
 import com.bryanreinero.hum.visitor.*;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
@@ -456,12 +454,6 @@ public class Executor implements Visitor {
 		} catch (UnsupportedEncodingException e) {
 			logger.warn( e.getMessage() );
 		}
-	}
-
-	@Override
-	public void visit(Profile profile) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override

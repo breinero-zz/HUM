@@ -9,7 +9,6 @@ package com.bryanreinero.hum.visitor;
 import com.bryanreinero.hum.element.*;
 import com.bryanreinero.hum.element.http.*;
 import com.bryanreinero.hum.element.json.*;
-import com.bryanreinero.hum.event.*;
 
 public interface Visitor {
     
@@ -102,8 +101,6 @@ public interface Visitor {
 	public void visit(URLDecode urlDecode);
 
 	public void visit(URLEncode urlEncode);
-	
-	public void visit(Profile profile);
 
 	public void visit(Field field);
 
