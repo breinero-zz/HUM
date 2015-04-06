@@ -6,11 +6,13 @@ import com.bryanreinero.hum.element.DecisionTree;
 import com.bryanreinero.hum.element.Name;
 import com.bryanreinero.hum.element.Value;
 import com.bryanreinero.hum.element.Literal;
+import com.bryanreinero.hum.element.http.ResponseBody;
 import com.bryanreinero.hum.element.http.ResponseCode;
 import com.bryanreinero.hum.element.http.ResponseHeader;
 import com.bryanreinero.hum.server.DataAccessObject;
 
 import org.mongodb.morphia.*;
+
 import com.mongodb.MongoClient;
 import com.mongodb.MongoException;
 
@@ -48,6 +50,12 @@ public class ConfigDAO implements DataAccessObject<String, DecisionTree> {
 		ResponseHeader contentType = new ResponseHeader();
 		contentType.addChild(headerName);
 		contentType.addChild(headerValue);
+		
+		ResponseBody body = new ResponseBody();
+		Literal responseText = new Literal();
+		responseText.setValue("No servlet here");
+		body.addChild(responseText);
+		defaultTree.addChild(body);
 		defaultTree.addChild(contentType);
 		defaultTree.addChild(notFoundHeader);
 	}
