@@ -1,18 +1,15 @@
 package com.bryanreinero.hum.element.json;
 
-import java.net.MalformedURLException;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 import com.bryanreinero.firehose.Transformer;
 import com.bryanreinero.hum.element.HumElement;
-import com.bryanreinero.hum.element.Name;
 import com.bryanreinero.hum.element.Type;
-import com.bryanreinero.hum.element.Value;
+import com.bryanreinero.hum.parser.HumSAXHandler;
 import com.bryanreinero.hum.parser.XMLParser;
-import com.bryanreinero.hum.parser.XMLParser.HumSAXHandler;
-import com.bryanreinero.hum.server.Executor;
+import com.bryanreinero.hum.test.Executor;
+import com.bryanreinero.hum.visitor.Visitable;
 
 public class Test {
 
@@ -20,18 +17,16 @@ public class Test {
 	XMLParser parser = null;
 	
 	public Test() {
-		Executor ex = null;
-		XMLParser parser = null;
+
 		try {
-			ex = new Executor(null);
+			ex = new Executor( );
 			parser = new XMLParser();
 			
-			parser.addHandler("document", 
+			parser.addHandler("Document", 
 				new HumSAXHandler() {
 
 					@Override
 					public void handleEnd(XMLParser parser) throws Exception {
-						parser.unite();
 					}
 
 					@Override
@@ -43,7 +38,7 @@ public class Test {
 				}
 			);
 			
-			parser.addHandler("field", 
+			parser.addHandler("Field", 
 					new HumSAXHandler() {
 
 						@Override
@@ -60,13 +55,26 @@ public class Test {
 					}
 				);
 			
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-			System.exit(-1);
+			parser.addHandler("Type", 
+					new HumSAXHandler() {
+
+						@Override
+						public void handleEnd(XMLParser parser) throws Exception {
+							parser.unite();
+						}
+
+						@Override
+						public void handleStart(XMLParser parser, Attributes atts)
+								throws Exception {
+							parser.push(new Type() );
+						}
+					
+					}
+				);
 		} catch (SAXException e) {
 			e.printStackTrace();
 			System.exit(-1);
-		}
+		} 
 	}
 	
 	public void startElement( String tag) throws SAXException {
@@ -78,46 +86,43 @@ public class Test {
 	}
 
 	private void takeString(String string) throws SAXException {
-		parser.characters(string.toCharArray(), 0, string.length()-1);
+		parser.characters(string.toCharArray(), 0, string.length() );
 	}
 	
 	public HumElement get() {
-		return parser.pop();
+		Visitable e =  (Visitable)parser.pop();
+		e.accept(ex);
+		return null;
 	}
 	
 	public static void main ( String[] args ) {
 		
-		HumElement e = null;
-		
 		Test test = new Test();
 		try {
-			test.startElement( "document" );
-			test.startElement( "field" );
+			test.startElement( "Document" );
+			test.startElement( "Field" );
 			
 			// field name element
-			test.startElement( "name" );
+			test.startElement( "Name" );
             test.takeString( "a" );
-			test.endElement( "name" );
+			test.endElement( "Name" );
 			
 			// field type element
-			test.startElement( "type" );
+			test.startElement( "Type" );
 			test.takeString( Transformer.TYPE_STRING );
-			test.endElement( "type" );
+			test.endElement( "Type" );
 			
-			test.startElement( "value" );
+			test.startElement( "Value" );
 			test.takeString( "test" );
-			test.endElement( "value" );
+			test.endElement( "Value" );
 			
-			test.endElement( "field" );
-			test.endElement( "document" );
-			
-			e = test.get();
+			test.endElement( "Field" );
+			test.endElement( "Document" );
+			test.get();
+		
 		} catch ( SAXException ex) {
 			ex.printStackTrace();
 			return;
 		}
-		System.out.println( e );
-		//document.accept( ex );
 	}
-
 }

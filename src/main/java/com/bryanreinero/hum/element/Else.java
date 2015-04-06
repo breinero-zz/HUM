@@ -1,7 +1,8 @@
 package com.bryanreinero.hum.element;
 
 import com.bryanreinero.hum.visitor.*;
-import com.google.code.morphia.annotations.Embedded;
+
+import org.mongodb.morphia.annotations.*;
 
 @Embedded
 public class Else extends HumElement implements Visitable {

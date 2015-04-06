@@ -22,13 +22,7 @@ public class XMLParser extends DefaultHandler implements Deserializer<String, De
     private static final String PARSER_NAME = "org.apache.xerces.parsers.SAXParser";
     private Stack<HumElement> stack = new Stack<HumElement>();
     
-    public interface HumSAXHandler 
-    { 
-        void handleEnd(XMLParser parser) throws Exception;
-        void handleStart(XMLParser parser, Attributes atts) throws Exception;
-    }
-    
-	private void initialize () {
+    private void initialize () {
 		
 		elements.put("And",
                 new HumSAXHandler()

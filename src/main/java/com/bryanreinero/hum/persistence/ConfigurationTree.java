@@ -1,6 +1,7 @@
 package com.bryanreinero.hum.persistence;
 
-import com.google.code.morphia.annotations.Id;
+
+import org.mongodb.morphia.annotations.*;
 
 public class ConfigurationTree {
 	

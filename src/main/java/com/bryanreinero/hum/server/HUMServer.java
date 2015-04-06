@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-
 import org.xml.sax.SAXException;
 
 import com.bryanreinero.hum.element.DecisionTree;
@@ -32,11 +31,9 @@ public class HUMServer extends HttpServlet {
 
 	private static DataService dataServices;
 
-	public static Logger logger;
+	private static final Logger logger = LogManager.getLogger( HUMServer.class.getName() );
 
 	public void init(ServletConfig config) {
-
-		logger = LogManager.getLogger( HUMServer.class.getName() );
 
 		try {
 

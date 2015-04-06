@@ -9,8 +9,8 @@ import com.bryanreinero.hum.element.Literal;
 import com.bryanreinero.hum.element.http.ResponseCode;
 import com.bryanreinero.hum.element.http.ResponseHeader;
 import com.bryanreinero.hum.server.DataAccessObject;
-import com.google.code.morphia.Datastore;
-import com.google.code.morphia.Morphia;
+
+import org.mongodb.morphia.*;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoException;
 
@@ -62,6 +62,13 @@ public class ConfigDAO implements DataAccessObject<String, DecisionTree> {
 
 	public ConfigDAO(MongoClient connection, String collection) throws MongoException {
 		ds = morphia.createDatastore(connection, collection);
+		morphia.map(ConfigurationTree.class);
+	}
+	
+	public ConfigDAO( String url, Deserializer<String, DecisionTree> deserializer ) throws MongoException, UnknownHostException {
+		this.deserializer = deserializer;
+		MongoClient client = new MongoClient();
+		ds = morphia.createDatastore(client, "serverconfigs");
 		morphia.map(ConfigurationTree.class);
 	}
 

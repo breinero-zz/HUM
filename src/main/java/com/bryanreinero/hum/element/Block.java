@@ -5,7 +5,8 @@ import java.util.List;
 
 import com.bryanreinero.hum.element.http.*;
 import com.bryanreinero.hum.visitor.*;
-import com.google.code.morphia.annotations.Embedded;
+
+import org.mongodb.morphia.annotations.*;
 
 @Embedded
 public class Block extends HumElement implements Visitable {
