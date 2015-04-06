@@ -9,6 +9,7 @@ package com.bryanreinero.hum.visitor;
 import com.bryanreinero.hum.element.*;
 import com.bryanreinero.hum.element.http.*;
 import com.bryanreinero.hum.element.json.*;
+import com.bryanreinero.hum.persistence.DAO;
 
 public interface Visitor {
     
@@ -107,4 +108,6 @@ public interface Visitor {
 	public void visit(Type type);
 
 	void visit(If element);
+
+	public void visit(DAO dao);
 }

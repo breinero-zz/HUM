@@ -4,6 +4,8 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Stack;
 
 import org.xml.sax.*;
@@ -21,6 +23,15 @@ public class XMLParser extends DefaultHandler implements Deserializer<String, De
     private static XMLReader parser = null;
     private static final String PARSER_NAME = "org.apache.xerces.parsers.SAXParser";
     private Stack<HumElement> stack = new Stack<HumElement>();
+    private Set<String> expecting = new HashSet<String>();
+    
+    public void setExpecting ( Set<String> allowed ) {
+    	this.expecting = allowed;
+    }
+    
+    public boolean isExpected( String name ) {
+    	return expecting.contains(name);
+    }
     
     private void initialize () {
 		

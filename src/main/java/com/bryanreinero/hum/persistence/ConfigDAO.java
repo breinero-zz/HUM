@@ -9,14 +9,14 @@ import com.bryanreinero.hum.element.Literal;
 import com.bryanreinero.hum.element.http.ResponseBody;
 import com.bryanreinero.hum.element.http.ResponseCode;
 import com.bryanreinero.hum.element.http.ResponseHeader;
-import com.bryanreinero.hum.server.DataAccessObject;
+import com.bryanreinero.hum.server.ConfigurationDAO;
 
 import org.mongodb.morphia.*;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoException;
 
-public class ConfigDAO implements DataAccessObject<String, DecisionTree> {
+public class ConfigDAO implements ConfigurationDAO {
 
 	private Datastore ds;
 	private Morphia morphia = new Morphia();

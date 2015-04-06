@@ -28,11 +28,9 @@ import com.bryanreinero.firehose.Transformer;
 import com.bryanreinero.hum.element.*;
 import com.bryanreinero.hum.element.http.*;
 import com.bryanreinero.hum.element.json.*;
+import com.bryanreinero.hum.persistence.DAO;
 import com.bryanreinero.hum.visitor.*;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
-import com.mongodb.util.JSON;
+import com.mongodb.BasicDBObject;
 
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
@@ -48,13 +46,17 @@ public class Executor implements Visitor {
 
 	private Response response = null; 
 	
-	
+	private final ConfigurationDAO dao;
+	private final DAOs daos;
+
 	private static final Logger logger = LogManager.getLogger( Executor.class.getName() );
 	
-	public Executor(HttpServletRequest req) throws MalformedURLException {
+	public Executor(HttpServletRequest req, ConfigurationDAO dao ) throws MalformedURLException {
 		this.req = req;
 		requestURL = new URL(req.getRequestURL().toString());
 		this.response = new Response();
+		this.dao = dao;
+		this.daos = null;
 	}
 	
 	private String getBody() {
@@ -416,7 +418,7 @@ public class Executor implements Visitor {
 	@Override
 	public void visit(SubTree subTree) {
 		String name = handleMixedChildren( subTree.getChildren() );
-		HUMServer.store.get( name ).accept(this);
+		dao.get( name ).accept(this);
 	}
 
 	@Override
@@ -458,7 +460,7 @@ public class Executor implements Visitor {
 
 	@Override
 	public void visit(Document document) {
-		Map<String, Object> doc = new HashMap<String, Object>();
+		Map<String, Object> doc = new BasicDBObject();
 		this.stack.push( doc );
 		for( Field field : document.getFields() )
 			field.accept(this);
@@ -483,5 +485,16 @@ public class Executor implements Visitor {
 	@Override
 	public void visit(Type type) {
 		stack.push(handleMixedChildren(type.getChildren()));
+	}
+
+	@Override
+	public void visit(DAO dao) {
+		dao.getName().accept( this );
+		String daoName = (String)this.stack.pop();
+		dao.getName().accept( this );
+		dao.getDocument().accept( this );
+		
+		Object o = daos.execute( daoName, (Map<String, Object>)this.stack.pop() );
+		
 	}
 }

@@ -1,6 +1,7 @@
 package com.bryanreinero.hum.element;
 
 import com.bryanreinero.hum.element.http.*;
+import com.bryanreinero.hum.element.json.Document;
 import com.bryanreinero.hum.element.json.Field;
 
 public abstract class HumElement {
@@ -79,5 +80,9 @@ public abstract class HumElement {
 	public void addChild(Field element) { throw new IllegalArgumentException(); }
 
 	public void addChild(Type type) { throw new IllegalArgumentException(); }
+
+	public void addChild(Document document) {
+		throw new IllegalArgumentException();
+	}
 	
 }

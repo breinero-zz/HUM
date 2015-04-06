@@ -11,7 +11,9 @@ public class DAOs {
 		if( !daos.containsKey( store) )
 			return "Requested store: "+store+" does not exist";
 		
-		return daos.get(store).execute(request);
+		DAO target = daos.get(store);
+		
+		return target.execute(request);
 	}
 	
 	public void put( String name, DAO store ) {
