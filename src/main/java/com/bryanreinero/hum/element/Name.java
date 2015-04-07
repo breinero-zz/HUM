@@ -13,5 +13,4 @@ public class Name extends MixedContentElement implements Visitable {
 	public void addParent(HumElement element) {
 		element.addChild(this);
 	}
-
 }

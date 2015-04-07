@@ -23,7 +23,7 @@ public class ConfigDAO implements ConfigurationDAO {
 	private Deserializer<String, DecisionTree> deserializer;
 	
 	// this is tree is returned when the requested match in not found
-	private static final DecisionTree defaultTree = new DecisionTree ();
+	public static final DecisionTree defaultTree = new DecisionTree ();
 	
 	public static final int defaultErrorCode = 404;
 	public static final String defaultContentType = "text";

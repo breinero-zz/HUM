@@ -14,7 +14,6 @@ public abstract class HumElement {
 	public void addChild(Else element) { throw new IllegalArgumentException(); }
 	public void addChild(IP element) { throw new IllegalArgumentException(); }
 	public void addChild(If element) { throw new IllegalArgumentException(); }
-
 	public void addChild(Language element) { throw new IllegalArgumentException(); }
 	public void addChild(Or element) { throw new IllegalArgumentException(); }
 	public void addChild(Block element) { throw new IllegalArgumentException(); }
@@ -34,22 +33,14 @@ public abstract class HumElement {
 	public void addChild(ResponseHeader element) { throw new IllegalArgumentException(); }
 	public void addChild(SetCookie element) { throw new IllegalArgumentException(); }
 	public void addChild(SetVariable element) { throw new IllegalArgumentException(); }
-
 	public void addChild(UserAgent element) { throw new IllegalArgumentException(); }
 	public void addChild(Value element) { throw new IllegalArgumentException(); }
-
 	public void addChild(Redirect element) { throw new IllegalArgumentException(); }
 	public void addChild(Literal element) { throw new IllegalArgumentException(); }
 	public void addChild(Name element) { throw new IllegalArgumentException(); }
-	public void addChild(Input element) {
-		throw new IllegalArgumentException();
-	}
-	public void addChild(RegularExpression element)  {
-		throw new IllegalArgumentException();
-	}
-	public void addChild(Substitute element)  {
-		throw new IllegalArgumentException();
-	}
+	public void addChild(Input element) { throw new IllegalArgumentException(); }
+	public void addChild(RegularExpression element) { throw new IllegalArgumentException();}
+	public void addChild(Substitute element) { throw new IllegalArgumentException(); }
 	public void addChild(Pattern element)  {
 		throw new IllegalArgumentException();
 	}

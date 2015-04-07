@@ -46,17 +46,15 @@ public class Executor implements Visitor {
 
 	private Response response = null; 
 	
-	private final ConfigurationDAO dao;
 	private final DAOs daos;
 
 	private static final Logger logger = LogManager.getLogger( Executor.class.getName() );
 	
-	public Executor(HttpServletRequest req, ConfigurationDAO dao ) throws MalformedURLException {
+	public Executor(HttpServletRequest req, DAOs daos ) throws MalformedURLException {
 		this.req = req;
 		requestURL = new URL(req.getRequestURL().toString());
 		this.response = new Response();
-		this.dao = dao;
-		this.daos = null;
+		this.daos = daos;
 	}
 	
 	private String getBody() {
@@ -418,7 +416,21 @@ public class Executor implements Visitor {
 	@Override
 	public void visit(SubTree subTree) {
 		String name = handleMixedChildren( subTree.getChildren() );
-		dao.get( name ).accept(this);
+		Map<String, Object> request = new HashMap<String, Object>();
+		request.put("name", name);
+		Map<String, Object> response = (Map<String, Object>)daos.execute("configs", request);
+		
+		if( !response.get("ok").equals("1") )
+			logger.warn("Couldn't execute requested config "+name);
+		
+		DecisionTree config = (DecisionTree)response.get("config");
+		
+		if( config == null )
+			logger.fatal("Config is null. Even default tree didin't return for "+name);
+		else {
+			config.accept(this);
+			logger.info("Config "+name+" executing");
+		}
 	}
 
 	@Override

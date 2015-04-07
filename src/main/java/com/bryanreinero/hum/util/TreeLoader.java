@@ -14,6 +14,7 @@ import org.xml.sax.SAXException;
 
 import com.bryanreinero.hum.element.DecisionTree;
 import com.bryanreinero.hum.parser.XMLParser;
+import com.bryanreinero.hum.parser.XMLParserFactory;
 import com.bryanreinero.hum.persistence.ConfigDAO;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -33,7 +34,7 @@ public class TreeLoader {
 		connection = new MongoClient( "localhost" , 27017 );
 		db = connection.getDB("configurations");
 		collection = db.getCollection("ConfigurationTree");
-		parser = new XMLParser();
+		parser = XMLParserFactory.getParser();
 		treestore = new ConfigDAO(connection, "configurations");
 		treestore.setDeserializer(parser);
 	}
