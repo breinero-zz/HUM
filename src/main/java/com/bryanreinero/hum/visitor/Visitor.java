@@ -63,7 +63,7 @@ public interface Visitor {
 	
 	public void visit(Redirect element);
 
-	public void visit(DecisionTree element);
+	public void visit(Specification element);
 
 	public void visit(Value aBean);
 

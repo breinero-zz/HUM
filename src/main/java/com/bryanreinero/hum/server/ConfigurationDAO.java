@@ -1,9 +1,9 @@
 package com.bryanreinero.hum.server;
 
-import com.bryanreinero.hum.element.DecisionTree;
+import com.bryanreinero.hum.element.Specification;
 
 public interface ConfigurationDAO {
 
-	public DecisionTree get( String key);
-	public void persist( DecisionTree tree );
+	public Specification get( String key);
+	public void persist( Specification tree );
 }

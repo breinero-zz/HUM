@@ -86,7 +86,7 @@ public class XMLParserFactory {
 							"Unallowed attribute \"timetolive\" : "
 									+ timeToLive);
 
-				DecisionTree tree = new DecisionTree();
+				Specification tree = new Specification();
 				tree.setName(name);
 				tree.setClient(Integer.parseInt(timeToLive));
 				parser.push(tree);

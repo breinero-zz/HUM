@@ -13,7 +13,7 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import com.bryanreinero.hum.element.*;
 import com.bryanreinero.hum.persistence.Deserializer;
 
-public class XMLParser extends DefaultHandler implements Deserializer<String, DecisionTree> {
+public class XMLParser extends DefaultHandler implements Deserializer<String, Specification> {
 	
     private HashMap<String, HumSAXHandler> elements = new HashMap<String, HumSAXHandler>();
 
@@ -42,10 +42,10 @@ public class XMLParser extends DefaultHandler implements Deserializer<String, De
         }
 	}
 	
-    public DecisionTree parse(InputStream is) throws IOException, SAXException 
+    public Specification parse(InputStream is) throws IOException, SAXException 
     {
         reader.parse( new InputSource(is) );
-        return (DecisionTree)stack.pop();
+        return (Specification)stack.pop();
     }
     
     public XMLParser( XMLReader reader )
@@ -96,7 +96,7 @@ public class XMLParser extends DefaultHandler implements Deserializer<String, De
     }
 
 	@Override
-	public DecisionTree deserialize(String input) throws IllegalArgumentException {
+	public Specification deserialize(String input) throws IllegalArgumentException {
 		try {
 			return parse(new ByteArrayInputStream(input.getBytes("UTF-8")));
 		} catch (Exception e) {

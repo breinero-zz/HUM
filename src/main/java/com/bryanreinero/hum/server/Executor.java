@@ -350,7 +350,7 @@ public class Executor implements Visitor {
 	}
 
 	@Override
-	public void visit(DecisionTree aBean) {
+	public void visit(Specification aBean) {
 		for( Visitable element : aBean.getChildren() )
 			element.accept(this);
 	}
@@ -423,7 +423,7 @@ public class Executor implements Visitor {
 		if( !response.get("ok").equals("1") )
 			logger.warn("Couldn't execute requested config "+name);
 		
-		DecisionTree config = (DecisionTree)response.get("config");
+		Specification config = (Specification)response.get("config");
 		
 		if( config == null )
 			logger.fatal("Config is null. Even default tree didin't return for "+name);

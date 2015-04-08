@@ -11,7 +11,7 @@ import com.bryanreinero.hum.element.http.*;
 
 
 @Entity
-public class DecisionTree extends HumElement implements Visitable {
+public class Specification extends HumElement implements Visitable {
 
 	@Id
 	private ObjectId id;
