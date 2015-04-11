@@ -69,9 +69,8 @@ public class XMLParserFactory {
 			}
 		});
 
-		parser.addHandler("DecisionTree", new HumSAXHandler() {
-			public void handleEnd(XMLParser parser) throws Exception {
-			}
+		parser.addHandler("Specification", new HumSAXHandler() {
+			public void handleEnd(XMLParser parser) throws Exception {}
 
 			public void handleStart(XMLParser parser, Attributes atts)
 					throws Exception {
