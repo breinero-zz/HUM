@@ -3,7 +3,7 @@ package com.bryanreinero.hum.server;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DAOs {
+public class DAOs  implements DAOService {
 	private Map<String, DAO> daos = new HashMap<String, DAO>();
 	
 	public Object execute ( String store, Map<String, Object> request ) {

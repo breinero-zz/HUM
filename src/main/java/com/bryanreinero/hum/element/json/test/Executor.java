@@ -6,7 +6,6 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.SimpleTimeZone;
@@ -250,7 +249,7 @@ public class Executor implements Visitor {
 	}
 
 	@Override
-	public void visit(DecisionTree aBean) {
+	public void visit(Specification aBean) {
 		for( Visitable element : aBean.getChildren() )
 			element.accept(this);
 	}
@@ -380,6 +379,7 @@ public class Executor implements Visitor {
 		String daoName = (String)this.stack.pop();
 		dao.getDocument().accept( this );
 		
-		this.daos.execute( daoName, (Map<String, Object>)this.stack.pop() );
+		Object o = this.daos.execute( daoName, (Map<String, Object>)this.stack.pop() );
+		System.out.println( o );
 	}
 }

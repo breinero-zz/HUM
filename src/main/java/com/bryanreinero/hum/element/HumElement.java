@@ -3,6 +3,7 @@ package com.bryanreinero.hum.element;
 import com.bryanreinero.hum.element.http.*;
 import com.bryanreinero.hum.element.json.Document;
 import com.bryanreinero.hum.element.json.Field;
+import com.bryanreinero.hum.persistence.DAO;
 
 public abstract class HumElement {
 
@@ -75,5 +76,7 @@ public abstract class HumElement {
 	public void addChild(Document document) {
 		throw new IllegalArgumentException();
 	}
+
+	public void addChild(DAO dao) { throw new IllegalArgumentException(); }
 	
 }

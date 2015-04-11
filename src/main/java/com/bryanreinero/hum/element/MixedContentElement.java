@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.bryanreinero.hum.element.http.*;
+import com.bryanreinero.hum.persistence.*;
 import com.bryanreinero.hum.visitor.*;
 
 public abstract class MixedContentElement extends HumElement implements Visitable {
@@ -113,5 +114,10 @@ public abstract class MixedContentElement extends HumElement implements Visitabl
 	@Override
 	public void addChild(URLEncode element){
 		children.add(element);
+	}
+	
+	@Override 
+	public void addChild( DAO dao ) {
+		children.add(dao);
 	}
 }

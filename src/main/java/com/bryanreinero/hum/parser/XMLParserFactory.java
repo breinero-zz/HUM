@@ -6,15 +6,19 @@ import org.xml.sax.helpers.XMLReaderFactory;
 
 import com.bryanreinero.hum.element.*;
 import com.bryanreinero.hum.element.http.*;
+import com.bryanreinero.hum.element.json.Document;
+import com.bryanreinero.hum.element.json.Field;
+import com.bryanreinero.hum.persistence.DAO;
 
 public class XMLParserFactory {
 
-    private static final String PARSER_NAME = "org.apache.xerces.parsers.SAXParser";
-    
+	private static final String PARSER_NAME = "org.apache.xerces.parsers.SAXParser";
+
 	public static XMLParser getParser() {
 		XMLParser parser;
 		try {
-			parser = new XMLParser( XMLReaderFactory.createXMLReader( PARSER_NAME ) );
+			parser = new XMLParser(
+					XMLReaderFactory.createXMLReader(PARSER_NAME));
 		} catch (SAXException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -70,7 +74,8 @@ public class XMLParserFactory {
 		});
 
 		parser.addHandler("Specification", new HumSAXHandler() {
-			public void handleEnd(XMLParser parser) throws Exception {}
+			public void handleEnd(XMLParser parser) throws Exception {
+			}
 
 			public void handleStart(XMLParser parser, Attributes atts)
 					throws Exception {
@@ -496,7 +501,68 @@ public class XMLParserFactory {
 			}
 		});
 
+		parser.addHandler("Document", new HumSAXHandler() {
+			private static final String name = "Document";
+
+			@Override
+			public void handleEnd(XMLParser parser) throws Exception {
+				parser.unite();
+			}
+
+			@Override
+			public void handleStart(XMLParser parser, Attributes atts)
+					throws Exception {
+
+				parser.push(new Document());
+			}
+
+		});
+
+		parser.addHandler("Field", new HumSAXHandler() {
+
+			@Override
+			public void handleEnd(XMLParser parser) throws Exception {
+				parser.unite();
+			}
+
+			@Override
+			public void handleStart(XMLParser parser, Attributes atts)
+					throws Exception {
+				parser.push(new Field());
+			}
+
+		});
+
+		parser.addHandler("Type", new HumSAXHandler() {
+
+			@Override
+			public void handleEnd(XMLParser parser) throws Exception {
+				parser.unite();
+			}
+
+			@Override
+			public void handleStart(XMLParser parser, Attributes atts)
+					throws Exception {
+				parser.push(new Type());
+			}
+
+		});
+
+		parser.addHandler("DAO", new HumSAXHandler() {
+
+			@Override
+			public void handleEnd(XMLParser parser) throws Exception {
+				parser.unite();
+			}
+
+			@Override
+			public void handleStart(XMLParser parser, Attributes atts)
+					throws Exception {
+				parser.push(new DAO());
+			}
+
+		});
+
 		return parser;
 	}
-
 }
