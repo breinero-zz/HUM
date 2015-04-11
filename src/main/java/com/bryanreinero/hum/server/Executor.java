@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
+import com.bryanreinero.firehose.Converter;
 import com.bryanreinero.firehose.Transformer;
 import com.bryanreinero.hum.element.*;
 import com.bryanreinero.hum.element.http.*;
@@ -469,8 +470,9 @@ public class Executor implements Visitor {
 	public void visit(Document document) {
 		Map<String, Object> doc = new BasicDBObject();
 		this.stack.push( doc );
-		for( Field field : document.getFields() )
+		for( Field field : document.getFields() ) {
 			field.accept(this);
+		}
 	}
 
 	@Override
@@ -484,8 +486,8 @@ public class Executor implements Visitor {
 		
 		
 		@SuppressWarnings("unchecked")
-		Map<String, Object> document = (Map<String, Object> )this.stack.peek();
-		document.put( name, Transformer.getTransformer( type ).transform( value ) );
+		Map<String, Object> doc = (Map<String, Object> )this.stack.peek();
+		Converter.convert(doc, name, Transformer.Type.getType(type), value );
 		
 	}
 
@@ -502,6 +504,7 @@ public class Executor implements Visitor {
 		dao.getDocument().accept( this );
 		
 		Object o = daos.execute( daoName, (Map<String, Object>)this.stack.pop() );
+		stack.push(o);
 		
 	}
 }
