@@ -11,6 +11,7 @@ public class Compare extends HumElement implements Visitable {
     private Operator op;
     
     public enum Operator {
+    	EX("exists"),
         EQ("eq"),
         GE("ge"),
         LE("le"),

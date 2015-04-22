@@ -125,6 +125,8 @@ public class Executor implements Visitor {
 
 	@Override
 	public void visit(Compare aBean) {
+		
+		//TODO this really needs to be handled properly
 		aBean.getChildren().get(0).accept(this);
 		aBean.getChildren().get(1).accept(this);
 		String termB = ((String)this.stack.pop());
@@ -141,6 +143,9 @@ public class Executor implements Visitor {
 			break;
 		case EQ: 
 			this.stack.push( (Integer.parseInt(termA) == Integer.parseInt(termB)) ? new Boolean(true) : new Boolean(false));
+			break;
+		case EX:
+			stack.push( ( termA.compareTo("null") != 0 )  ? new Boolean(true) : new Boolean(false));
 			break;
 		case GE: 
 			this.stack.push( (Integer.parseInt(termA) >= Integer.parseInt(termB)) ? new Boolean(true) : new Boolean(false));
@@ -487,7 +492,12 @@ public class Executor implements Visitor {
 		
 		@SuppressWarnings("unchecked")
 		Map<String, Object> doc = (Map<String, Object> )this.stack.peek();
-		Converter.convert(doc, name, Transformer.Type.getType(type), value );
+		try {
+			Converter.convert(doc, name, Transformer.Type.getType(type), value );
+		}catch( Exception e ) {
+			logger.warn("Trouble parsing Field \"{ name: \""+field.getName()+"\", type: \""+field.getType()+"\", value: \"\"}");
+			throw e;
+		}
 		
 	}
 
