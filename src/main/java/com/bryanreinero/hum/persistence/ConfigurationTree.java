@@ -55,18 +55,4 @@ public class ConfigurationTree {
 	public void setTimeToLive(int timeToLive) {
 		this.timeToLive = timeToLive;
 	}
-
-//	public void addChild(TimeToLive timeToLive ) {
-//		setTimeToLive( timeToLive.getValue() );
-//	}
-//
-//	@Override
-//	public void addParent(ConfigurationElement element) {
-//		//element.addChild( this );
-//	}
-//
-//	@Override
-//	public void accept(ConfigurationVisitor visitor) {
-//		visitor.visit( this );
-//	}
 }

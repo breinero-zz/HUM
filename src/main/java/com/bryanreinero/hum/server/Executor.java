@@ -24,15 +24,14 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
+import com.bryanreinero.firehose.Converter;
 import com.bryanreinero.firehose.Transformer;
 import com.bryanreinero.hum.element.*;
 import com.bryanreinero.hum.element.http.*;
 import com.bryanreinero.hum.element.json.*;
+import com.bryanreinero.hum.persistence.DAO;
 import com.bryanreinero.hum.visitor.*;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
-import com.mongodb.util.JSON;
+import com.mongodb.BasicDBObject;
 
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
@@ -48,13 +47,15 @@ public class Executor implements Visitor {
 
 	private Response response = null; 
 	
-	
+	private final DAOService daos;
+
 	private static final Logger logger = LogManager.getLogger( Executor.class.getName() );
 	
-	public Executor(HttpServletRequest req) throws MalformedURLException {
+	public Executor(HttpServletRequest req, DAOService daos ) throws MalformedURLException {
 		this.req = req;
 		requestURL = new URL(req.getRequestURL().toString());
 		this.response = new Response();
+		this.daos = daos;
 	}
 	
 	private String getBody() {
@@ -124,6 +125,8 @@ public class Executor implements Visitor {
 
 	@Override
 	public void visit(Compare aBean) {
+		
+		//TODO this really needs to be handled properly
 		aBean.getChildren().get(0).accept(this);
 		aBean.getChildren().get(1).accept(this);
 		String termB = ((String)this.stack.pop());
@@ -140,6 +143,9 @@ public class Executor implements Visitor {
 			break;
 		case EQ: 
 			this.stack.push( (Integer.parseInt(termA) == Integer.parseInt(termB)) ? new Boolean(true) : new Boolean(false));
+			break;
+		case EX:
+			stack.push( ( termA.compareTo("null") != 0 )  ? new Boolean(true) : new Boolean(false));
 			break;
 		case GE: 
 			this.stack.push( (Integer.parseInt(termA) >= Integer.parseInt(termB)) ? new Boolean(true) : new Boolean(false));
@@ -350,7 +356,7 @@ public class Executor implements Visitor {
 	}
 
 	@Override
-	public void visit(DecisionTree aBean) {
+	public void visit(Specification aBean) {
 		for( Visitable element : aBean.getChildren() )
 			element.accept(this);
 	}
@@ -416,7 +422,16 @@ public class Executor implements Visitor {
 	@Override
 	public void visit(SubTree subTree) {
 		String name = handleMixedChildren( subTree.getChildren() );
-		HUMServer.store.get( name ).accept(this);
+		Map<String, Object> request = new HashMap<String, Object>();
+		request.put("name", name);
+		Specification config = (Specification)daos.execute("configs", request);
+		
+		if( config == null )
+			logger.fatal("Config is null. Even default tree didin't return for "+name);
+		else {
+			config.accept(this);
+			logger.info("Config "+name+" executing");
+		}
 	}
 
 	@Override
@@ -458,10 +473,11 @@ public class Executor implements Visitor {
 
 	@Override
 	public void visit(Document document) {
-		Map<String, Object> doc = new HashMap<String, Object>();
+		Map<String, Object> doc = new BasicDBObject();
 		this.stack.push( doc );
-		for( Field field : document.getFields() )
+		for( Field field : document.getFields() ) {
 			field.accept(this);
+		}
 	}
 
 	@Override
@@ -475,13 +491,30 @@ public class Executor implements Visitor {
 		
 		
 		@SuppressWarnings("unchecked")
-		Map<String, Object> document = (Map<String, Object> )this.stack.peek();
-		document.put( name, Transformer.getTransformer( type ).transform( value ) );
+		Map<String, Object> doc = (Map<String, Object> )this.stack.peek();
+		try {
+			Converter.convert(doc, name, Transformer.Type.getType(type), value );
+		}catch( Exception e ) {
+			logger.warn("Trouble parsing Field \"{ name: \""+field.getName()+"\", type: \""+field.getType()+"\", value: \"\"}");
+			throw e;
+		}
 		
 	}
 
 	@Override
 	public void visit(Type type) {
 		stack.push(handleMixedChildren(type.getChildren()));
+	}
+
+	@Override
+	public void visit(DAO dao) {
+		dao.getName().accept( this );
+		String daoName = (String)this.stack.pop();
+		dao.getName().accept( this );
+		dao.getDocument().accept( this );
+		
+		Object o = daos.execute( daoName, (Map<String, Object>)this.stack.pop() );
+		stack.push(o);
+		
 	}
 }

@@ -1,11 +1,11 @@
   package com.bryanreinero.hum.persistence;
 
 import java.io.ByteArrayInputStream;
-
 import java.util.Map;
 
+import com.bryanreinero.hum.element.DecisionTree;
 import com.bryanreinero.hum.parser.XMLParser;
-import com.bryanreinero.hum.server.DataAccessObject;
+import com.bryanreinero.hum.server.ConfigurationDAO;
 import com.bryanreinero.hum.util.UpdatingMap;
 
 import org.apache.http.client.ResponseHandler;
@@ -15,12 +15,12 @@ import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.xml.sax.SAXException;
 
-public class HUMElementDS<K, V> implements DataAccessObject<K, V>  {
+public class HUMElementDS implements ConfigurationDAO {
 	
-	private Map <K, V> map = new UpdatingMap<K, V>();
+	private Map <String, DecisionTree> map = new UpdatingMap<String, DecisionTree>();
 	
 	@Override
-	public V get(K key){
+	public DecisionTree get( String key ) {
 		
 		synchronized(map){
 			if(map.containsKey(key))
@@ -111,5 +111,11 @@ public class HUMElementDS<K, V> implements DataAccessObject<K, V>  {
 
 	public void setCache(Map<K, V> cache) {
 		map = cache;
+	}
+
+	@Override
+	public void persist(DecisionTree tree) {
+		// TODO Auto-generated method stub
+		
 	}
 }

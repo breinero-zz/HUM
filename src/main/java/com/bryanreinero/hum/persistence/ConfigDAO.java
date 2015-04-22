@@ -2,28 +2,28 @@ package com.bryanreinero.hum.persistence;
 
 import java.net.UnknownHostException;
 
-import com.bryanreinero.hum.element.DecisionTree;
+import com.bryanreinero.hum.element.Specification;
 import com.bryanreinero.hum.element.Name;
 import com.bryanreinero.hum.element.Value;
 import com.bryanreinero.hum.element.Literal;
 import com.bryanreinero.hum.element.http.ResponseBody;
 import com.bryanreinero.hum.element.http.ResponseCode;
 import com.bryanreinero.hum.element.http.ResponseHeader;
-import com.bryanreinero.hum.server.DataAccessObject;
+import com.bryanreinero.hum.server.ConfigurationDAO;
 
 import org.mongodb.morphia.*;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoException;
 
-public class ConfigDAO implements DataAccessObject<String, DecisionTree> {
+public class ConfigDAO implements ConfigurationDAO {
 
 	private Datastore ds;
 	private Morphia morphia = new Morphia();
-	private Deserializer<String, DecisionTree> deserializer;
+	private Deserializer<String, Specification> deserializer;
 	
 	// this is tree is returned when the requested match in not found
-	private static final DecisionTree defaultTree = new DecisionTree ();
+	public static final Specification defaultTree = new Specification ();
 	
 	public static final int defaultErrorCode = 404;
 	public static final String defaultContentType = "text";
@@ -60,11 +60,11 @@ public class ConfigDAO implements DataAccessObject<String, DecisionTree> {
 		defaultTree.addChild(notFoundHeader);
 	}
 	
-	public Deserializer<String, DecisionTree> getDeserializer() {
+	public Deserializer<String, Specification> getDeserializer() {
 		return deserializer;
 	}
 
-	public void setDeserializer(Deserializer<String, DecisionTree> deserializer) {
+	public void setDeserializer(Deserializer<String, Specification> deserializer) {
 		this.deserializer = deserializer;
 	}
 
@@ -73,7 +73,7 @@ public class ConfigDAO implements DataAccessObject<String, DecisionTree> {
 		morphia.map(ConfigurationTree.class);
 	}
 	
-	public ConfigDAO( String url, Deserializer<String, DecisionTree> deserializer ) throws MongoException, UnknownHostException {
+	public ConfigDAO( String url, Deserializer<String, Specification> deserializer ) throws MongoException, UnknownHostException {
 		this.deserializer = deserializer;
 		MongoClient client = new MongoClient();
 		ds = morphia.createDatastore(client, "serverconfigs");
@@ -81,7 +81,7 @@ public class ConfigDAO implements DataAccessObject<String, DecisionTree> {
 	}
 
 	@Override
-	public DecisionTree get(String key) {
+	public Specification get(String key) {
 		ConfigurationTree config = ds
 				.find(ConfigurationTree.class, "name", key).get();
 
@@ -92,7 +92,7 @@ public class ConfigDAO implements DataAccessObject<String, DecisionTree> {
 	}
 
 	@Override
-	public void persist(DecisionTree object) {
+	public void persist(Specification object) {
 		ds.save(object);
 	}
 	
@@ -101,7 +101,7 @@ public class ConfigDAO implements DataAccessObject<String, DecisionTree> {
 			MongoClient client = new MongoClient();
 			ConfigDAO dao = new ConfigDAO( client, "test" );
 			
-			DecisionTree tree = dao.get("default");
+			Specification tree = dao.get("default");
 			
 			
 		} catch (UnknownHostException e) {
