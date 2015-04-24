@@ -4,9 +4,6 @@ import com.bryanreinero.hum.element.HumElement;
 import com.bryanreinero.hum.element.MixedContentElement;
 import com.bryanreinero.hum.visitor.*;
 
-import org.mongodb.morphia.annotations.*;
-
-@Embedded
 public class RequestHeader extends MixedContentElement implements Visitable {
 	
     @Override

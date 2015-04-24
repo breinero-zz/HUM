@@ -2,9 +2,6 @@ package com.bryanreinero.hum.element;
 
 import com.bryanreinero.hum.visitor.*;
 
-import org.mongodb.morphia.annotations.*;
-
-@Embedded
 public class Else extends HumElement implements Visitable {
     private Block path;
     private If ifElement;

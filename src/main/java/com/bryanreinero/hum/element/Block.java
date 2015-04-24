@@ -6,9 +6,6 @@ import java.util.List;
 import com.bryanreinero.hum.element.http.*;
 import com.bryanreinero.hum.visitor.*;
 
-import org.mongodb.morphia.annotations.*;
-
-@Embedded
 public class Block extends HumElement implements Visitable {
     private List <Visitable> children = new ArrayList<Visitable>();
 
