@@ -58,6 +58,11 @@ public class Executor implements Visitor {
 		this.daos = daos;
 	}
 	
+	private void failRequest()	{
+		getResponse().setResponseStatus(503);
+		getResponse().setResponseBody("Soory, service not available");	
+	}
+	
 	private String getBody() {
 		if (requestBody == null) {
 			StringBuilder stringBuilder = new StringBuilder();
@@ -424,14 +429,20 @@ public class Executor implements Visitor {
 		String name = handleMixedChildren( subTree.getChildren() );
 		Map<String, Object> request = new HashMap<String, Object>();
 		request.put("name", name);
-		Specification config = (Specification)daos.execute("configs", request);
-		
+		Specification config = null;
+		try {
+			config = (Specification)daos.execute("configs", request);
+		} catch ( Exception e ) {
+			logger.fatal(e);
+			failRequest();
+		}
 		if( config == null )
 			logger.fatal("Config is null. Even default tree didin't return for "+name);
 		else {
 			config.accept(this);
 			logger.info("Config "+name+" executing");
 		}
+		
 	}
 
 	@Override
@@ -513,8 +524,11 @@ public class Executor implements Visitor {
 		dao.getName().accept( this );
 		dao.getDocument().accept( this );
 		
-		Object o = daos.execute( daoName, (Map<String, Object>)this.stack.pop() );
-		stack.push(o);
-		
+		try {
+			Object o = daos.execute( daoName, (Map<String, Object>)this.stack.pop() );
+			stack.push(o);
+		} catch ( Exception e ) {
+			failRequest();
+		}
 	}
 }
