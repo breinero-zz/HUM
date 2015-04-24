@@ -11,9 +11,8 @@ import org.xml.sax.helpers.*;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 import com.bryanreinero.hum.element.*;
-import com.bryanreinero.hum.persistence.Deserializer;
 
-public class XMLParser extends DefaultHandler implements Deserializer<String, Specification> {
+public class XMLParser extends DefaultHandler {
 	
     private HashMap<String, HumSAXHandler> elements = new HashMap<String, HumSAXHandler>();
 
@@ -95,7 +94,6 @@ public class XMLParser extends DefaultHandler implements Deserializer<String, Sp
 		}
     }
 
-	@Override
 	public Specification deserialize(String input) throws IllegalArgumentException {
 		try {
 			return parse(new ByteArrayInputStream(input.getBytes("UTF-8")));
