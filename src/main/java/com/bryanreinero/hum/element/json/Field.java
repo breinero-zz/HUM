@@ -4,6 +4,7 @@ import com.bryanreinero.hum.element.HumElement;
 import com.bryanreinero.hum.element.Name;
 import com.bryanreinero.hum.element.Type;
 import com.bryanreinero.hum.element.Value;
+import com.bryanreinero.hum.server.HumException;
 import com.bryanreinero.hum.visitor.Visitable;
 import com.bryanreinero.hum.visitor.Visitor;
 
@@ -26,7 +27,7 @@ public class Field extends HumElement implements Visitable {
 	}
 
 	@Override
-	public void accept(Visitor visitor) {
+	public void accept(Visitor visitor) throws HumException {
 		visitor.visit( this );
 	}
 

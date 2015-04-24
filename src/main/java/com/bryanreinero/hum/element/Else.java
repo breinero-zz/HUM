@@ -1,5 +1,6 @@
 package com.bryanreinero.hum.element;
 
+import com.bryanreinero.hum.server.HumException;
 import com.bryanreinero.hum.visitor.*;
 
 public class Else extends HumElement implements Visitable {
@@ -7,7 +8,7 @@ public class Else extends HumElement implements Visitable {
     private If ifElement;
     
     @Override
-    public void accept(Visitor visitor) {
+    public void accept(Visitor visitor) throws HumException {
         visitor.visit(this);
     }
     

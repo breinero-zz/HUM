@@ -31,6 +31,7 @@ import com.bryanreinero.hum.element.http.*;
 import com.bryanreinero.hum.element.json.*;
 import com.bryanreinero.hum.persistence.DAO;
 import com.bryanreinero.hum.visitor.*;
+import com.bryanreinero.hum.server.HumException;
 import com.mongodb.BasicDBObject;
 
 import java.util.regex.Pattern;
@@ -58,7 +59,8 @@ public class Executor implements Visitor {
 		this.daos = daos;
 	}
 	
-	private void failRequest()	{
+	private void failRequest( String message )	{
+		logger.warn(message);
 		getResponse().setResponseStatus(503);
 		getResponse().setResponseBody("Soory, service not available");	
 	}
@@ -101,7 +103,7 @@ public class Executor implements Visitor {
 		return requestURL;
 	}
 	
-	private String handleMixedChildren( List<Visitable> list) {
+	private String handleMixedChildren( List<Visitable> list) throws HumException {
 		StringBuffer sb = new StringBuffer();
 		
 		for ( Visitable element : list ) {
@@ -116,7 +118,7 @@ public class Executor implements Visitor {
 	}
 
 	@Override
-	public void visit(And element) {
+	public void visit(And element) throws HumException {
 		boolean result = true;
 		for ( Visitable child : element.getChildren() ) {
 			child.accept(this);
@@ -129,7 +131,7 @@ public class Executor implements Visitor {
 	}
 
 	@Override
-	public void visit(Compare aBean) {
+	public void visit(Compare aBean) throws HumException {
 		
 		//TODO this really needs to be handled properly
 		aBean.getChildren().get(0).accept(this);
@@ -180,12 +182,12 @@ public class Executor implements Visitor {
 	}
 	
 	@Override
-	public void visit(ContentType aBean) {
+	public void visit(ContentType aBean) throws HumException {
 		this.getResponse().setContentType(handleMixedChildren(aBean.getChildren()));
 	}
 	
 	@Override
-	public void visit(Else element) {
+	public void visit(Else element) throws HumException {
 		if(element.getIf() != null)
 			element.getIf().accept(this);
 		else
@@ -193,7 +195,7 @@ public class Executor implements Visitor {
 	}
 
 	@Override
-	public void visit(GetCookie aBean) {
+	public void visit(GetCookie aBean) throws HumException {
 		String cookieName = handleMixedChildren(aBean.getChildren());
 		
 		Cookie[] cookies = this.req.getCookies();
@@ -215,7 +217,7 @@ public class Executor implements Visitor {
 	}
 
 	@Override
-	public void visit(If element) {
+	public void visit(If element) throws HumException {
 		element.getChild().accept(this);
 		if( ((Boolean)this.stack.pop()).booleanValue() ) 
 			element.getPath().accept(this);
@@ -229,7 +231,7 @@ public class Executor implements Visitor {
 	}
 
 	@Override
-	public void visit(Or aBean) {
+	public void visit(Or aBean) throws HumException {
 		boolean result = false;
 			
 	    for ( Visitable element : aBean.getChildren() ) {
@@ -243,7 +245,7 @@ public class Executor implements Visitor {
 	}
 	
 	@Override
-	public void visit(Block aBean) {
+	public void visit(Block aBean) throws HumException {
 		for ( Visitable element : aBean.getChildren() ) 
 			element.accept(this);
 	}
@@ -314,31 +316,31 @@ public class Executor implements Visitor {
 	}
 
 	@Override
-	public void visit(ResponseBody aBean) {
+	public void visit(ResponseBody aBean) throws HumException{
 		this.getResponse().setResponseBody(handleMixedChildren(aBean.getChildren()));
 	}
 
 	@Override
-	public void visit(ResponseCode aBean) {
+	public void visit(ResponseCode aBean) throws HumException{
 		this.getResponse().setResponseStatus(
 				Integer.parseInt(handleMixedChildren(aBean.getChildren()))
 				);
 	}
 
 	@Override
-	public void visit(ResponseHeader aBean) {
+	public void visit(ResponseHeader aBean) throws HumException {
 		aBean.getValue().accept(this);
 		aBean.getName().accept(this);
 		this.getResponse().setResponseHeader((String)stack.pop(), (String)stack.pop());
 	}
 
 	@Override
-	public void visit(Redirect element) {
+	public void visit(Redirect element) throws HumException{
 		stack.push(handleMixedChildren(element.getChildren()));
 	}
 
 	@Override
-	public void visit(SetCookie aBean) {
+	public void visit(SetCookie aBean) throws HumException {
 		//TODO: setting cookies requires special logic
 		aBean.getValue().accept(this);
 		aBean.getName().accept(this);
@@ -349,35 +351,35 @@ public class Executor implements Visitor {
 	}
 
 	@Override
-	public void visit(SetVariable aBean) {
+	public void visit(SetVariable aBean) throws HumException {
 		aBean.getValue().accept(this);
 		aBean.getName().accept(this);
 		variables.put((String)stack.pop(), (String)stack.pop());
 	}
 
 	@Override
-	public void visit(Value aBean) {
+	public void visit(Value aBean) throws HumException {
 		stack.push(handleMixedChildren(aBean.getChildren()));
 	}
 
 	@Override
-	public void visit(Specification aBean) {
+	public void visit(Specification aBean) throws HumException {
 		for( Visitable element : aBean.getChildren() )
 			element.accept(this);
 	}
 
 	@Override
-	public void visit(Input aBean) {
+	public void visit(Input aBean) throws HumException {
 		stack.push(handleMixedChildren(aBean.getChildren()));
 	}
 
 	@Override
-	public void visit(com.bryanreinero.hum.element.Pattern element) {
+	public void visit(com.bryanreinero.hum.element.Pattern element) throws HumException {
 		stack.push(handleMixedChildren(element.getChildren()));
 	}
 
 	@Override
-	public void visit(RequestHeader element) {
+	public void visit(RequestHeader element) throws HumException {
 		stack.push(req.getHeader(handleMixedChildren(element.getChildren())));
 	}
 
@@ -387,12 +389,12 @@ public class Executor implements Visitor {
 	}
 
 	@Override
-	public void visit(Name element) {
+	public void visit(Name element) throws HumException {
 		stack.push(handleMixedChildren(element.getChildren()));
 	}
 	
 	@Override
-	public void visit(RegularExpression element) {
+	public void visit(RegularExpression element) throws HumException {
 		
 		element.getPattern().accept(this);
 		String patternS = (String)stack.pop();
@@ -415,17 +417,17 @@ public class Executor implements Visitor {
 	}
 
 	@Override
-	public void visit(Substitute element) {
+	public void visit(Substitute element) throws HumException {
 		stack.push(handleMixedChildren(element.getChildren()));
 	}
 
 	@Override
-	public void visit(GetVariable element) {
+	public void visit(GetVariable element) throws HumException {
 		stack.push(variables.get(handleMixedChildren(element.getChildren())));
 	}
 
 	@Override
-	public void visit(SubTree subTree) {
+	public void visit(SubTree subTree) throws HumException {
 		String name = handleMixedChildren( subTree.getChildren() );
 		Map<String, Object> request = new HashMap<String, Object>();
 		request.put("name", name);
@@ -433,8 +435,7 @@ public class Executor implements Visitor {
 		try {
 			config = (Specification)daos.execute("configs", request);
 		} catch ( Exception e ) {
-			logger.fatal(e);
-			failRequest();
+			throw new HumException("Could not execute subtree", e);
 		}
 		if( config == null )
 			logger.fatal("Config is null. Even default tree didin't return for "+name);
@@ -460,12 +461,12 @@ public class Executor implements Visitor {
 	}
 
 	@Override
-	public void visit(RequestParameter element) {
+	public void visit(RequestParameter element) throws HumException {
 		stack.push(req.getParameter(handleMixedChildren(element.getChildren())));
 	}
 
 	@Override
-	public void visit(URLDecode element) {
+	public void visit(URLDecode element) throws HumException {
 		try {
 			stack.push(URLDecoder.decode(handleMixedChildren(element.getChildren()), "UTF-8"));
 		} catch (UnsupportedEncodingException e) {
@@ -474,7 +475,7 @@ public class Executor implements Visitor {
 	}
 
 	@Override
-	public void visit(URLEncode element) {
+	public void visit(URLEncode element) throws HumException {
 		try {
 			stack.push(URLEncoder.encode(handleMixedChildren(element.getChildren()), "UTF-8"));
 		} catch (UnsupportedEncodingException e) {
@@ -483,7 +484,7 @@ public class Executor implements Visitor {
 	}
 
 	@Override
-	public void visit(Document document) {
+	public void visit(Document document) throws HumException {
 		Map<String, Object> doc = new BasicDBObject();
 		this.stack.push( doc );
 		for( Field field : document.getFields() ) {
@@ -492,7 +493,7 @@ public class Executor implements Visitor {
 	}
 
 	@Override
-	public void visit(Field field) {
+	public void visit(Field field) throws HumException {
 		field.getName().accept( this );
 		String name = (String)this.stack.pop();
 		field.getType().accept( this );
@@ -513,22 +514,22 @@ public class Executor implements Visitor {
 	}
 
 	@Override
-	public void visit(Type type) {
+	public void visit(Type type) throws HumException {
 		stack.push(handleMixedChildren(type.getChildren()));
 	}
 
 	@Override
-	public void visit(DAO dao) {
+	public void visit(DAO dao) throws HumException {
 		dao.getName().accept( this );
 		String daoName = (String)this.stack.pop();
-		dao.getName().accept( this );
 		dao.getDocument().accept( this );
+		Map<String, Object> doc = (Map<String, Object>)this.stack.pop();
 		
 		try {
-			Object o = daos.execute( daoName, (Map<String, Object>)this.stack.pop() );
+			Object o = daos.execute( daoName, doc);
 			stack.push(o);
 		} catch ( Exception e ) {
-			failRequest();
+			throw new HumException("Failed acces to dao: "+daoName, e );
 		}
 	}
 }

@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.bson.types.ObjectId;
 
+import com.bryanreinero.hum.server.HumException;
 import com.bryanreinero.hum.visitor.*;
 import com.bryanreinero.hum.element.http.*;
 
@@ -56,7 +57,7 @@ public class Specification extends HumElement implements Visitable {
 	}
 
 	@Override
-	public void accept( Visitor visitor){
+	public void accept( Visitor visitor) throws HumException {
 		visitor.visit(this);
 	}
 

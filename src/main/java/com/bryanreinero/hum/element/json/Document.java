@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.bryanreinero.hum.element.HumElement;
+import com.bryanreinero.hum.server.HumException;
 import com.bryanreinero.hum.visitor.Visitable;
 import com.bryanreinero.hum.visitor.Visitor;
 
@@ -26,7 +27,7 @@ public class Document extends HumElement implements Visitable {
 	}
 
 	@Override
-	public void accept(Visitor visitor) {
+	public void accept(Visitor visitor) throws HumException {
 		visitor.visit( this );
 	}
 
