@@ -3,6 +3,7 @@ package com.bryanreinero.hum.element;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.bryanreinero.hum.server.HumException;
 import com.bryanreinero.hum.visitor.*;
 
 public class RegularExpression extends HumElement implements Visitable {
@@ -24,7 +25,7 @@ public class RegularExpression extends HumElement implements Visitable {
 	}
 
 	@Override
-	public void accept(Visitor visitor) {
+	public void accept(Visitor visitor) throws HumException {
 		visitor.visit(this);
 	}
 

@@ -9,6 +9,7 @@ package com.bryanreinero.hum.element;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.bryanreinero.hum.server.HumException;
 import com.bryanreinero.hum.visitor.*;
 
 public class And extends HumElement implements Visitable {
@@ -52,7 +53,7 @@ public class And extends HumElement implements Visitable {
 		children.add(element);
 	}
 
-	public void accept(Visitor visitor) {
+	public void accept(Visitor visitor) throws HumException {
 		visitor.visit(this);
 	}
 

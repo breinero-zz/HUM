@@ -1,16 +1,14 @@
 package com.bryanreinero.hum.element;
 
+import com.bryanreinero.hum.server.HumException;
 import com.bryanreinero.hum.visitor.*;
 
-import org.mongodb.morphia.annotations.*;
-
-@Embedded
 public class Else extends HumElement implements Visitable {
     private Block path;
     private If ifElement;
     
     @Override
-    public void accept(Visitor visitor) {
+    public void accept(Visitor visitor) throws HumException {
         visitor.visit(this);
     }
     

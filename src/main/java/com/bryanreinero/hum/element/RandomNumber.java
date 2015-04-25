@@ -1,5 +1,6 @@
 package com.bryanreinero.hum.element;
 
+import com.bryanreinero.hum.server.HumException;
 import com.bryanreinero.hum.visitor.*;
 
 public class RandomNumber extends HumElement implements Visitable {
@@ -31,7 +32,7 @@ public class RandomNumber extends HumElement implements Visitable {
     }
 
     @Override
-    public void accept(Visitor aVisitor) {
+    public void accept(Visitor aVisitor) throws HumException {
         aVisitor.visit(this);
     }
 

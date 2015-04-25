@@ -1,11 +1,9 @@
 package com.bryanreinero.hum.element.http;
 
 import com.bryanreinero.hum.element.HumElement;
+import com.bryanreinero.hum.server.HumException;
 import com.bryanreinero.hum.visitor.*;
 
-import org.mongodb.morphia.annotations.*;
-
-@Embedded
 public class RequestURLPage extends HumElement implements Visitable {
 
     @Override
@@ -14,7 +12,7 @@ public class RequestURLPage extends HumElement implements Visitable {
     }
 
     @Override
-    public void accept(Visitor visitor) {
+    public void accept(Visitor visitor) throws HumException {
         visitor.visit(this);
     }
 }

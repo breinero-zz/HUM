@@ -1,11 +1,12 @@
 package com.bryanreinero.hum.element;
 
+import com.bryanreinero.hum.server.HumException;
 import com.bryanreinero.hum.visitor.*;
 
 public class Format extends MixedContentElement implements Visitable {
 
 	@Override
-	public void accept(Visitor visitor) {
+	public void accept(Visitor visitor) throws HumException {
 		visitor.visit(this);
 	}
 
