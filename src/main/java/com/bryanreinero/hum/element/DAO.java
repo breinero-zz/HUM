@@ -1,9 +1,5 @@
-package com.bryanreinero.hum.persistence;
+package com.bryanreinero.hum.element;
 
-import com.bryanreinero.hum.element.HumElement;
-import com.bryanreinero.hum.element.MixedContentElement;
-import com.bryanreinero.hum.element.Name;
-import com.bryanreinero.hum.element.Type;
 import com.bryanreinero.hum.element.json.Document;
 import com.bryanreinero.hum.server.HumException;
 import com.bryanreinero.hum.visitor.Visitable;

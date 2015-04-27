@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.bryanreinero.hum.element.http.*;
-import com.bryanreinero.hum.persistence.*;
 import com.bryanreinero.hum.visitor.*;
 
 public abstract class MixedContentElement extends HumElement implements Visitable {

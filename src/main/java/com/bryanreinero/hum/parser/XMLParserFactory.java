@@ -8,7 +8,6 @@ import com.bryanreinero.hum.element.*;
 import com.bryanreinero.hum.element.http.*;
 import com.bryanreinero.hum.element.json.Document;
 import com.bryanreinero.hum.element.json.Field;
-import com.bryanreinero.hum.persistence.DAO;
 
 public class XMLParserFactory {
 

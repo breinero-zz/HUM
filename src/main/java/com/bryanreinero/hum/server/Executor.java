@@ -26,10 +26,10 @@ import org.apache.log4j.Logger;
 
 import com.bryanreinero.firehose.Converter;
 import com.bryanreinero.firehose.Transformer;
+import com.bryanreinero.firehose.dao.DAOService;
 import com.bryanreinero.hum.element.*;
 import com.bryanreinero.hum.element.http.*;
 import com.bryanreinero.hum.element.json.*;
-import com.bryanreinero.hum.persistence.DAO;
 import com.bryanreinero.hum.visitor.*;
 import com.bryanreinero.hum.server.HumException;
 import com.mongodb.BasicDBObject;

@@ -9,7 +9,6 @@ package com.bryanreinero.hum.visitor;
 import com.bryanreinero.hum.element.*;
 import com.bryanreinero.hum.element.http.*;
 import com.bryanreinero.hum.element.json.*;
-import com.bryanreinero.hum.persistence.DAO;
 import com.bryanreinero.hum.server.HumException;
 
 public interface Visitor {
