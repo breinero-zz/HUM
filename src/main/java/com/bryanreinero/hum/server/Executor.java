@@ -52,17 +52,16 @@ public class Executor implements Visitor {
 
 	private static final Logger logger = LogManager.getLogger( Executor.class.getName() );
 	
-	public Executor(HttpServletRequest req, DAOService daos ) throws MalformedURLException {
+	public Executor(HttpServletRequest req, DAOService daos ) throws HumException {
 		this.req = req;
+		try {
 		requestURL = new URL(req.getRequestURL().toString());
+		} catch ( MalformedURLException e ) {
+			logger.warn( "bad URL.", e);
+			throw new HumException("Failed to construct Executor.", e);
+		}
 		this.response = new Response();
 		this.daos = daos;
-	}
-	
-	private void failRequest( String message )	{
-		logger.warn(message);
-		getResponse().setResponseStatus(503);
-		getResponse().setResponseBody("Soory, service not available");	
 	}
 	
 	private String getBody() {
@@ -177,6 +176,11 @@ public class Executor implements Visitor {
 			break;
 		case STARTS_WITH: 
 			this.stack.push( (termA.startsWith(termB) ) ? new Boolean(true) : new Boolean(false));
+			break;
+		case ISEQ:
+			// what the hell was I thinking with this operator? What does ISEQ mean?
+			break;
+		default:
 			break;
 		}
 	}
