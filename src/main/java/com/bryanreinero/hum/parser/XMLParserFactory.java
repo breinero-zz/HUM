@@ -6,8 +6,6 @@ import org.xml.sax.helpers.XMLReaderFactory;
 
 import com.bryanreinero.hum.element.*;
 import com.bryanreinero.hum.element.http.*;
-import com.bryanreinero.hum.element.json.Document;
-import com.bryanreinero.hum.element.json.Field;
 
 public class XMLParserFactory {
 
@@ -513,21 +511,6 @@ public class XMLParserFactory {
 					throws Exception {
 
 				parser.push(new Document());
-			}
-
-		});
-
-		parser.addHandler("Field", new HumSAXHandler() {
-
-			@Override
-			public void handleEnd(XMLParser parser) throws Exception {
-				parser.unite();
-			}
-
-			@Override
-			public void handleStart(XMLParser parser, Attributes atts)
-					throws Exception {
-				parser.push(new Field());
 			}
 
 		});

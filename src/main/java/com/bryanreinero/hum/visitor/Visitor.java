@@ -103,8 +103,6 @@ public interface Visitor {
 
 	public void visit(URLEncode urlEncode) throws HumException;
 
-	public void visit(Field field) throws HumException;
-
 	public void visit(Type type) throws HumException;
 
 	public void visit(If element) throws HumException;

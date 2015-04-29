@@ -1,10 +1,10 @@
 package com.bryanreinero.hum.element;
 
-import com.bryanreinero.hum.element.json.Document;
 import com.bryanreinero.hum.server.HumException;
 import com.bryanreinero.hum.visitor.Visitable;
 import com.bryanreinero.hum.visitor.Visitor;
 
+// should really just be a HumElement not a MixedContentElement
 public class DAO extends MixedContentElement implements Visitable {
 	
 	private Name name;

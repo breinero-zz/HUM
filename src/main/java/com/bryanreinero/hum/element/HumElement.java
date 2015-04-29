@@ -1,8 +1,7 @@
 package com.bryanreinero.hum.element;
 
 import com.bryanreinero.hum.element.http.*;
-import com.bryanreinero.hum.element.json.Document;
-import com.bryanreinero.hum.element.json.Field;
+import com.bryanreinero.hum.element.json.*;
 
 public abstract class HumElement {
 
@@ -57,25 +56,12 @@ public abstract class HumElement {
 		throw new IllegalArgumentException();
 	}
 
-	public void addChild(GetCookie element) {
-		throw new IllegalArgumentException();
-	}
-	
+	public void addChild(GetCookie element) { throw new IllegalArgumentException(); }
 	public void addChild(RequestURLPort element) { throw new IllegalArgumentException(); }
-
 	public void addChild(DateTime element) { throw new IllegalArgumentException(); }
-	
 	public void addChild(URLDecode element) { throw new IllegalArgumentException(); }
 	public void addChild(URLEncode element) { throw new IllegalArgumentException(); }
-
-	public void addChild(Field element) { throw new IllegalArgumentException(); }
-
 	public void addChild(Type type) { throw new IllegalArgumentException(); }
-
-	public void addChild(Document document) {
-		throw new IllegalArgumentException();
-	}
-
+	public void addChild(Document document) { throw new IllegalArgumentException(); }
 	public void addChild(DAO dao) { throw new IllegalArgumentException(); }
-	
 }

@@ -37,6 +37,8 @@ import com.mongodb.BasicDBObject;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
+import com.mongodb.util.JSON;
+
 public class Executor implements Visitor {
 
 	private final HttpServletRequest req;
@@ -489,32 +491,10 @@ public class Executor implements Visitor {
 
 	@Override
 	public void visit(Document document) throws HumException {
-		Map<String, Object> doc = new BasicDBObject();
-		this.stack.push( doc );
-		for( Field field : document.getFields() ) {
-			field.accept(this);
-		}
-	}
-
-	@Override
-	public void visit(Field field) throws HumException {
-		field.getName().accept( this );
-		String name = (String)this.stack.pop();
-		field.getType().accept( this );
-		String type = (String)this.stack.pop();
-		field.getValue().accept( this );
-		String value = (String)this.stack.pop();
-		
-		
-		@SuppressWarnings("unchecked")
-		Map<String, Object> doc = (Map<String, Object> )this.stack.peek();
-		try {
-			Converter.convert(doc, name, Transformer.Type.getType(type), value );
-		}catch( Exception e ) {
-			logger.warn("Trouble parsing Field \"{ name: \""+field.getName()+"\", type: \""+field.getType()+"\", value: \"\"}");
-			throw e;
-		}
-		
+		Map<String, Object> doc = null;
+		String jsonString = handleMixedChildren(document.getChildren());
+		doc = (Map<String, Object>)com.mongodb.util.JSON.parse( jsonString );
+		stack.push(doc);
 	}
 
 	@Override
