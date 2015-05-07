@@ -21,23 +21,17 @@ import java.net.URLEncoder;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import com.bryanreinero.firehose.Converter;
-import com.bryanreinero.firehose.Transformer;
 import com.bryanreinero.firehose.dao.DAOService;
 import com.bryanreinero.hum.element.*;
 import com.bryanreinero.hum.element.http.*;
-import com.bryanreinero.hum.element.json.*;
 import com.bryanreinero.hum.visitor.*;
 import com.bryanreinero.hum.server.HumException;
-import com.mongodb.BasicDBObject;
 
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
-
-import com.mongodb.util.JSON;
 
 public class Executor implements Visitor {
 
