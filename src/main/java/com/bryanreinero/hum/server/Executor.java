@@ -404,16 +404,22 @@ public class Executor implements Visitor {
 		String input = (String)stack.pop();
 		Matcher matcher = pattern.matcher(input);
 		
+		if ( matcher.matches() )  {
+			String count = Integer.toString( matcher.groupCount() );
+			variables.put("groupCount", count );
+        	for ( int i = 0; i <=  matcher.groupCount(); i++ )
+        		variables.put("group"+i,  matcher.group(i) );
+		}
+		else {
+			variables.put("groupCount", "0" );
+			variables.put("group0", input );
+		}
 		if(element.getSubstitutes().size() != 0 ){
 			for(Substitute substitute : element.getSubstitutes()){
 				substitute.accept(this);
 				stack.push(matcher.replaceAll((String)stack.pop()));
 			}
 		}
-		else {
-			if(matcher.find())
-				stack.push( matcher.group(1) );
-		}		
 	}
 
 	@Override

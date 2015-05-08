@@ -320,6 +320,17 @@ public class XMLParserFactory {
 				parser.push(new RequestHost());
 			}
 		});
+		
+		parser.addHandler("RequestServletPath", new HumSAXHandler() {
+			public void handleEnd(XMLParser parser) throws Exception {
+				parser.unite();
+			}
+
+			public void handleStart(XMLParser parser, Attributes atts)
+					throws Exception {
+				parser.push(new RequestServletPath());
+			}
+		});
 
 		parser.addHandler("RequestParameter", new HumSAXHandler() {
 			public void handleEnd(XMLParser parser) throws Exception {

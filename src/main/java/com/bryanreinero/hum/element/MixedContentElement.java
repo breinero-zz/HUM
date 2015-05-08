@@ -91,6 +91,11 @@ public abstract class MixedContentElement extends HumElement implements Visitabl
 	}
 	
 	@Override
+	public void addChild(RequestServletPath element){
+		children.add(element);
+	}
+	
+	@Override
 	public void addChild(RequestURLPage element){
 		children.add(element);
 	}

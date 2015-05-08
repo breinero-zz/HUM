@@ -121,4 +121,9 @@ public class Specification extends HumElement implements Visitable {
 	public void addChild(SubTree element){
 		children.add(element);
 	}
+	
+	@Override
+	public void addChild(RegularExpression element){
+		children.add(element);
+	}
 }

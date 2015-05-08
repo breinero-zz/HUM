@@ -63,4 +63,6 @@ public abstract class HumElement {
 	public void addChild(Type type) { throw new IllegalArgumentException(); }
 	public void addChild(Document document) { throw new IllegalArgumentException(); }
 	public void addChild(DAO dao) { throw new IllegalArgumentException(); }
+	public void addChild(RequestServletPath element) { throw new IllegalArgumentException(); }
+
 }
